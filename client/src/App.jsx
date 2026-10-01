@@ -1,137 +1,91 @@
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import "./App.css";
+import React from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { SocketProvider } from './context/SocketContext';
+import { ChatProvider } from './context/ChatContext';
+import AuthModal from './components/Auth/AuthModal';
+import Sidebar from './components/Sidebar/Sidebar';
+import ChatHeader from './components/Chat/ChatHeader';
+import MessageList from './components/Chat/MessageList';
+import MessageInput from './components/Chat/MessageInput';
+import ConnectionBanner from './components/UI/ConnectionBanner';
+import ThreadDrawer from './components/Chat/ThreadDrawer';
+import MemberDrawer from './components/Chat/MemberDrawer';
+import SearchModal from './components/UI/SearchModal';
+import ProfileModal from './components/Auth/ProfileModal';
+import './index.css';
 
-const socket = io("http://localhost:5000");
+function ChatLayout() {
+  const { user } = useAuth();
+  const [isMemberDrawerOpen, setIsMemberDrawerOpen] = React.useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const [theme, setTheme] = React.useState(localStorage.getItem('chat_theme') || 'dark');
 
-function App() {
-  const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
-  const [joined, setJoined] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  React.useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('chat_theme', theme);
+  }, [theme]);
 
-  useEffect(() => {
-    socket.on("receive-message", (data) => {
-      setMessages((prev) => [...prev, data]);
-    });
+  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
-    socket.on("user-joined", ({ username }) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "system",
-          message: `${username} joined the room`,
-        },
-      ]);
-    });
-
-    socket.on("user-left", ({ username }) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "system",
-          message: `${username} left the room`,
-        },
-      ]);
-    });
-
-    return () => {
-      socket.off("receive-message");
-      socket.off("user-joined");
-      socket.off("user-left");
-    };
-  }, []);
-
-  const joinRoom = () => {
-    if (!username.trim() || !room.trim()) return;
-
-    socket.emit("join-room", {
-      username,
-      room,
-    });
-
-    setJoined(true);
-  };
-
-  const sendMessage = (e) => {
-    e.preventDefault();
-
-    if (!message.trim()) return;
-
-    socket.emit("send-message", {
-      username,
-      message,
-      room,
-    });
-
-    setMessage("");
-  };
-
-  if (!joined) {
-    return (
-      <div className="app">
-        <div className="join-card">
-          <h1>Real-time Chat</h1>
-          <p>Join a room to start chatting</p>
-
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-
-          <input
-            type="text"
-            placeholder="Room name"
-            value={room}
-            onChange={(e) => setRoom(e.target.value)}
-          />
-
-          <button onClick={joinRoom}>Join Room</button>
-        </div>
-      </div>
-    );
+  if (!user) {
+    return <AuthModal />;
   }
 
   return (
-    <div className="app">
-      <div className="chat-container">
-        <header>
-          <h2>Room: {room}</h2>
-          <p>Logged in as {username}</p>
-        </header>
-
-        <div className="messages">
-          {messages.map((msg, index) =>
-            msg.type === "system" ? (
-              <div className="system-message" key={index}>
-                {msg.message}
-              </div>
-            ) : (
-              <div className="message" key={index}>
-                <strong>{msg.username}</strong>
-                <p>{msg.message}</p>
-                <small>
-                  {new Date(msg.timestamp).toLocaleTimeString()}
-                </small>
-              </div>
-            )
-          )}
-        </div>
-
-        <form className="message-form" onSubmit={sendMessage}>
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-          />
-
-          <button type="submit">Send</button>
-        </form>
+    <div className="app-container">
+      <ConnectionBanner />
+      
+      <div className={`sidebar-container ${isSidebarOpen ? 'open' : ''}`}>
+        <Sidebar 
+          onOpenProfile={() => setIsProfileModalOpen(true)} 
+          onOpenSearch={() => setIsSearchModalOpen(true)}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
       </div>
+
+      {isSidebarOpen && (
+        <div 
+          className="mobile-only" 
+          onClick={() => setIsSidebarOpen(false)}
+          style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 40 }}
+        />
+      )}
+
+      <main className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+        <ChatHeader 
+           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+           onToggleMembers={() => setIsMemberDrawerOpen(!isMemberDrawerOpen)} 
+           onOpenSearch={() => setIsSearchModalOpen(true)}
+        />
+        <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+               <MessageList />
+               <MessageInput />
+           </div>
+           {isMemberDrawerOpen && <MemberDrawer onClose={() => setIsMemberDrawerOpen(false)} />}
+        </div>
+      </main>
+
+      <ThreadDrawer />
+      
+      {isProfileModalOpen && <ProfileModal onClose={() => setIsProfileModalOpen(false)} />}
+      {isSearchModalOpen && <SearchModal onClose={() => setIsSearchModalOpen(false)} />}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <SocketProvider>
+        <ChatProvider>
+          <ChatLayout />
+        </ChatProvider>
+      </SocketProvider>
+    </AuthProvider>
   );
 }
 
