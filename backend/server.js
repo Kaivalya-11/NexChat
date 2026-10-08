@@ -23,7 +23,7 @@ async function startServer() {
       methods: ['GET', 'POST']
     }
   });
-  
+
   initSocket(io);
 
   expressApp.use(cors());
@@ -37,9 +37,10 @@ async function startServer() {
   expressApp.use('/uploads', express.static('./public/uploads'));
 
   const PORT = process.env.PORT || 3001;
-  server.listen(PORT, (err) => {
+
+  server.listen(PORT, '0.0.0.0', (err) => {
     if (err) throw err;
-    console.log(`> Backend API ready on http://localhost:${PORT}`);
+    console.log(`> Backend API ready on port ${PORT}`);
   });
 }
 
