@@ -45,7 +45,11 @@ export default function NotificationDrawer({ onClose }) {
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
         {notifications.length === 0 ? (
-          <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '32px', fontSize: '0.9rem' }}>No new notifications</div>
+          <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '64px', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <RiNotification3Fill size={48} style={{ color: 'var(--border-highlight)', marginBottom: '16px' }} />
+            <span style={{ fontWeight: 600, color: 'var(--text-main)', marginBottom: '8px', fontSize: '1.05rem', fontFamily: 'var(--font-heading)' }}>All caught up!</span>
+            <span>You have no new notifications.</span>
+          </div>
         ) : (
           notifications.map((n, i) => (
             <motion.div 

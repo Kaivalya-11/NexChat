@@ -102,6 +102,11 @@ export default function ThreadDrawer() {
 
         {loading ? (
           <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading replies...</div>
+        ) : replies.length === 0 ? (
+          <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <span style={{ display: 'block', fontSize: '1rem', fontWeight: 500, color: 'var(--text-main)', marginBottom: '8px' }}>No replies yet</span>
+            <span style={{ fontSize: '0.85rem' }}>Be the first to reply to this thread!</span>
+          </div>
         ) : (
           <div style={{ paddingBottom: '20px' }}>
             {replies.map((reply, i) => {

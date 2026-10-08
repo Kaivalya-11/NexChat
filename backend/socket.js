@@ -49,9 +49,18 @@ function initSocket(io) {
       console.error('Error joining user channels:', err);
     }
 
-    socket.on('join-channel', (channelId) => {
-      socket.join(channelId);
-      console.log(`User ${username} joined channel ${channelId}`);
+    socket.on('join-channel', async (channelId) => {
+      try {
+        const channel = await store.getChannelById(channelId);
+        if (channel && channel.members.includes(userId)) {
+           socket.join(channelId);
+           console.log(`User ${username} joined channel ${channelId}`);
+        } else {
+           console.warn(`User ${username} unauthorized join attempt for channel ${channelId}`);
+        }
+      } catch (err) {
+        console.error('Error joining channel:', err);
+      }
     });
 
     socket.on('leave-channel', (channelId) => {
@@ -61,6 +70,15 @@ function initSocket(io) {
     socket.on('send-message', async (data, callback) => {
       try {
         const { channelId, content, media, parentId, quote, type } = data;
+        
+        const channel = await store.getChannelById(channelId);
+        if (!channel || !channel.members.includes(userId)) {
+          if (typeof callback === 'function') {
+            callback({ error: 'Unauthorized to send message in this channel' });
+          }
+          return;
+        }
+
         const senderProfile = await store.findUserById(userId);
 
         const newMsg = await store.createMessage({
@@ -75,7 +93,6 @@ function initSocket(io) {
 
         socket.to(channelId).emit('new-message', newMsg);
 
-        const channel = await store.getChannelById(channelId);
         if (channel) {
           channel.members.forEach(memberId => {
             if (memberId !== userId) {

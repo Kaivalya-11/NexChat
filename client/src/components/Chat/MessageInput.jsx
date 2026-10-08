@@ -263,7 +263,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '4px', paddingLeft: '4px' }}>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '4px', paddingLeft: '4px', overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
         <button type="button" onMouseDown={(e) => { e.preventDefault(); insertFormat('**', '**'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[bold]</button>
         <button type="button" onMouseDown={(e) => { e.preventDefault(); insertFormat('*', '*'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[italic]</button>
         <button type="button" onMouseDown={(e) => { e.preventDefault(); insertFormat('[', '](url)'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[link]</button>

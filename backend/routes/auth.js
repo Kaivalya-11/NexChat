@@ -25,12 +25,7 @@ router.post('/register', async (req, res) => {
       statusText: statusText || 'Available'
     });
 
-    const generalChan = await store.getChannelByName('general');
-    if (generalChan) {
-      await store.updateChannel(generalChan.id, {
-        members: [...generalChan.members, user.id]
-      });
-    }
+
 
     const token = generateToken(user);
     const { password: _, ...userWithoutPassword } = user;

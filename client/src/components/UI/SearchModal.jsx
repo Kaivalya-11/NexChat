@@ -83,7 +83,11 @@ export default function SearchModal({ onClose }) {
         <div style={{ maxHeight: '400px', overflowY: 'auto', backgroundColor: 'var(--bg-darkest)' }}>
           {loading && <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>Searching...</div>}
           {!loading && query.length > 1 && results.length === 0 && (
-             <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>No results found for &quot;{query}&quot;</div>
+             <div style={{ padding: '48px 24px', textAlign: 'center', color: 'var(--text-muted)' }}>
+               <RiSearch2Line size={48} style={{ color: 'var(--border-highlight)', marginBottom: '16px' }} />
+               <h3 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '8px', fontFamily: 'var(--font-heading)' }}>No results found</h3>
+               <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>We couldn't find anything matching "{query}"</p>
+             </div>
           )}
           
           {results.map((msg, idx) => (

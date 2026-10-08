@@ -67,7 +67,6 @@ async function initDB() {
 
   try {
     console.log('🔄 Connecting to MongoDB...');
-    console.log('MongoDB URI:', mongoUri.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
 
     await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 8000
@@ -94,19 +93,7 @@ async function initDB() {
     }
   }
 
-  try {
-    const demoUsernames = [/alice/i, /bob/i, /charlie/i, /sarah/i];
-    const demoUsers = await UserModel.find({ username: { $in: demoUsernames } });
-    if (demoUsers.length > 0) {
-      const demoUserIds = demoUsers.map(u => u._id);
-      await UserModel.deleteMany({ _id: { $in: demoUserIds } });
-      await ChannelModel.updateMany({}, { $pull: { members: { $in: demoUserIds }, admins: { $in: demoUserIds } } });
-      await MessageModel.deleteMany({ sender: { $in: demoUserIds } });
-      console.log('🧹 Cleaned up demo accounts (alice, bob, charlie, sarah) from MongoDB');
-    }
-  } catch (err) {
-    console.warn('Demo cleanup note:', err.message);
-  }
+
 }
 const store = {
   PRESET_AVATARS,
@@ -278,9 +265,20 @@ const store = {
     return true;
   },
 
-  async searchMessages(query, channelId = null) {
+  async searchMessages(query, channelId = null, userId) {
+    const userChannels = await ChannelModel.find({ members: userId }).select('_id');
+    const allowedChannelIds = userChannels.map(c => c._id);
+
     const filter = { $text: { $search: query } };
-    if (channelId) filter.conversation = channelId;
+    if (channelId) {
+      if (!allowedChannelIds.some(id => id.toString() === channelId.toString())) {
+        return [];
+      }
+      filter.conversation = channelId;
+    } else {
+      filter.conversation = { $in: allowedChannelIds };
+    }
+
     const msgs = await MessageModel.find(filter, { score: { $meta: 'textScore' } })
       .populate('sender', 'username avatar')
       .sort({ score: { $meta: 'textScore' } })
@@ -289,7 +287,11 @@ const store = {
     // Fallback to regex if no results (for substring matches)
     if (msgs.length === 0) {
       const fallbackFilter = { content: { $regex: query, $options: 'i' } };
-      if (channelId) fallbackFilter.conversation = channelId;
+      if (channelId) {
+         fallbackFilter.conversation = channelId;
+      } else {
+         fallbackFilter.conversation = { $in: allowedChannelIds };
+      }
       const regexMsgs = await MessageModel.find(fallbackFilter)
         .populate('sender', 'username avatar')
         .sort({ createdAt: -1 })

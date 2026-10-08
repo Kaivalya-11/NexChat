@@ -28,6 +28,14 @@ router.get('/:channelId', authMiddleware, async (req, res) => {
 // Get threaded replies for a specific message
 router.get('/thread/:parentId', authMiddleware, async (req, res) => {
   try {
+    const msg = await store.getMessageById(req.params.parentId);
+    if (!msg) return res.status(404).json({ error: 'Message not found' });
+    
+    const chan = await store.getChannelById(msg.channelId);
+    if (!chan || !chan.members.includes(req.user.id)) {
+      return res.status(403).json({ error: 'Access denied to this thread' });
+    }
+
     const replies = await store.getThreadReplies(req.params.parentId);
     res.json(replies);
   } catch (err) {
@@ -42,7 +50,7 @@ router.get('/search/all', authMiddleware, async (req, res) => {
     if (!q || q.trim().length === 0) {
       return res.json([]);
     }
-    const results = await store.searchMessages(q.trim(), channelId || null);
+    const results = await store.searchMessages(q.trim(), channelId || null, req.user.id);
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: 'Search failed' });

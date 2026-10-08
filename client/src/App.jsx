@@ -1,9 +1,10 @@
 "use client";
 import React from 'react';
+import { RiMenuLine, RiMessage3Fill } from 'react-icons/ri';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
-import { ChatProvider } from './context/ChatContext';
+import { ChatProvider, useChat } from './context/ChatContext';
 import { CallProvider } from './context/CallContext';
 import VideoCallModal from './components/Chat/VideoCallModal';
 import AuthModal from './components/Auth/AuthModal';
@@ -27,6 +28,8 @@ function ChatLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = React.useState(false);
   const [theme, setTheme] = React.useState(localStorage.getItem('chat_theme') || 'dark');
+  
+  const { activeChannelId } = useChat();
 
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -72,26 +75,43 @@ function ChatLayout() {
       </AnimatePresence>
 
       <main className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        <ChatHeader 
-           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-           onToggleMembers={() => setIsMemberDrawerOpen(!isMemberDrawerOpen)} 
-           onOpenSearch={() => setIsSearchModalOpen(true)}
-           onToggleNotifications={() => setIsNotificationDrawerOpen(!isNotificationDrawerOpen)}
-        />
-        <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
-           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, minWidth: 0 }}>
-               <MessageList />
-               <MessageInput />
-           </div>
-           
-           <AnimatePresence>
-             {isMemberDrawerOpen && <MemberDrawer key="member-drawer" onClose={() => setIsMemberDrawerOpen(false)} />}
-           </AnimatePresence>
-           
-           <AnimatePresence>
-             {isNotificationDrawerOpen && <NotificationDrawer key="notif-drawer" onClose={() => setIsNotificationDrawerOpen(false)} />}
-           </AnimatePresence>
-        </div>
+        {activeChannelId ? (
+          <>
+            <ChatHeader 
+               onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+               onToggleMembers={() => setIsMemberDrawerOpen(!isMemberDrawerOpen)} 
+               onOpenSearch={() => setIsSearchModalOpen(true)}
+               onToggleNotifications={() => setIsNotificationDrawerOpen(!isNotificationDrawerOpen)}
+            />
+            <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
+               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, minWidth: 0 }}>
+                   <MessageList />
+                   <MessageInput />
+               </div>
+               
+               <AnimatePresence>
+                 {isMemberDrawerOpen && <MemberDrawer key="member-drawer" onClose={() => setIsMemberDrawerOpen(false)} />}
+               </AnimatePresence>
+               
+               <AnimatePresence>
+                 {isNotificationDrawerOpen && <NotificationDrawer key="notif-drawer" onClose={() => setIsNotificationDrawerOpen(false)} />}
+               </AnimatePresence>
+            </div>
+          </>
+        ) : (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', backgroundColor: 'var(--bg-darkest)' }}>
+             <button className="btn-icon mobile-only" onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ position: 'absolute', top: '16px', left: '16px', padding: '8px', backgroundColor: 'var(--bg-card)' }}>
+               <RiMenuLine size={24} color="var(--text-main)" />
+             </button>
+             <div style={{ width: '100%', maxWidth: '400px', textAlign: 'center', padding: '32px', backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
+                <RiMessage3Fill size={64} color="var(--border-highlight)" style={{ marginBottom: '24px' }} />
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '12px', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>No conversations yet</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, fontFamily: 'var(--font-body)' }}>
+                   Create a channel or join a conversation to get started.
+                </p>
+             </div>
+          </div>
+        )}
       </main>
 
       <AnimatePresence>

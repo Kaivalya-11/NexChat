@@ -4,7 +4,7 @@ import { useChat } from '../../context/ChatContext';
 import { useSocket } from '../../context/SocketContext';
 import { useAuth } from '../../context/AuthContext';
 import * as api from '../../services/api';
-import { RiCloseLine, RiUserAddFill, RiUserMinusFill, RiVipCrownFill, RiShieldUserFill } from 'react-icons/ri';
+import { RiCloseLine, RiUserAddFill, RiUserMinusFill, RiVipCrownFill, RiShieldUserFill, RiGroupFill } from 'react-icons/ri';
 
 export default function MemberDrawer({ onClose }) {
   const { channels, activeChannelId, refreshChannels } = useChat();
@@ -169,6 +169,13 @@ export default function MemberDrawer({ onClose }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          {membersData.length === 0 && (
+             <div style={{ padding: '32px 16px', textAlign: 'center', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+               <RiGroupFill size={48} style={{ color: 'var(--border-highlight)', marginBottom: '16px' }} />
+               <span style={{ fontWeight: 600, color: 'var(--text-main)', marginBottom: '8px', fontSize: '1.05rem', fontFamily: 'var(--font-heading)' }}>No members</span>
+               <span style={{ fontSize: '0.9rem' }}>This channel doesn't have any members yet.</span>
+             </div>
+          )}
           {membersData.map((member, idx) => {
             const presence = onlineUsers.get(member.id);
             const isOnline = presence?.status === 'online' || member.status === 'online';

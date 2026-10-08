@@ -98,19 +98,19 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
           onClick={() => setPreviewMedia({ url: mediaItem.url, fileName: mediaItem.fileName || 'Photo', fileType: 'image', fileSize: mediaItem.fileSize })}
           style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', backgroundColor: '#000', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '4px' }}
         >
-          <img src={mediaItem.url} alt={mediaItem.fileName} style={{ maxWidth: '320px', maxHeight: '400px', width: 'auto', height: 'auto', borderRadius: '2px', display: 'block', objectFit: 'contain' }} />
+          <img src={mediaItem.url} alt={mediaItem.fileName} style={{ maxWidth: '100%', maxHeight: '400px', width: 'auto', height: 'auto', borderRadius: '2px', display: 'block', objectFit: 'contain' }} />
         </motion.div>
       );
     } else if (mediaItem.fileType === 'audio') {
       return (
         <div key={mediaItem.url} style={{ marginTop: isMediaOnly ? '2px' : '8px', padding: '8px 12px', background: 'var(--bg-card)', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid var(--border-color)' }}>
-          <audio controls src={mediaItem.url} style={{ height: '32px', width: '240px' }} />
+          <audio controls src={mediaItem.url} style={{ height: '32px', width: '100%', maxWidth: '240px' }} />
         </div>
       );
     } else if (isVideo) {
       return (
         <motion.div key={mediaItem.url} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} style={{ marginTop: isMediaOnly ? '2px' : '8px', cursor: 'pointer', backgroundColor: '#000', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '4px' }} onClick={() => setPreviewMedia({ url: mediaItem.url, fileName: mediaItem.fileName || 'Video', fileType: 'video', fileSize: mediaItem.fileSize })}>
-          <video src={mediaItem.url} style={{ maxWidth: '320px', maxHeight: '300px', borderRadius: '2px', backgroundColor: '#000', display: 'block' }} />
+          <video src={mediaItem.url} style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '2px', backgroundColor: '#000', display: 'block' }} />
         </motion.div>
       );
     } else {
@@ -118,7 +118,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         <div
           key={mediaItem.url}
           onClick={() => setPreviewMedia({ url: mediaItem.url, fileName: mediaItem.fileName || 'Document', fileType: 'document', fileSize: mediaItem.fileSize })}
-          style={{ marginTop: isMediaOnly ? '2px' : '8px', padding: '12px', background: 'var(--bg-card)', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', color: 'var(--text-main)', border: '1px solid var(--border-color)', maxWidth: '320px' }}
+          style={{ marginTop: isMediaOnly ? '2px' : '8px', padding: '12px', background: 'var(--bg-card)', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', color: 'var(--text-main)', border: '1px solid var(--border-color)', maxWidth: '100%' }}
         >
           <div style={{ background: 'var(--bg-darkest)', border: '1px solid var(--border-color)', padding: '8px', borderRadius: '8px', color: 'var(--accent-primary)' }}>
             <RiFileTextFill size={24} />
@@ -154,7 +154,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
       catch (e) { contactData = { name: message.content }; }
 
       return (
-        <div style={{ marginTop: '6px', width: '280px', backgroundColor: 'var(--bg-darker)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
+        <div style={{ marginTop: '6px', maxWidth: '280px', width: '100%', backgroundColor: 'var(--bg-darker)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
           <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid var(--border-color)' }}>
             <img src={contactData.avatar || `https://ui-avatars.com/api/?name=${contactData.name || 'Contact'}`} alt={contactData.name} style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }} />
             <div style={{ flex: 1, overflow: 'hidden' }}>
@@ -205,7 +205,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         display: 'flex',
         gap: '8px',
         flexDirection: isOwn ? 'row-reverse' : 'row',
-        maxWidth: selectionMode ? 'calc(75% - 40px)' : '75%',
+        maxWidth: selectionMode ? 'calc(85% - 40px)' : '85%',
         position: 'relative'
       }}
       onClick={(e) => {
@@ -323,7 +323,9 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
               fontSize: '14px',
               lineHeight: '1.5',
               wordBreak: 'break-word',
-              whiteSpace: 'pre-wrap'
+              overflowWrap: 'anywhere',
+              whiteSpace: 'pre-wrap',
+              overflowX: 'auto'
             }}
             dangerouslySetInnerHTML={{ __html: formatMessageText(message.content) }}
           />

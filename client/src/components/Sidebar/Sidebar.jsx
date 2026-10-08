@@ -108,8 +108,19 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
               <RiAddFill size={16} />
             </motion.button>
           </div>
-
-          {groupChannels.map(c => {
+          
+          {groupChannels.length === 0 ? (
+            <div style={{ padding: '20px 12px', textAlign: 'center', color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '0.85rem', marginBottom: '12px', lineHeight: '1.4' }}>You aren't in any channels yet.</p>
+              <button 
+                onClick={() => setShowCreateChannel(true)}
+                style={{ background: 'var(--accent-primary)', color: 'var(--bg-darkest)', border: 'none', padding: '8px 16px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+              >
+                Create Channel
+              </button>
+            </div>
+          ) : (
+            groupChannels.map(c => {
             const isActive = activeChannelId === c.id;
             const hasUnread = unreadCounts[c.id] && !isActive;
 
@@ -171,7 +182,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                 )}
               </motion.div>
             );
-          })}
+          }))}
         </div>
 
         <div>
@@ -188,7 +199,18 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
             </motion.button>
           </div>
 
-          {dmChannels.map(c => {
+          {dmChannels.length === 0 ? (
+            <div style={{ padding: '20px 12px', textAlign: 'center', color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '0.85rem', marginBottom: '12px', lineHeight: '1.4' }}>No direct messages yet.</p>
+              <button 
+                onClick={() => setShowStartDM(true)}
+                style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border-color)', padding: '8px 16px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+              >
+                Start a Chat
+              </button>
+            </div>
+          ) : (
+            dmChannels.map(c => {
             const isActive = activeChannelId === c.id;
             const status = getDMOtherUserStatus(c);
             const hasUnread = unreadCounts[c.id] && !isActive;
@@ -261,7 +283,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                 )}
               </motion.div>
             );
-          })}
+          }))}
         </div>
 
       </div>

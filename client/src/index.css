@@ -226,7 +226,7 @@ body, html {
 
   /* Input area mobile padding */
   .message-input-container {
-    padding: 0 10px 12px 10px !important;
+    padding: 0 10px calc(12px + env(safe-area-inset-bottom)) 10px !important;
   }
 
   /* Modal responsiveness */
