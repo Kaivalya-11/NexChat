@@ -419,6 +419,33 @@ const store = {
     return { messageId: messageId.toString(), channelId: msg.conversation.toString() };
   },
 
+  async getOrCreateDM(user1Id, user2Id) {
+    if (user1Id === user2Id) return null;
+    let channel = await ChannelModel.findOne({
+      isGroup: false,
+      members: { $all: [user1Id, user2Id], $size: 2 }
+    }).populate('members');
+    
+    if (!channel) {
+      const u1 = await UserModel.findById(user1Id);
+      const u2 = await UserModel.findById(user2Id);
+      if (!u1 || !u2) return null;
+      
+      channel = new ChannelModel({
+        name: `DM: ${u1.username} & ${u2.username}`,
+        isGroup: false,
+        members: [user1Id, user2Id],
+        admins: [user1Id, user2Id]
+      });
+      await channel.save();
+      channel = await ChannelModel.findById(channel._id).populate('members');
+    }
+    
+    const formatted = formatChannel(channel);
+    formatted.membersData = channel.members.map(m => formatPublicUser(m));
+    return formatted;
+  },
+
   async deleteChannel(channelId, userId) {
     const channel = await ChannelModel.findById(channelId);
     if (!channel) return null;

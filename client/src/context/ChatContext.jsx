@@ -120,15 +120,18 @@ export function ChatProvider({ children }) {
       });
     };
 
-    const handleUserTyping = ({ userId, channelId }) => {
-      setTypingUsers(prev => ({ ...prev, [channelId]: new Set(prev[channelId]).add(userId) }));
+    const handleUserTyping = ({ userId, username, channelId }) => {
+      setTypingUsers(prev => ({ 
+        ...prev, 
+        [channelId]: { ...(prev[channelId] || {}), [userId]: username }
+      }));
     };
 
     const handleUserStopTyping = ({ userId, channelId }) => {
       setTypingUsers(prev => {
         if (!prev[channelId]) return prev;
-        const current = new Set(prev[channelId]);
-        current.delete(userId);
+        const current = { ...prev[channelId] };
+        delete current[userId];
         return { ...prev, [channelId]: current };
       });
     };

@@ -12,7 +12,7 @@ import {
 
 export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSearch, onToggleTheme, logout, getStatusColor }) {
   return (
-    <div style={{ padding: '12px' }}>
+    <div style={{ padding: '12px', marginTop: 'auto' }}>
       <div style={{
         backgroundColor: 'var(--bg-darkest, #0a0a0a)',
         borderRadius: '16px',

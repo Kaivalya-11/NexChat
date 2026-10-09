@@ -252,8 +252,10 @@ export default function MediaPreviewModal() {
                 autoPlay
                 src={url}
                 style={{
-                  width: '100%',
+                  width: 'auto',
+                  maxWidth: '90vw',
                   maxHeight: '75vh',
+                  objectFit: 'contain',
                   borderRadius: '16px',
                   backgroundColor: '#000',
                   boxShadow: '0 20px 60px rgba(0,0,0,0.8)',

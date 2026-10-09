@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { RiCamera3Fill, RiCloseLine } from 'react-icons/ri';
+import { RiCamera3Fill, RiCloseLine, RiCameraSwitchLine } from 'react-icons/ri';
 import * as api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -10,9 +10,15 @@ export default function CameraModal({ onClose, onAttach }) {
   const [capturedImage, setCapturedImage] = useState(null);
   const [cameraErr, setCameraErr] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [facingMode, setFacingMode] = useState('user');
 
   useEffect(() => {
-    navigator.mediaDevices?.getUserMedia({ video: true })
+    // Stop any existing stream before requesting a new one
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+    }
+    
+    navigator.mediaDevices?.getUserMedia({ video: { facingMode } })
       .then(stream => {
         setCameraStream(stream);
         if (videoRef.current) {
@@ -25,10 +31,10 @@ export default function CameraModal({ onClose, onAttach }) {
 
     return () => {
       if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
+         cameraStream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [facingMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const snapPhoto = () => {
     if (videoRef.current) {
@@ -71,9 +77,16 @@ export default function CameraModal({ onClose, onAttach }) {
           <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <RiCamera3Fill size={20} style={{ color: '#ff2d55' }} /> Take Photo
           </h3>
-          <button className="btn-icon" onClick={onClose}>
-            <RiCloseLine size={22} />
-          </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {!capturedImage && (
+              <button className="btn-icon" onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')} title="Switch Camera">
+                <RiCameraSwitchLine size={22} />
+              </button>
+            )}
+            <button className="btn-icon" onClick={onClose}>
+              <RiCloseLine size={22} />
+            </button>
+          </div>
         </div>
 
         {cameraErr ? (

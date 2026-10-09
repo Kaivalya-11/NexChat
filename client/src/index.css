@@ -181,6 +181,19 @@ html {
     max-width: 85vw;
     transform: translateX(-100%);
     box-shadow: none;
+    z-index: 100;
+  }
+  
+  .emoji-picker-wrapper {
+    position: fixed !important;
+    bottom: 80px !important;
+    right: 50% !important;
+    transform: translateX(50%) !important;
+    z-index: 1000 !important;
+  }
+  .emoji-picker-wrapper aside {
+    width: 90vw !important;
+    max-width: 350px !important;
   }
 
   .sidebar-container.open {

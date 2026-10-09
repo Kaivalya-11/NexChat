@@ -104,7 +104,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
     } else if (mediaItem.fileType === 'audio') {
       return (
         <div key={mediaItem.url} style={{ marginTop: isMediaOnly ? '2px' : '8px', padding: '4px', background: 'var(--bg-card)', borderRadius: '30px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid var(--border-color)' }}>
-          <audio controls src={mediaItem.url} style={{ height: '54px', width: '100%', minWidth: '260px', borderRadius: '24px' }} />
+          <audio controls src={mediaItem.url} style={{ height: '54px', width: '100%', minWidth: '200px', maxWidth: '100%', borderRadius: '24px' }} />
         </div>
       );
     } else if (isVideo) {
@@ -414,10 +414,10 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
           zIndex: 50
         }}
       >
-        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={() => handleReaction('👍')}>
+        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('👍'); setShowActions(false); }}>
           <span>👍</span>
         </motion.button>
-        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={() => handleReaction('❤️')}>
+        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('❤️'); setShowActions(false); }}>
           <span>❤️</span>
         </motion.button>
         
@@ -431,7 +431,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
                 style={{ position: 'fixed', inset: 0, zIndex: 90 }} 
                 onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setShowEmojiPicker(false); setShowActions(false); }} 
               />
-              <div style={{ position: 'absolute', bottom: '100%', right: '-50px', zIndex: 100, marginBottom: '8px' }} onMouseDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
+              <div className="emoji-picker-wrapper" style={{ position: 'absolute', bottom: '100%', right: '-50px', zIndex: 100, marginBottom: '8px' }} onMouseDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
                 <EmojiPicker 
                   onEmojiClick={(emojiObj) => {
                     handleReaction(emojiObj.emoji);
@@ -483,7 +483,8 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
             whileTap={{ scale: 0.9 }}
             className="btn-icon"
             style={{ padding: '6px', color: 'rgba(239,68,68,0.85)' }}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setShowActions(false);
               setConfirmConfig({
                 title: 'Delete Message',

@@ -62,7 +62,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
   const channelId = activeChannelId;
   const currentChannel = channels?.find(c => c.id === channelId);
   
-  const channelTypers = typingUsers[channelId] ? Array.from(typingUsers[channelId]) : [];
+  const channelTypers = typingUsers[channelId] ? Object.values(typingUsers[channelId]) : [];
   const showTyping = !isThread && channelTypers.length > 0;
 
   const handleTyping = (e) => {
@@ -206,13 +206,13 @@ export default function MessageInput({ isThread = false, threadParentId = null }
   return (
     <div className="message-input-container" style={{ padding: '0 16px 16px 16px', position: 'relative' }}>
       {showTyping && (
-        <div style={{ position: 'absolute', top: '-28px', left: '16px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: 'var(--text-muted)', zIndex: 10 }}>
+        <div style={{ position: 'absolute', top: '-36px', left: '16px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: 'var(--text-muted)', zIndex: 10, background: 'var(--bg-darkest)', padding: '4px 12px', borderRadius: '12px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
           <div className="typing-dots">
             <span className="typing-dot"></span>
             <span className="typing-dot"></span>
             <span className="typing-dot"></span>
           </div>
-          <span>{channelTypers.length === 1 ? 'Someone is typing...' : 'Several people are typing...'}</span>
+          <span>{channelTypers.length === 1 ? `${channelTypers[0]} is typing...` : `${channelTypers.length} people are typing...`}</span>
         </div>
       )}
 
@@ -470,7 +470,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
               <RiEmotionHappyLine size={22} />
             </button>
             {showEmojiPicker && (
-              <div style={{ position: 'absolute', bottom: '100%', right: 0, zIndex: 50, marginBottom: '8px' }}>
+              <div className="emoji-picker-wrapper" style={{ position: 'absolute', bottom: '100%', right: '-10px', zIndex: 50, marginBottom: '8px' }}>
                 <EmojiPicker onEmojiClick={(emojiObj) => {
                   setContent(prev => prev + emojiObj.emoji);
                   setShowEmojiPicker(false);
