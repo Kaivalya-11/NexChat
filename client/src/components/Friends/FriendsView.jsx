@@ -191,7 +191,7 @@ export default function FriendsView() {
                       <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '1.05rem' }}>{r.user.username}</div>
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <button onClick={() => handleAcceptRequest(r.id)} className="btn-icon" style={{ backgroundColor: 'var(--accent-success)', color: 'white', padding: '8px', borderRadius: '50%' }}>
+                      <button onClick={() => handleAcceptRequest(r.id)} className="btn-icon" style={{ backgroundColor: 'var(--accent-success)', color: 'var(--bg-darkest)', padding: '8px', borderRadius: '50%' }}>
                         <RiCheckLine size={20} />
                       </button>
                       <button onClick={() => handleDeclineRequest(r.id)} className="btn-icon" style={{ backgroundColor: 'var(--bg-darker)', color: 'var(--accent-danger)', padding: '8px', borderRadius: '50%' }}>
