@@ -64,6 +64,71 @@ export async function getAllUsers(token) {
   return await res.json();
 }
 
+export async function getFriends(token) {
+  const res = await fetch(`${API_BASE}/friends`, {
+    headers: getHeaders(token)
+  });
+  if (!res.ok) throw new Error('Failed to fetch friends');
+  return await res.json();
+}
+
+export async function getFriendRequests(token) {
+  const res = await fetch(`${API_BASE}/friends/requests`, {
+    headers: getHeaders(token)
+  });
+  if (!res.ok) throw new Error('Failed to fetch friend requests');
+  return await res.json();
+}
+
+export async function searchUsersForFriends(token, query) {
+  const res = await fetch(`${API_BASE}/friends/search?q=${encodeURIComponent(query)}`, {
+    headers: getHeaders(token)
+  });
+  if (!res.ok) throw new Error('Failed to search users');
+  return await res.json();
+}
+
+export async function sendFriendRequest(token, toUserId) {
+  const res = await fetch(`${API_BASE}/friends/requests`, {
+    method: 'POST',
+    headers: getHeaders(token),
+    body: JSON.stringify({ to: toUserId })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to send request');
+  return data;
+}
+
+export async function acceptFriendRequest(token, requestId) {
+  const res = await fetch(`${API_BASE}/friends/requests/${requestId}/accept`, {
+    method: 'POST',
+    headers: getHeaders(token)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to accept request');
+  return data;
+}
+
+export async function declineFriendRequest(token, requestId) {
+  const res = await fetch(`${API_BASE}/friends/requests/${requestId}`, {
+    method: 'DELETE',
+    headers: getHeaders(token)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to decline request');
+  return data;
+}
+
+export async function removeFriend(token, friendId) {
+  const res = await fetch(`${API_BASE}/friends/${friendId}`, {
+    method: 'DELETE',
+    headers: getHeaders(token)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to remove friend');
+  return data;
+}
+
 export async function getChannels(token) {
   const res = await fetch(`${API_BASE}/channels`, {
     headers: getHeaders(token)

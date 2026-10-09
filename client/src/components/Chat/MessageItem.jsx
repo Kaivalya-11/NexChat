@@ -103,8 +103,8 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
       );
     } else if (mediaItem.fileType === 'audio') {
       return (
-        <div key={mediaItem.url} style={{ marginTop: isMediaOnly ? '2px' : '8px', padding: '8px 12px', background: 'var(--bg-card)', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid var(--border-color)' }}>
-          <audio controls src={mediaItem.url} style={{ height: '32px', width: '100%', maxWidth: '240px' }} />
+        <div key={mediaItem.url} style={{ marginTop: isMediaOnly ? '2px' : '8px', padding: '4px', background: 'var(--bg-card)', borderRadius: '30px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid var(--border-color)' }}>
+          <audio controls src={mediaItem.url} style={{ height: '54px', width: '100%', minWidth: '260px', borderRadius: '24px' }} />
         </div>
       );
     } else if (isVideo) {

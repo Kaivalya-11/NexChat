@@ -13,7 +13,8 @@ import {
   RiLogoutBoxRFill,
   RiSunFill,
   RiMoonClearFill,
-  RiDeleteBin6Line
+  RiDeleteBin6Line,
+  RiUserSmileFill
 } from 'react-icons/ri';
 import CreateChannelModal from './CreateChannelModal';
 import StartDMModal from './StartDMModal';
@@ -94,8 +95,30 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px 12px' }}>
-
+      
         <div style={{ marginBottom: '24px' }}>
+          <motion.div
+            onClick={() => handleSelect('friends')}
+            whileHover={{ x: 2 }}
+            whileTap={{ scale: 0.98 }}
+            className="channel-sidebar-item"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-md)',
+              cursor: 'pointer',
+              background: activeChannelId === 'friends' ? 'var(--bg-card)' : 'transparent',
+              border: activeChannelId === 'friends' ? '1px solid var(--border-color)' : '1px solid transparent',
+              color: activeChannelId === 'friends' ? 'var(--text-main)' : 'var(--text-muted)',
+              marginBottom: '12px'
+            }}
+          >
+            <RiUserSmileFill size={20} />
+            <span style={{ fontWeight: 600, fontSize: '15px' }}>Friends</span>
+          </motion.div>
+
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px', marginBottom: '10px' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.08em' }}>CHANNELS</span>
             <motion.button

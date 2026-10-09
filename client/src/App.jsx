@@ -19,6 +19,7 @@ import SearchModal from './components/UI/SearchModal';
 import ProfileModal from './components/Auth/ProfileModal';
 import NotificationDrawer from './components/UI/NotificationDrawer';
 import MediaPreviewModal from './components/UI/MediaPreviewModal';
+import FriendsView from './components/Friends/FriendsView';
 
 function ChatLayout() {
   const { user } = useAuth();
@@ -75,7 +76,9 @@ function ChatLayout() {
       </AnimatePresence>
 
       <main className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        {activeChannelId ? (
+        {activeChannelId === 'friends' ? (
+          <FriendsView />
+        ) : activeChannelId ? (
           <>
             <ChatHeader 
                onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}

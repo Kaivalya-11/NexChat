@@ -16,8 +16,9 @@ export default function CreateChannelModal({ onClose }) {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    api.getAllUsers(token)
-      .then(data => setUsers(data.filter(u => u.id !== user.id)))
+    api.getFriends(token)
+      .then(data => setUsers(data))
+      .catch(err => console.error("Failed to load friends", err))
       .finally(() => setLoading(false));
   }, [token, user.id]);
 
@@ -104,7 +105,9 @@ export default function CreateChannelModal({ onClose }) {
             <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Add Members</label>
             <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '4px' }}>
               {loading ? (
-                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading users...</div>
+                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading friends...</div>
+              ) : users.length === 0 ? (
+                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-muted)' }}>You don't have any friends yet to add to this channel.</div>
               ) : users.map(u => (
                 <motion.div 
                   key={u.id}

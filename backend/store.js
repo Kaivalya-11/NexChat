@@ -9,6 +9,13 @@ const UserSchema = new mongoose.Schema({
   statusText: { type: String, default: 'Available' },
   status: { type: String, enum: ['online', 'offline', 'away', 'dnd'], default: 'offline' },
   lastSeen: { type: Date, default: Date.now },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  createdAt: { type: Date, default: Date.now }
+});
+
+const FriendRequestSchema = new mongoose.Schema({
+  from: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  to: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -52,6 +59,7 @@ MessageSchema.index({ content: 'text' });
 const UserModel = mongoose.model('User', UserSchema);
 const ChannelModel = mongoose.model('Channel', ChannelSchema);
 const MessageModel = mongoose.model('Message', MessageSchema);
+const FriendRequestModel = mongoose.model('FriendRequest', FriendRequestSchema);
 
 const PRESET_AVATARS = [
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80',
@@ -122,7 +130,80 @@ const store = {
   async getAllUsers() {
     const demoUsernames = [/alice/i, /bob/i, /charlie/i, /sarah/i];
     const users = await UserModel.find({ username: { $nin: demoUsernames } }, { password: 0 });
-    return users.map(formatUser);
+    return users.map(formatPublicUser);
+  },
+
+  async searchUsers(query, currentUserId) {
+    const users = await UserModel.find({
+      _id: { $ne: currentUserId },
+      username: { $regex: new RegExp(query, 'i') }
+    }, { password: 0 }).limit(20);
+    return users.map(formatPublicUser);
+  },
+
+  async getFriends(userId) {
+    const user = await UserModel.findById(userId).populate('friends', 'username avatar status statusText');
+    if (!user) return [];
+    return user.friends.map(f => ({
+      id: f._id.toString(),
+      username: f.username,
+      avatar: f.avatar,
+      status: f.status,
+      statusText: f.statusText
+    }));
+  },
+
+  async getFriendRequests(userId) {
+    const incoming = await FriendRequestModel.find({ to: userId }).populate('from', 'username avatar');
+    const outgoing = await FriendRequestModel.find({ from: userId }).populate('to', 'username avatar');
+    return {
+      incoming: incoming.map(r => ({ id: r._id.toString(), user: { id: r.from._id.toString(), username: r.from.username, avatar: r.from.avatar } })),
+      outgoing: outgoing.map(r => ({ id: r._id.toString(), user: { id: r.to._id.toString(), username: r.to.username, avatar: r.to.avatar } }))
+    };
+  },
+
+  async sendFriendRequest(fromId, toId) {
+    if (fromId.toString() === toId.toString()) throw new Error("Cannot send request to yourself");
+    const user = await UserModel.findById(fromId);
+    if (user.friends.includes(toId)) throw new Error("Already friends");
+    
+    const existing = await FriendRequestModel.findOne({
+      $or: [
+        { from: fromId, to: toId },
+        { from: toId, to: fromId }
+      ]
+    });
+    if (existing) throw new Error("Friend request already exists");
+    
+    const req = await FriendRequestModel.create({ from: fromId, to: toId });
+    return req;
+  },
+
+  async acceptFriendRequest(requestId, userId) {
+    const req = await FriendRequestModel.findById(requestId);
+    if (!req) throw new Error("Request not found");
+    if (req.to.toString() !== userId.toString()) throw new Error("Unauthorized");
+    
+    await UserModel.findByIdAndUpdate(req.from, { $addToSet: { friends: req.to } });
+    await UserModel.findByIdAndUpdate(req.to, { $addToSet: { friends: req.from } });
+    
+    await FriendRequestModel.findByIdAndDelete(requestId);
+    return true;
+  },
+
+  async declineFriendRequest(requestId, userId) {
+    const req = await FriendRequestModel.findById(requestId);
+    if (!req) throw new Error("Request not found");
+    if (req.to.toString() !== userId.toString() && req.from.toString() !== userId.toString()) throw new Error("Unauthorized");
+    
+    await FriendRequestModel.findByIdAndDelete(requestId);
+    return true;
+  },
+  
+  async removeFriend(userId, friendId) {
+    await UserModel.findByIdAndUpdate(userId, { $pull: { friends: friendId } });
+    await UserModel.findByIdAndUpdate(friendId, { $pull: { friends: userId } });
+    return true;
   },
 
   async getChannelsForUser(userId) {
@@ -382,6 +463,20 @@ function formatUser(doc) {
     username: obj.username,
     email: obj.email,
     password: obj.password,
+    avatar: obj.avatar,
+    statusText: obj.statusText,
+    status: obj.status,
+    lastSeen: obj.lastSeen,
+    friends: obj.friends ? obj.friends.map(f => typeof f === 'object' && f._id ? f._id.toString() : f.toString()) : [],
+    createdAt: obj.createdAt
+  };
+}
+
+function formatPublicUser(doc) {
+  const obj = doc.toObject ? doc.toObject() : doc;
+  return {
+    id: obj._id.toString(),
+    username: obj.username,
     avatar: obj.avatar,
     statusText: obj.statusText,
     status: obj.status,

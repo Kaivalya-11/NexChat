@@ -70,7 +70,7 @@ export function ChatProvider({ children }) {
   };
 
   useEffect(() => {
-    if (activeChannelId) {
+    if (activeChannelId && activeChannelId !== 'friends') {
       if (socket) socket.emit('join-channel', activeChannelId);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       loadMessages(activeChannelId);

@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const channelsRoutes = require('./routes/channels');
 const messagesRoutes = require('./routes/messages');
 const uploadRoutes = require('./routes/upload');
+const friendsRoutes = require('./routes/friends');
 const store = require('./store');
 
 const expressApp = express();
@@ -19,9 +20,16 @@ async function startServer() {
 
   const CLIENT_URL = process.env.CLIENT_URL || '*';
 
+  const corsOptions = {
+    origin: function (origin, callback) {
+      callback(null, true); // reflect origin
+    },
+    credentials: true
+  };
+
   const io = new Server(server, {
     cors: {
-      origin: CLIENT_URL,
+      origin: true,
       methods: ['GET', 'POST'],
       credentials: true
     }
@@ -29,10 +37,7 @@ async function startServer() {
 
   initSocket(io);
 
-  expressApp.use(cors({
-    origin: CLIENT_URL,
-    credentials: true
-  }));
+  expressApp.use(cors(corsOptions));
 
   expressApp.use(express.json());
 
@@ -40,6 +45,7 @@ async function startServer() {
   expressApp.use('/api/channels', channelsRoutes);
   expressApp.use('/api/messages', messagesRoutes);
   expressApp.use('/api/upload', uploadRoutes);
+  expressApp.use('/api/friends', friendsRoutes);
 
   expressApp.use('/uploads', express.static('./public/uploads'));
 
