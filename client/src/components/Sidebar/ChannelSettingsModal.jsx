@@ -20,13 +20,13 @@ export default function ChannelSettingsModal({ channel, onClose }) {
       try {
         const users = await api.getAllUsers(token);
         const channelMembers = users.filter(u => channel.members.includes(u.id));
-        
+
         // Also include the current user if they are in the channel, because getAllUsers might filter out the current user
         if (channel.members.includes(user.id)) {
-           const isAlreadyIncluded = channelMembers.some(u => u.id === user.id);
-           if (!isAlreadyIncluded) {
-              channelMembers.unshift(user);
-           }
+          const isAlreadyIncluded = channelMembers.some(u => u.id === user.id);
+          if (!isAlreadyIncluded) {
+            channelMembers.unshift(user);
+          }
         }
         setMembers(channelMembers);
       } catch (err) {
@@ -41,7 +41,7 @@ export default function ChannelSettingsModal({ channel, onClose }) {
   const handleDelete = () => {
     const isOwner = channel.owner === user.id;
     const actionText = (channel.isGroup && !isAdmin && !isOwner) ? 'leave' : 'delete';
-    
+
     setConfirmConfig({
       title: `${actionText === 'leave' ? 'Leave' : 'Delete'} Channel`,
       message: `Are you sure you want to ${actionText} #${channel.name}?`,
@@ -68,17 +68,17 @@ export default function ChannelSettingsModal({ channel, onClose }) {
   };
 
   return (
-    <motion.div 
-      className="modal-overlay" 
+    <motion.div
+      className="modal-overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       onClick={onClose}
     >
-      <motion.div 
-        className="modal-content" 
-        style={{ padding: '24px', maxWidth: '400px', width: '100%', maxHeight: '80vh', overflowY: 'auto' }} 
+      <motion.div
+        className="modal-content"
+        style={{ padding: '24px', maxWidth: '400px', width: '100%', maxHeight: '80vh', overflowY: 'auto' }}
         initial={{ scale: 0.9, opacity: 0, y: 15 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 10 }}
@@ -86,11 +86,11 @@ export default function ChannelSettingsModal({ channel, onClose }) {
         onClick={e => e.stopPropagation()}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-           <h2 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-             <RiHashtag size={20} color="var(--accent-primary)" />
-             Channel Settings
-           </h2>
-           <button className="btn-icon" onClick={onClose}><RiCloseLine size={22}/></button>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <RiHashtag size={20} color="var(--accent-primary)" />
+            Channel Settings
+          </h2>
+          <button className="btn-icon" onClick={onClose}><RiCloseLine size={22} /></button>
         </div>
 
         <div style={{ marginBottom: '24px' }}>
@@ -113,7 +113,7 @@ export default function ChannelSettingsModal({ channel, onClose }) {
               {members.map(m => {
                 const isMemberAdmin = channel.admins?.includes(m.id);
                 const isMemberOwner = channel.owner === m.id;
-                
+
                 return (
                   <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', background: 'var(--bg-darkest)', borderRadius: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -127,10 +127,10 @@ export default function ChannelSettingsModal({ channel, onClose }) {
                         </span>
                       )}
                     </div>
-                    
+
                     {isAdmin && m.id !== user.id && !isMemberOwner && (
-                      <button 
-                        className="btn-icon" 
+                      <button
+                        className="btn-icon"
                         style={{ fontSize: '0.75rem', padding: '4px 8px', borderRadius: '6px', background: isMemberAdmin ? 'rgba(239, 68, 68, 0.1)' : 'rgba(20, 184, 166, 0.1)', color: isMemberAdmin ? '#ef4444' : 'var(--accent-primary)' }}
                         onClick={() => handleToggleAdmin(m.id, isMemberAdmin)}
                       >
@@ -146,12 +146,12 @@ export default function ChannelSettingsModal({ channel, onClose }) {
 
         <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
           <h3 style={{ color: 'var(--text-main)', fontSize: '1rem', marginBottom: '12px' }}>Danger Zone</h3>
-          <button 
-            className="btn" 
-            style={{ 
-              width: '100%', 
-              backgroundColor: 'rgba(239, 68, 68, 0.1)', 
-              color: '#ef4444', 
+          <button
+            className="btn"
+            style={{
+              width: '100%',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              color: '#ef4444',
               border: '1px solid rgba(239, 68, 68, 0.2)',
               display: 'flex',
               alignItems: 'center',
@@ -166,7 +166,7 @@ export default function ChannelSettingsModal({ channel, onClose }) {
           </button>
         </div>
       </motion.div>
-      <ConfirmModal 
+      <ConfirmModal
         isOpen={!!confirmConfig}
         title={confirmConfig?.title}
         message={confirmConfig?.message}

@@ -457,7 +457,9 @@ export default function MessageInput({ isThread = false, threadParentId = null }
             maxHeight: '150px',
             outline: 'none',
             fontFamily: 'inherit',
-            lineHeight: '1.4'
+            lineHeight: '1.4',
+            minWidth: 0,
+            width: '100%'
           }}
           rows={1}
         />

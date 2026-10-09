@@ -117,14 +117,14 @@ export default function FriendsView() {
           <RiUserSmileFill size={24} /> Friends
         </h2>
         <div style={{ display: 'flex', gap: '16px', marginLeft: '16px' }}>
-          <button 
-            onClick={() => setActiveTab('all')} 
+          <button
+            onClick={() => setActiveTab('all')}
             style={{ background: 'none', border: 'none', padding: '8px 12px', borderRadius: '8px', color: activeTab === 'all' ? 'var(--text-main)' : 'var(--text-muted)', backgroundColor: activeTab === 'all' ? 'var(--bg-card)' : 'transparent', cursor: 'pointer', fontWeight: activeTab === 'all' ? 600 : 500 }}
           >
             All Friends
           </button>
-          <button 
-            onClick={() => setActiveTab('requests')} 
+          <button
+            onClick={() => setActiveTab('requests')}
             style={{ background: 'none', border: 'none', padding: '8px 12px', borderRadius: '8px', color: activeTab === 'requests' ? 'var(--text-main)' : 'var(--text-muted)', backgroundColor: activeTab === 'requests' ? 'var(--bg-card)' : 'transparent', cursor: 'pointer', fontWeight: activeTab === 'requests' ? 600 : 500, position: 'relative' }}
           >
             Requests
@@ -134,8 +134,8 @@ export default function FriendsView() {
               </span>
             )}
           </button>
-          <button 
-            onClick={() => setActiveTab('add')} 
+          <button
+            onClick={() => setActiveTab('add')}
             style={{ background: 'none', border: 'none', padding: '8px 12px', borderRadius: '8px', color: activeTab === 'add' ? 'var(--accent-success)' : 'var(--text-muted)', backgroundColor: activeTab === 'add' ? 'rgba(39, 174, 96, 0.1)' : 'transparent', cursor: 'pointer', fontWeight: activeTab === 'add' ? 600 : 500 }}
           >
             Add Friend
@@ -239,14 +239,14 @@ export default function FriendsView() {
             <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.9rem' }}>
               You can add friends with their NexChat username.
             </p>
-            
+
             <div style={{ position: 'relative', marginBottom: '32px' }}>
               <div style={{ position: 'absolute', top: '14px', left: '16px', color: 'var(--text-muted)' }}>
                 <RiSearch2Line size={20} />
               </div>
-              <input 
-                type="text" 
-                placeholder="Search by username..." 
+              <input
+                type="text"
+                placeholder="Search by username..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 style={{ width: '100%', padding: '16px 16px 16px 48px', borderRadius: '12px', border: '1px solid var(--accent-success)', backgroundColor: 'var(--bg-card)', color: 'var(--text-main)', fontSize: '1rem', outline: 'none', boxShadow: '0 0 0 2px rgba(39, 174, 96, 0.1)' }}
@@ -254,7 +254,7 @@ export default function FriendsView() {
             </div>
 
             {loading && <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Searching...</div>}
-            
+
             {!loading && searchResults.length > 0 && (
               <div>
                 <h4 style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>Results</h4>
@@ -271,7 +271,7 @@ export default function FriendsView() {
                 ))}
               </div>
             )}
-            
+
             {!loading && searchQuery.trim().length > 0 && searchResults.length === 0 && (
               <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--text-muted)' }}>
                 No users found matching "{searchQuery}"
@@ -280,7 +280,7 @@ export default function FriendsView() {
           </div>
         )}
       </div>
-      
+
       <AnimatePresence>
         {toast && (
           <motion.div

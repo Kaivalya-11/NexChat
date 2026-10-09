@@ -1,8 +1,8 @@
 import React from 'react';
-import { 
-  RiSettings4Fill, 
-  RiSunFill, 
-  RiMoonClearFill, 
+import {
+  RiSettings4Fill,
+  RiSunFill,
+  RiMoonClearFill,
   RiLogoutBoxRFill,
   RiUser3Fill,
   RiBookmarkFill,
