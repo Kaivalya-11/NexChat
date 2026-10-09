@@ -65,6 +65,7 @@ export default function MemberDrawer({ onClose }) {
       transition={{ type: 'spring', damping: 25, stiffness: 240 }}
       style={{ 
         width: '320px', 
+        maxWidth: '100%',
         backgroundColor: 'var(--glass-bg)', 
         backdropFilter: 'blur(16px)',
         borderLeft: '1px solid var(--border-color)',

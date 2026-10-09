@@ -449,7 +449,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
             flex: 1,
             backgroundColor: 'transparent',
             border: 'none',
-            color: 'var(--text-primary)',
+            color: 'var(--text-main)',
             fontSize: '13px',
             padding: '8px 10px',
             resize: 'none',

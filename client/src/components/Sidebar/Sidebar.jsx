@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useChat } from '../../context/ChatContext';
 import { useAuth } from '../../context/AuthContext';
@@ -327,13 +328,19 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
       />
 
       <AnimatePresence>
-        {showCreateChannel && <CreateChannelModal key="create-channel-modal" onClose={() => setShowCreateChannel(false)} />}
+        {showCreateChannel && typeof document !== 'undefined' && createPortal(
+          <CreateChannelModal key="create-channel-modal" onClose={() => setShowCreateChannel(false)} />,
+          document.body
+        )}
       </AnimatePresence>
       <AnimatePresence>
-        {showStartDM && <StartDMModal key="start-dm-modal" onClose={() => setShowStartDM(false)} />}
+        {showStartDM && typeof document !== 'undefined' && createPortal(
+          <StartDMModal key="start-dm-modal" onClose={() => setShowStartDM(false)} />,
+          document.body
+        )}
       </AnimatePresence>
       <AnimatePresence>
-        {showChannelSettings && selectedChannelForSettings && (
+        {showChannelSettings && selectedChannelForSettings && typeof document !== 'undefined' && createPortal(
           <ChannelSettingsModal
             key="channel-settings-modal"
             channel={selectedChannelForSettings}
@@ -341,7 +348,8 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
               setShowChannelSettings(false);
               setSelectedChannelForSettings(null);
             }}
-          />
+          />,
+          document.body
         )}
       </AnimatePresence>
     </aside>

@@ -17,11 +17,7 @@ function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
   );
 }
 
-async function getCroppedBlob(imageSrc, crop, fileName) {
-  const image = new Image();
-  image.src = imageSrc;
-  await new Promise(res => { image.onload = res; });
-
+async function getCroppedBlob(image, crop, fileName) {
   const canvas = document.createElement('canvas');
   const scaleX = image.naturalWidth / image.width;
   const scaleY = image.naturalHeight / image.height;
@@ -130,7 +126,7 @@ export default function ProfileModal({ onClose }) {
     setUploading(true);
     setCropSrc(null);
     try {
-      const blob = await getCroppedBlob(imgRef.current.src, completedCrop, cropFileName);
+      const blob = await getCroppedBlob(imgRef.current, completedCrop, cropFileName);
       const file = new File([blob], cropFileName, { type: 'image/jpeg' });
       const result = await api.uploadFile(token, file);
       setAvatar(result.url);

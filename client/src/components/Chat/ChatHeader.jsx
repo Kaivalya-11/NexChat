@@ -64,10 +64,10 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px 24px',
+        padding: '12px 16px',
         borderBottom: '1px solid var(--border-color)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button className="btn-icon mobile-only" onClick={onToggleSidebar} style={{ padding: '4px', marginRight: '4px' }}>
             <RiMenuLine size={20} color="var(--text-main)" />
           </button>

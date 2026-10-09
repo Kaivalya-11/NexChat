@@ -112,11 +112,11 @@ export default function FriendsView() {
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-darkest)', height: '100%' }}>
-      <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border-color)', display: 'flex', gap: '24px', alignItems: 'center' }}>
-        <h2 style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: 0, fontSize: '1.25rem', color: 'var(--text-main)' }}>
+      <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-color)', display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: 0, fontSize: '1.25rem', color: 'var(--text-main)', minWidth: '120px' }}>
           <RiUserSmileFill size={24} /> Friends
         </h2>
-        <div style={{ display: 'flex', gap: '16px', marginLeft: '16px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setActiveTab('all')}
             style={{ background: 'none', border: 'none', padding: '8px 12px', borderRadius: '8px', color: activeTab === 'all' ? 'var(--text-main)' : 'var(--text-muted)', backgroundColor: activeTab === 'all' ? 'var(--bg-card)' : 'transparent', cursor: 'pointer', fontWeight: activeTab === 'all' ? 600 : 500 }}
@@ -143,7 +143,7 @@ export default function FriendsView() {
         </div>
       </div>
 
-      <div style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
+      <div style={{ flex: 1, padding: '16px', overflowY: 'auto' }}>
         {activeTab === 'all' && (
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
