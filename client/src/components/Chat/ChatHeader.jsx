@@ -3,6 +3,7 @@ import { useChat } from '../../context/ChatContext';
 import { useAuth } from '../../context/AuthContext';
 import { useCall } from '../../context/CallContext';
 import { useSocket } from '../../context/SocketContext';
+import { AnimatePresence } from 'framer-motion';
 import {
   RiHashtag,
   RiMessage3Fill,
@@ -13,9 +14,11 @@ import {
   RiGroupFill,
   RiMenuLine,
   RiDeleteBin6Line,
-  RiArrowLeftSLine
+  RiArrowLeftSLine,
+  RiSettings4Line
 } from 'react-icons/ri';
 import ConfirmModal from '../UI/ConfirmModal';
+import ChannelSettingsModal from '../Sidebar/ChannelSettingsModal';
 
 export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSidebar, onToggleNotifications }) {
   const { channels, activeChannelId, notifications, removeChannel } = useChat();
@@ -23,6 +26,7 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
   const { onlineUsers } = useSocket();
   const { startCall } = useCall();
   const [confirmConfig, setConfirmConfig] = useState(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const channel = channels.find(c => c.id === activeChannelId);
 
@@ -100,6 +104,15 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
 
           <button
             className="btn-icon"
+            onClick={() => setShowSettingsModal(true)}
+            title={channel.isGroup ? "Channel Settings" : "Chat Settings"}
+            style={{ padding: '6px', color: 'var(--text-muted)' }}
+          >
+            <RiSettings4Line size={18} />
+          </button>
+
+          <button
+            className="btn-icon"
             onClick={() => {
               setConfirmConfig({
                 title: channel.isGroup ? `Leave Channel` : `Delete Chat`,
@@ -116,6 +129,15 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
           </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showSettingsModal && (
+          <ChannelSettingsModal
+            channel={channel}
+            onClose={() => setShowSettingsModal(false)}
+          />
+        )}
+      </AnimatePresence>
 
       <ConfirmModal 
         isOpen={!!confirmConfig}

@@ -13,6 +13,7 @@ import ChatHeader from './components/Chat/ChatHeader';
 import MessageList from './components/Chat/MessageList';
 import MessageInput from './components/Chat/MessageInput';
 import ConnectionBanner from './components/UI/ConnectionBanner';
+import AnnouncementBanner from './components/UI/AnnouncementBanner';
 import ThreadDrawer from './components/Chat/ThreadDrawer';
 import MemberDrawer from './components/Chat/MemberDrawer';
 import SearchModal from './components/UI/SearchModal';
@@ -50,6 +51,7 @@ function ChatLayout() {
   return (
     <div className="app-container">
       <ConnectionBanner />
+      <AnnouncementBanner />
       
       <div className={`sidebar-container ${isSidebarOpen ? 'open' : ''}`}>
         <Sidebar 

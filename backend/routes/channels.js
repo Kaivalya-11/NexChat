@@ -55,12 +55,55 @@ router.post('/dm', authMiddleware, async (req, res) => {
   }
 });
 
-// Update Channel details (Admins only)
+// Get Channel details with populated members & admins
+router.get('/:id', authMiddleware, async (req, res) => {
+  try {
+    const channel = await store.ChannelModel.findById(req.params.id)
+      .populate('members', 'username avatar status statusText role isAdmin')
+      .populate('admins', 'username avatar status statusText role isAdmin')
+      .populate('owner', 'username avatar status statusText role isAdmin');
+    if (!channel) return res.status(404).json({ error: 'Channel not found' });
+
+    const isMember = channel.members.some(m => (m._id || m).toString() === req.user.id);
+    const isSysAdmin = Boolean(req.user.isAdmin || req.user.role === 'admin');
+    if (!isMember && !isSysAdmin) {
+      return res.status(403).json({ error: 'Access denied: You are not a member of this channel' });
+    }
+
+    res.json({
+      id: channel._id.toString(),
+      name: channel.name,
+      description: channel.description || '',
+      isGroup: channel.isGroup,
+      members: channel.members.map(m => ({
+        id: m._id.toString(),
+        username: m.username,
+        avatar: m.avatar,
+        status: m.status || 'offline',
+        statusText: m.statusText || '',
+        role: m.role || (m.isAdmin ? 'admin' : 'user'),
+        isAdmin: Boolean(m.isAdmin || m.role === 'admin')
+      })),
+      admins: channel.admins.map(a => (a._id || a).toString()),
+      owner: channel.owner ? (channel.owner._id || channel.owner).toString() : null,
+      avatar: channel.avatar || '',
+      isArchived: Boolean(channel.isArchived),
+      createdAt: channel.createdAt
+    });
+  } catch (err) {
+    console.error('Error fetching channel details:', err);
+    res.status(500).json({ error: 'Failed to retrieve channel details' });
+  }
+});
+
+// Update Channel details (Admins or Owner)
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
-    const chan = await store.getChannelById(req.params.id);
+    const chan = await store.ChannelModel.findById(req.params.id);
     if (!chan) return res.status(404).json({ error: 'Channel not found' });
-    if (!chan.admins.includes(req.user.id)) {
+    const isChannelAdmin = chan.admins.some(a => a.toString() === req.user.id) || (chan.owner && chan.owner.toString() === req.user.id);
+    const isSysAdmin = Boolean(req.user.isAdmin || req.user.role === 'admin');
+    if (!isChannelAdmin && !isSysAdmin) {
       return res.status(403).json({ error: 'Only channel admins can edit details' });
     }
 

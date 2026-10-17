@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import {
   RiSettings4Fill,
   RiSunFill,
@@ -7,12 +8,13 @@ import {
   RiUser3Fill,
   RiBookmarkFill,
   RiSearch2Line,
-  RiArrowRightSLine
+  RiArrowRightSLine,
+  RiShieldCheckFill
 } from 'react-icons/ri';
 
 export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSearch, onToggleTheme, logout, getStatusColor }) {
   return (
-    <div style={{ padding: '12px', marginTop: 'auto' }}>
+    <div style={{ padding: '12px', flexShrink: 0 }}>
       <div style={{
         backgroundColor: 'var(--bg-darkest, #0a0a0a)',
         borderRadius: '16px',
@@ -60,8 +62,22 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
           </div>
 
           <div style={{ textAlign: 'center', width: '100%' }}>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
               {user.username}
+              {user.isAdmin && (
+                <span style={{
+                  fontSize: '0.6rem',
+                  fontWeight: 700,
+                  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                  color: '#000',
+                  padding: '2px 6px',
+                  borderRadius: '6px',
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase'
+                }}>
+                  👑 Admin
+                </span>
+              )}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '4px' }}>
               <div style={{
@@ -113,33 +129,44 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
             </div>
           </button>
 
-          {/* Quick Search Shortcut */}
-          <button
-            onClick={onOpenSearch}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '10px 12px',
-              backgroundColor: 'rgba(255, 255, 255, 0.02)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '12px',
-              color: 'var(--text-main)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              textAlign: 'left'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)'}
-          >
-            <div style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
-              <RiSearch2Line size={18} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>Quick Search</div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Search channels, users...</div>
-            </div>
-          </button>
+          {/* Admin Dashboard Shortcut (Only visible for Admins) */}
+          {(user.isAdmin || user.role === 'admin') && (
+            <Link
+              href="/admin"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '10px 12px',
+                backgroundColor: 'rgba(211, 255, 234, 0.08)',
+                border: '1px solid var(--border-highlight)',
+                borderRadius: '12px',
+                color: 'var(--text-main)',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                textAlign: 'left'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(211, 255, 234, 0.15)';
+                e.currentTarget.style.borderColor = 'var(--accent-primary)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(211, 255, 234, 0.08)';
+                e.currentTarget.style.borderColor = 'var(--border-highlight)';
+              }}
+            >
+              <div style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center' }}>
+                <RiShieldCheckFill size={18} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-primary)' }}>
+                  Admin Dashboard
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Console & Telemetry</div>
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* Bottom: Appearance & Logout */}

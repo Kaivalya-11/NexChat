@@ -5,13 +5,20 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('chat_token') || null);
+  const [token, setToken] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('chat_token') || null;
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
 
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem('chat_token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('chat_token');
+    }
   };
 
   useEffect(() => {
@@ -34,14 +41,18 @@ export function AuthProvider({ children }) {
     const data = await api.loginUser(username, password);
     setToken(data.token);
     setUser(data.user);
-    localStorage.setItem('chat_token', data.token);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('chat_token', data.token);
+    }
   };
 
   const register = async (userData) => {
     const data = await api.registerUser(userData);
     setToken(data.token);
     setUser(data.user);
-    localStorage.setItem('chat_token', data.token);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('chat_token', data.token);
+    }
   };
 
   const updateProfile = async (profileData) => {

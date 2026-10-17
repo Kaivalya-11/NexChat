@@ -100,7 +100,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
         </motion.div>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 12px' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '16px 12px' }}>
 
         <div style={{ marginBottom: '24px' }}>
           <motion.div
@@ -315,6 +315,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
             }))}
         </div>
 
+        <div style={{ height: '32px', flexShrink: 0 }}></div>
       </div>
 
       <UserProfilePanel

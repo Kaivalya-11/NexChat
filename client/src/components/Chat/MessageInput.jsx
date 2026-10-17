@@ -470,7 +470,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
               <RiEmotionHappyLine size={22} />
             </button>
             {showEmojiPicker && (
-              <div className="emoji-picker-wrapper" style={{ position: 'absolute', bottom: '100%', right: '-10px', zIndex: 50, marginBottom: '8px' }}>
+              <div className="emoji-picker-wrapper" style={{ position: 'absolute', bottom: '100%', left: '0', zIndex: 50, marginBottom: '8px' }}>
                 <EmojiPicker onEmojiClick={(emojiObj) => {
                   setContent(prev => prev + emojiObj.emoji);
                   setShowEmojiPicker(false);

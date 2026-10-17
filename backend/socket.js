@@ -4,19 +4,61 @@ const { JWT_SECRET } = require('./middleware/auth');
 
 const userSockets = new Map();
 const socketUserMap = new Map();
+let ioInstance = null;
 
 function initSocket(io) {
-  io.use((socket, next) => {
+  ioInstance = io;
+
+  io.use(async (socket, next) => {
     const token = socket.handshake.auth?.token || socket.handshake.query?.token;
     if (!token) {
       return next(new Error('Authentication error: Missing token'));
     }
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
+      const userId = decoded.id || decoded._id;
+      const user = await store.findUserById(userId);
+      if (!user) {
+        return next(new Error('Authentication error: User not found'));
+      }
+
+      // Check suspension with expiry
+      if (user.isSuspended) {
+        if (user.suspendedUntil && new Date(user.suspendedUntil) <= new Date()) {
+          // Suspension expired -> auto restore
+          user.isSuspended = false;
+          user.suspendedReason = '';
+          user.suspendedUntil = null;
+          user.suspendedBy = null;
+          await user.save();
+        } else {
+          const reason = user.suspendedReason ? `: ${user.suspendedReason}` : '';
+          return next(new Error(`Account suspended${reason}`));
+        }
+      }
+
+      if (user.isDeactivated) {
+        return next(new Error('Account is deactivated'));
+      }
+
+      // Check maintenance mode (admins & moderators retain full access)
+      try {
+        const maintenance = await store.getPlatformSetting('maintenanceMode', { enabled: false, message: '' });
+        if (maintenance?.enabled) {
+          const isAdminOrMod = Boolean(user.isAdmin || user.role === 'admin' || user.role === 'moderator');
+          if (!isAdminOrMod) {
+            return next(new Error(`Maintenance mode active: ${maintenance.message || 'Please try again later.'}`));
+          }
+        }
+      } catch (mErr) {
+        // Proceed if setting retrieval fails gracefully
+      }
+
       socket.user = decoded;
+      socket.userDoc = user;
       next();
     } catch (err) {
-      next(new Error('Authentication error: Invalid token'));
+      next(new Error(err.message || 'Authentication error: Invalid token'));
     }
   });
 
@@ -79,7 +121,22 @@ function initSocket(io) {
           return;
         }
 
+        if (channel.isArchived || channel.isRestricted) {
+          if (typeof callback === 'function') {
+            callback({ error: 'This channel is archived or restricted from posting' });
+          }
+          return;
+        }
+
         const senderProfile = await store.findUserById(userId);
+        if (!senderProfile || senderProfile.isSuspended || senderProfile.isDeactivated) {
+          if (typeof callback === 'function') {
+            callback({ error: senderProfile?.suspendedReason ? `Account suspended: ${senderProfile.suspendedReason}` : 'Account suspended or deactivated' });
+          }
+          socket.emit('account-suspended', { reason: senderProfile?.suspendedReason || 'Administrative action' });
+          socket.disconnect(true);
+          return;
+        }
 
         const newMsg = await store.createMessage({
           channelId,
@@ -400,4 +457,64 @@ function initSocket(io) {
   });
 }
 
-module.exports = { initSocket };
+function disconnectUserSockets(userId, reason = 'Administrative action') {
+  if (!userId) return;
+  const strUserId = userId.toString();
+  const sSet = userSockets.get(strUserId);
+  if (sSet && ioInstance) {
+    sSet.forEach(socketId => {
+      const sock = ioInstance.sockets.sockets.get(socketId);
+      if (sock) {
+        sock.emit('account-suspended', { reason });
+        sock.disconnect(true);
+      }
+    });
+    userSockets.delete(strUserId);
+  }
+}
+
+function notifyUser(userId, event, data) {
+  if (!userId) return false;
+  const strUserId = userId.toString();
+  const sSet = userSockets.get(strUserId);
+  if (sSet && ioInstance) {
+    sSet.forEach(socketId => {
+      ioInstance.to(socketId).emit(event, data);
+    });
+    return true;
+  }
+  return false;
+}
+
+function getSocketMetrics() {
+  const connectedSockets = ioInstance ? (ioInstance.engine ? ioInstance.engine.clientsCount : (ioInstance.sockets?.sockets?.size || 0)) : 0;
+  const activeUsers = userSockets.size;
+  const roomsCount = ioInstance?.sockets?.adapter?.rooms ? ioInstance.sockets.adapter.rooms.size : 0;
+  return {
+    status: ioInstance ? 'connected' : 'uninitialized',
+    connectedSockets,
+    activeUsers,
+    roomsCount
+  };
+}
+
+function broadcastAnnouncement(announcement) {
+  if (ioInstance) {
+    ioInstance.emit('announcement-published', announcement);
+  }
+}
+
+function broadcastMaintenance(maintenance) {
+  if (ioInstance) {
+    ioInstance.emit('maintenance-status', maintenance);
+  }
+}
+
+module.exports = {
+  initSocket,
+  disconnectUserSockets,
+  notifyUser,
+  getSocketMetrics,
+  broadcastAnnouncement,
+  broadcastMaintenance
+};
