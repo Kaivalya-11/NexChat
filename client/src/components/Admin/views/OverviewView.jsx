@@ -137,20 +137,9 @@ export default function OverviewView({ token, onNavigate }) {
   const recent = stats.recentActivity || { users: [], channels: [], auditLogs: [] };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div className="overview-container">
       {/* Top Banner & Refresh */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '16px',
-        padding: '20px 24px',
-        backgroundColor: 'var(--bg-card)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-color)',
-        boxShadow: 'var(--shadow-sm)'
-      }}>
+      <div className="overview-header-banner">
         <div>
           <div style={{
             display: 'inline-flex',
@@ -175,12 +164,13 @@ export default function OverviewView({ token, onNavigate }) {
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className="overview-header-actions">
           <button
             onClick={() => onNavigate && onNavigate('analytics')}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '6px',
               padding: '8px 14px',
               backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -189,7 +179,8 @@ export default function OverviewView({ token, onNavigate }) {
               borderRadius: 'var(--radius-md)',
               cursor: 'pointer',
               fontSize: '0.85rem',
-              fontWeight: 600
+              fontWeight: 600,
+              whiteSpace: 'nowrap'
             }}
           >
             <RiBarChartLine size={16} />
@@ -202,6 +193,7 @@ export default function OverviewView({ token, onNavigate }) {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '8px',
               padding: '8px 16px',
               backgroundColor: 'var(--bg-darkest)',
@@ -211,7 +203,8 @@ export default function OverviewView({ token, onNavigate }) {
               cursor: refreshing ? 'not-allowed' : 'pointer',
               fontSize: '0.85rem',
               fontWeight: 600,
-              transition: 'all 0.15s ease'
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap'
             }}
           >
             <RiRefreshLine size={16} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
@@ -221,22 +214,9 @@ export default function OverviewView({ token, onNavigate }) {
       </div>
 
       {/* Primary KPI Metric Cards Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: '16px'
-      }}>
+      <div className="overview-kpi-grid">
         {/* Total Users Card */}
-        <div style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '20px',
-          boxShadow: 'var(--shadow-sm)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
+        <div className="overview-kpi-card">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -250,13 +230,14 @@ export default function OverviewView({ token, onNavigate }) {
                 color: 'var(--accent-primary)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: 0
               }}>
                 <RiGroupLine size={20} />
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-              <div style={{ fontSize: '2.25rem', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+              <div style={{ fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
                 {users.total}
               </div>
               <span style={{
@@ -265,7 +246,8 @@ export default function OverviewView({ token, onNavigate }) {
                 color: 'var(--accent-success)',
                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
                 padding: '2px 6px',
-                borderRadius: '4px'
+                borderRadius: '4px',
+                whiteSpace: 'nowrap'
               }}>
                 +{velocity.newUsers} 7d
               </span>
@@ -281,32 +263,23 @@ export default function OverviewView({ token, onNavigate }) {
             gap: '6px',
             fontSize: '0.75rem'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-dim)' }}>
-              <span style={{ color: 'var(--accent-success)' }}>● {users.active} Active</span>
-              <span style={{ color: users.suspended > 0 ? '#ef4444' : 'var(--text-dim)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px 8px', color: 'var(--text-dim)' }}>
+              <span style={{ color: 'var(--accent-success)', whiteSpace: 'nowrap' }}>● {users.active} Active</span>
+              <span style={{ color: users.suspended > 0 ? '#ef4444' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                 {users.suspended > 0 ? `⚠️ ${users.suspended} Suspended` : '0 Suspended'}
               </span>
-              {users.deactivated > 0 && <span>⚪ {users.deactivated} Deact</span>}
+              {users.deactivated > 0 && <span style={{ whiteSpace: 'nowrap' }}>⚪ {users.deactivated} Deact</span>}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.7rem' }}>
-              <span>👑 {users.admins} Admins</span>
-              <span>🛡️ {users.moderators} Mods</span>
-              <span>👤 {users.regular} Users</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px 8px', color: 'var(--text-muted)', fontSize: '0.7rem' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>👑 {users.admins} Admins</span>
+              <span style={{ whiteSpace: 'nowrap' }}>🛡️ {users.moderators} Mods</span>
+              <span style={{ whiteSpace: 'nowrap' }}>👤 {users.regular} Users</span>
             </div>
           </div>
         </div>
 
         {/* Total Channels Card */}
-        <div style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '20px',
-          boxShadow: 'var(--shadow-sm)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
+        <div className="overview-kpi-card">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -320,13 +293,14 @@ export default function OverviewView({ token, onNavigate }) {
                 color: '#60a5fa',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: 0
               }}>
                 <RiHashtag size={20} />
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-              <div style={{ fontSize: '2.25rem', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+              <div style={{ fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
                 {channels.total}
               </div>
               <span style={{
@@ -335,7 +309,8 @@ export default function OverviewView({ token, onNavigate }) {
                 color: '#60a5fa',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
                 padding: '2px 6px',
-                borderRadius: '4px'
+                borderRadius: '4px',
+                whiteSpace: 'nowrap'
               }}>
                 +{velocity.newChannels} 7d
               </span>
@@ -348,25 +323,18 @@ export default function OverviewView({ token, onNavigate }) {
             borderTop: '1px solid var(--border-color)',
             display: 'flex',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '4px 8px',
             fontSize: '0.75rem',
             color: 'var(--text-dim)'
           }}>
-            <span>📢 {channels.groups} Public Groups</span>
-            <span>💬 {channels.dms} Direct Chats</span>
+            <span style={{ whiteSpace: 'nowrap' }}>📢 {channels.groups} Public Groups</span>
+            <span style={{ whiteSpace: 'nowrap' }}>💬 {channels.dms} Direct Chats</span>
           </div>
         </div>
 
         {/* Total Messages Card */}
-        <div style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '20px',
-          boxShadow: 'var(--shadow-sm)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
+        <div className="overview-kpi-card">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -380,13 +348,14 @@ export default function OverviewView({ token, onNavigate }) {
                 color: '#fbbf24',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: 0
               }}>
                 <RiMessage3Line size={20} />
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-              <div style={{ fontSize: '2.25rem', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+              <div style={{ fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
                 {messages.total}
               </div>
               <span style={{
@@ -395,7 +364,8 @@ export default function OverviewView({ token, onNavigate }) {
                 color: '#fbbf24',
                 backgroundColor: 'rgba(245, 158, 11, 0.1)',
                 padding: '2px 6px',
-                borderRadius: '4px'
+                borderRadius: '4px',
+                whiteSpace: 'nowrap'
               }}>
                 +{velocity.newMessages} 7d
               </span>
@@ -409,26 +379,19 @@ export default function OverviewView({ token, onNavigate }) {
             fontSize: '0.75rem',
             color: 'var(--text-dim)',
             display: 'flex',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '4px 8px'
           }}>
-            <span>🔒 Contents strictly private</span>
-            <span style={{ cursor: 'pointer', color: 'var(--accent-primary)' }} onClick={() => onNavigate && onNavigate('analytics')}>
+            <span style={{ whiteSpace: 'nowrap' }}>🔒 Contents strictly private</span>
+            <span style={{ cursor: 'pointer', color: 'var(--accent-primary)', whiteSpace: 'nowrap' }} onClick={() => onNavigate && onNavigate('analytics')}>
               Trends →
             </span>
           </div>
         </div>
 
         {/* Moderation & Compliance Card */}
-        <div style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '20px',
-          boxShadow: 'var(--shadow-sm)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
+        <div className="overview-kpi-card">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -442,14 +405,15 @@ export default function OverviewView({ token, onNavigate }) {
                 color: moderation.pendingReports > 0 ? '#ef4444' : 'var(--accent-success)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: 0
               }}>
                 <RiShieldCheckLine size={20} />
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
               <div style={{
-                fontSize: '2.25rem',
+                fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)',
                 fontWeight: 700,
                 color: moderation.pendingReports > 0 ? '#ef4444' : 'var(--text-main)',
                 fontFamily: 'var(--font-heading)',
@@ -457,7 +421,7 @@ export default function OverviewView({ token, onNavigate }) {
               }}>
                 {moderation.pendingReports}
               </div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                 pending {moderation.pendingReports === 1 ? 'report' : 'reports'}
               </span>
             </div>
@@ -471,9 +435,11 @@ export default function OverviewView({ token, onNavigate }) {
             color: 'var(--text-dim)',
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center'
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '4px 8px'
           }}>
-            <span>⚖️ {moderation.pendingAppeals} Appeals</span>
+            <span style={{ whiteSpace: 'nowrap' }}>⚖️ {moderation.pendingAppeals} Appeals</span>
             <button
               onClick={() => onNavigate && onNavigate('moderation')}
               style={{
@@ -485,7 +451,8 @@ export default function OverviewView({ token, onNavigate }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '4px',
-                padding: 0
+                padding: 0,
+                whiteSpace: 'nowrap'
               }}
             >
               Review Queue →
@@ -495,12 +462,7 @@ export default function OverviewView({ token, onNavigate }) {
       </div>
 
       {/* Recent Platform Activity Feeds (Real Database-derived) */}
-      <div style={{
-        backgroundColor: 'var(--bg-card)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-color)',
-        padding: '24px'
-      }}>
+      <div className="overview-panel">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
           <div>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-heading)' }}>
@@ -512,25 +474,16 @@ export default function OverviewView({ token, onNavigate }) {
           </div>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '20px'
-        }}>
+        <div className="overview-activity-grid">
           {/* Recent Accounts */}
-          <div style={{
-            backgroundColor: 'var(--bg-darkest)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border-color)',
-            padding: '16px'
-          }}>
+          <div className="activity-subcard">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <RiUserAddLine color="var(--accent-primary)" /> New Accounts
               </span>
               <button
                 onClick={() => onNavigate && onNavigate('users')}
-                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
               >
                 All Users →
               </button>
@@ -541,9 +494,9 @@ export default function OverviewView({ token, onNavigate }) {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {recent.users.map(u => (
-                  <div key={u.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                      <span style={{ fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div key={u.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+                      <span style={{ fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
                         @{u.username}
                       </span>
                       <span style={{
@@ -552,12 +505,14 @@ export default function OverviewView({ token, onNavigate }) {
                         padding: '1px 5px',
                         borderRadius: '3px',
                         backgroundColor: u.role === 'admin' ? 'rgba(239, 68, 68, 0.15)' : (u.role === 'moderator' ? 'rgba(59, 130, 246, 0.15)' : 'rgba(255, 255, 255, 0.05)'),
-                        color: u.role === 'admin' ? '#ef4444' : (u.role === 'moderator' ? '#60a5fa' : 'var(--text-dim)')
+                        color: u.role === 'admin' ? '#ef4444' : (u.role === 'moderator' ? '#60a5fa' : 'var(--text-dim)'),
+                        flexShrink: 0,
+                        whiteSpace: 'nowrap'
                       }}>
                         {u.role}
                       </span>
                     </div>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>
+                    <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
                       {formatDateRelative(u.createdAt)}
                     </span>
                   </div>
@@ -567,19 +522,14 @@ export default function OverviewView({ token, onNavigate }) {
           </div>
 
           {/* Recent Channels */}
-          <div style={{
-            backgroundColor: 'var(--bg-darkest)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border-color)',
-            padding: '16px'
-          }}>
+          <div className="activity-subcard">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <RiFolderAddLine color="#60a5fa" /> New Channels
               </span>
               <button
                 onClick={() => onNavigate && onNavigate('channels')}
-                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
               >
                 All Channels →
               </button>
@@ -590,9 +540,9 @@ export default function OverviewView({ token, onNavigate }) {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {recent.channels.map(c => (
-                  <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                      <span style={{ fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+                      <span style={{ fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
                         {c.isGroup ? `#${c.name}` : c.name}
                       </span>
                       <span style={{
@@ -601,12 +551,14 @@ export default function OverviewView({ token, onNavigate }) {
                         padding: '1px 5px',
                         borderRadius: '3px',
                         backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        color: 'var(--text-dim)'
+                        color: 'var(--text-dim)',
+                        flexShrink: 0,
+                        whiteSpace: 'nowrap'
                       }}>
                         {c.memberCount} {c.memberCount === 1 ? 'member' : 'members'}
                       </span>
                     </div>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>
+                    <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
                       {formatDateRelative(c.createdAt)}
                     </span>
                   </div>
@@ -616,17 +568,12 @@ export default function OverviewView({ token, onNavigate }) {
           </div>
 
           {/* Recent Audit / Security Events */}
-          <div style={{
-            backgroundColor: 'var(--bg-darkest)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border-color)',
-            padding: '16px'
-          }}>
+          <div className="activity-subcard">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <RiShieldCheckLine color="var(--accent-success)" /> Security & Actions
               </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Audit trail</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>Audit trail</span>
             </div>
 
             {(!recent.auditLogs || recent.auditLogs.length === 0) ? (
@@ -634,23 +581,28 @@ export default function OverviewView({ token, onNavigate }) {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {recent.auditLogs.map(a => (
-                  <div key={a.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                  <div key={a.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
                       <span style={{
                         fontSize: '0.65rem',
                         fontFamily: 'var(--font-mono)',
                         padding: '1px 5px',
                         borderRadius: '3px',
                         backgroundColor: a.result === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                        color: a.result === 'success' ? 'var(--accent-success)' : '#ef4444'
-                      }}>
+                        color: a.result === 'success' ? 'var(--accent-success)' : '#ef4444',
+                        maxWidth: '135px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0
+                      }} title={a.action}>
                         {a.action}
                       </span>
-                      <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
                         by @{a.actorUsername}
                       </span>
                     </div>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>
+                    <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
                       {formatDateRelative(a.createdAt)}
                     </span>
                   </div>
@@ -662,12 +614,7 @@ export default function OverviewView({ token, onNavigate }) {
       </div>
 
       {/* Quick Navigation Hub */}
-      <div style={{
-        backgroundColor: 'var(--bg-card)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-color)',
-        padding: '24px'
-      }}>
+      <div className="overview-panel">
         <h3 style={{
           fontSize: '1.1rem',
           fontWeight: 700,
@@ -678,11 +625,7 @@ export default function OverviewView({ token, onNavigate }) {
           Administrative Control Center
         </h3>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '12px'
-        }}>
+        <div className="overview-control-grid">
           {QUICK_NAV_ITEMS.map(item => {
             const Icon = item.icon;
             return (
@@ -698,7 +641,8 @@ export default function OverviewView({ token, onNavigate }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '14px',
-                  transition: 'all 0.15s ease'
+                  transition: 'all 0.15s ease',
+                  minWidth: 0
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.borderColor = 'var(--border-highlight)';
@@ -725,7 +669,7 @@ export default function OverviewView({ token, onNavigate }) {
                 </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                     <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)' }}>
                       {item.label}
                     </span>
@@ -748,12 +692,131 @@ export default function OverviewView({ token, onNavigate }) {
                   </p>
                 </div>
 
-                <RiArrowRightLine size={18} color="var(--text-dim)" />
+                <RiArrowRightLine size={18} color="var(--text-dim)" style={{ flexShrink: 0 }} />
               </div>
             );
           })}
         </div>
       </div>
+
+      <style jsx global>{`
+        .overview-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .overview-header-banner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 16px;
+          padding: 20px 24px;
+          background-color: var(--bg-card);
+          border-radius: var(--radius-lg);
+          border: 1px solid var(--border-color);
+          box-shadow: var(--shadow-sm);
+        }
+
+        .overview-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        /* 4 KPI cards: 4 columns on desktop (>=1200px), 2 on tablet/laptop, 1 on mobile */
+        .overview-kpi-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .overview-kpi-card {
+          background-color: var(--bg-card);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-lg);
+          padding: 20px;
+          box-shadow: var(--shadow-sm);
+          display: flex;
+          flex-direction: column;
+          justifyContent: space-between;
+          min-width: 0;
+        }
+
+        /* Recent Activity: 3 columns on desktop, responsive wrap below */
+        .overview-activity-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 20px;
+        }
+
+        .activity-subcard {
+          background-color: var(--bg-darkest);
+          border-radius: var(--radius-md);
+          border: 1px solid var(--border-color);
+          padding: 16px;
+          min-width: 0;
+        }
+
+        /* Control Center Grid */
+        .overview-control-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 12px;
+        }
+
+        .overview-panel {
+          background-color: var(--bg-card);
+          border-radius: var(--radius-lg);
+          border: 1px solid var(--border-color);
+          padding: 24px;
+        }
+
+        @media (max-width: 1200px) {
+          .overview-kpi-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+          .overview-activity-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          }
+        }
+
+        @media (max-width: 768px) {
+          .overview-container {
+            gap: 16px;
+          }
+          .overview-header-banner {
+            padding: 16px 14px;
+          }
+          .overview-header-actions {
+            width: 100%;
+          }
+          .overview-header-actions button {
+            flex: 1;
+            justify-content: center;
+          }
+          .overview-activity-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+          .overview-panel {
+            padding: 16px 14px;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .overview-kpi-grid {
+            grid-template-columns: 1fr;
+          }
+          .overview-control-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   );
 }

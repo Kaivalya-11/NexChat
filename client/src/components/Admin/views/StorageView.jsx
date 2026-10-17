@@ -252,7 +252,7 @@ export default function StorageView({ token }) {
       {/* Storage KPI Cards */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
         gap: '16px'
       }}>
         {/* Total Storage Used */}
@@ -435,7 +435,7 @@ export default function StorageView({ token }) {
       ) : (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
           gap: '16px'
         }}>
           {files.map(file => {

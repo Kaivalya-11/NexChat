@@ -264,9 +264,17 @@ export default function AdminPage() {
         @media (max-width: 1023px) {
           .admin-main-wrapper {
             margin-left: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
           }
           .admin-content-area {
-            padding: 16px !important;
+            padding: 18px 16px !important;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .admin-content-area {
+            padding: 12px 10px !important;
           }
         }
       `}</style>

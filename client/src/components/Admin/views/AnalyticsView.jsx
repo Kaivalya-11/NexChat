@@ -306,7 +306,7 @@ export default function AnalyticsView({ token, onNavigate }) {
       {/* KPI Metric Cards */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
         gap: '16px'
       }}>
         {/* Messages Volume Card */}
@@ -558,7 +558,7 @@ export default function AnalyticsView({ token, onNavigate }) {
       {/* Two Column Grid: User Registration Curve & Channel Creation Trend */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
         gap: '20px'
       }}>
         {/* User Signups Trend */}

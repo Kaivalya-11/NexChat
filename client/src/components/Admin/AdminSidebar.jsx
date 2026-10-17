@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import {
@@ -96,6 +96,18 @@ export default function AdminSidebar({
   onClose,
   adminUser
 }) {
+  // Close drawer on Escape key when open
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   return (
     <>
       {/* Mobile Backdrop */}
@@ -110,13 +122,14 @@ export default function AdminSidebar({
             zIndex: 90
           }}
           className="admin-mobile-backdrop"
+          aria-hidden="true"
         />
       )}
 
       {/* Sidebar Aside */}
       <aside
         style={{
-          width: '280px',
+          width: 'min(280px, 85vw)',
           height: '100vh',
           backgroundColor: 'var(--bg-sidebar)',
           borderRight: '1px solid var(--border-color)',
@@ -128,10 +141,11 @@ export default function AdminSidebar({
           left: 0,
           bottom: 0,
           zIndex: 100,
-          transition: 'transform 0.25s ease',
+          transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: isOpen ? 'translateX(0)' : undefined
         }}
         className={`admin-sidebar ${isOpen ? 'open' : ''}`}
+        aria-label="Admin Navigation"
       >
         {/* Header / Brand */}
         <div style={{
@@ -189,6 +203,7 @@ export default function AdminSidebar({
           <button
             onClick={onClose}
             className="mobile-only-btn"
+            aria-label="Close admin menu"
             style={{
               padding: '6px',
               backgroundColor: 'transparent',
@@ -390,7 +405,9 @@ export default function AdminSidebar({
         }
         @media (max-width: 1023px) {
           .admin-sidebar {
+            width: min(280px, 85vw) !important;
             transform: translateX(-100%);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
           }
           .admin-sidebar.open {
             transform: translateX(0);

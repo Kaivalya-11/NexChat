@@ -661,7 +661,7 @@ export default function AuditLogsView({ token }) {
 
             {/* Modal Body */}
             <div style={{ padding: '20px 24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '12px' }}>
                 <div style={{ backgroundColor: 'var(--bg-darkest)', padding: '12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Administrator</div>
                   <div style={{ fontWeight: 600, color: 'var(--text-main)', marginTop: '4px' }}>@{inspectLog.actor?.username || 'System'}</div>

@@ -152,7 +152,7 @@ export default function SystemHealthView({ token }) {
       {/* Grid of System Subsystems */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',
         gap: '16px'
       }}>
         {/* 1. Database Connection & Latency */}

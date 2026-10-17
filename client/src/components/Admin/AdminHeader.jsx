@@ -14,20 +14,23 @@ export default function AdminHeader({
   adminUser
 }) {
   return (
-    <header style={{
-      height: '68px',
-      backgroundColor: 'var(--header-bg, #0A1514)',
-      borderBottom: '1px solid var(--border-color)',
-      padding: '0 24px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      position: 'sticky',
-      top: 0,
-      zIndex: 50
-    }}>
+    <header 
+      className="admin-header"
+      style={{
+        height: '68px',
+        backgroundColor: 'var(--header-bg, #0A1514)',
+        borderBottom: '1px solid var(--border-color)',
+        padding: '0 24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50
+      }}
+    >
       {/* Left: Mobile Toggle & Breadcrumb */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
         <button
           onClick={onToggleSidebar}
           style={{
@@ -39,32 +42,34 @@ export default function AdminHeader({
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            flexShrink: 0
           }}
           className="admin-hamburger"
           title="Open Admin Navigation"
+          aria-label="Open admin navigation menu"
         >
           <RiMenuLine size={20} />
         </button>
 
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
               NexChat Admin
             </span>
             <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>/</span>
-            <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>
+            <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {navItem?.label || 'Dashboard'}
             </span>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }} className="admin-header-subtitle">
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className="admin-header-subtitle">
             {navItem?.description || 'Admin management console'}
           </div>
         </div>
       </div>
 
       {/* Right: Telemetry pill & Return button */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
         {/* Live Status Pill */}
         <div style={{
           display: 'flex',
@@ -103,7 +108,8 @@ export default function AdminHeader({
             textDecoration: 'none',
             fontSize: '0.85rem',
             fontWeight: 600,
-            transition: 'all 0.15s ease'
+            transition: 'all 0.15s ease',
+            whiteSpace: 'nowrap'
           }}
           onMouseOver={(e) => {
             e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
@@ -115,7 +121,8 @@ export default function AdminHeader({
             e.currentTarget.style.borderColor = 'var(--border-color)';
             e.currentTarget.style.color = 'var(--text-main)';
           }}
-          title="Return to chat"
+          title="Return to NexChat"
+          aria-label="Return to NexChat"
         >
           <RiArrowLeftLine size={16} />
           <span className="admin-return-text">Return to NexChat</span>
@@ -128,7 +135,16 @@ export default function AdminHeader({
             display: none !important;
           }
         }
+        @media (max-width: 768px) {
+          .admin-header {
+            padding: 0 16px !important;
+            height: 60px !important;
+          }
+        }
         @media (max-width: 640px) {
+          .admin-header {
+            padding: 0 12px !important;
+          }
           .admin-status-pill,
           .admin-header-subtitle {
             display: none !important;
