@@ -131,6 +131,8 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
               whileHover={{ scale: 1.15, rotate: 90 }}
               whileTap={{ scale: 0.85 }}
               className="btn-icon"
+              title="Create Channel"
+              aria-label="Create channel"
               style={{ padding: '2px', borderRadius: '6px', color: 'var(--text-muted)' }}
               onClick={() => setShowCreateChannel(true)}
             >
@@ -205,6 +207,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                       }}
                       style={{ padding: '2px', color: 'var(--text-main)' }}
                       title="Channel Settings"
+                      aria-label="Channel Settings"
                     >
                       <RiSettings4Line size={16} />
                     </button>
@@ -221,6 +224,8 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
               whileHover={{ scale: 1.15, rotate: 90 }}
               whileTap={{ scale: 0.85 }}
               className="btn-icon"
+              title="Start Direct Message"
+              aria-label="Start direct message"
               style={{ padding: '2px', borderRadius: '6px', color: 'var(--text-muted)' }}
               onClick={() => setShowStartDM(true)}
             >
@@ -306,6 +311,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                       }}
                       style={{ padding: '2px', color: 'var(--text-main)' }}
                       title="Chat Settings"
+                      aria-label="Chat Settings"
                     >
                       <RiSettings4Line size={16} />
                     </button>

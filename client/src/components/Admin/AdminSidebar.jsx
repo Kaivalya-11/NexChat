@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import {
   RiDashboardLine,
   RiGroupLine,
@@ -307,8 +308,12 @@ export default function AdminSidebar({
             }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={adminUser.avatar || `https://ui-avatars.com/api/?name=${adminUser.username}`}
+                src={getOptimizedImageUrl(adminUser.avatar || `https://ui-avatars.com/api/?name=${adminUser.username}`, { width: 68, height: 68 })}
                 alt={adminUser.username}
+                width="34"
+                height="34"
+                loading="lazy"
+                decoding="async"
                 style={{
                   width: '34px',
                   height: '34px',

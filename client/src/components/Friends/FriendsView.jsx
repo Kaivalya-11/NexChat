@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import * as api from '../../services/api';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { RiUserSmileFill, RiUserAddFill, RiSearch2Line, RiCheckLine, RiCloseLine, RiUserUnfollowLine } from 'react-icons/ri';
 
 export default function FriendsView() {
@@ -160,7 +161,15 @@ export default function FriendsView() {
                 <div key={f.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: 'var(--bg-card)', borderRadius: '12px', marginBottom: '8px', border: '1px solid var(--border-color)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <div style={{ position: 'relative' }}>
-                      <img src={f.avatar} alt={f.username} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img 
+                        src={getOptimizedImageUrl(f.avatar || `https://ui-avatars.com/api/?name=${f.username}`, { width: 80, height: 80 })} 
+                        alt={f.username} 
+                        width="40" 
+                        height="40" 
+                        loading="lazy" 
+                        decoding="async"
+                        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
+                      />
                       <div style={{ position: 'absolute', bottom: -2, right: -2, width: 12, height: 12, borderRadius: '50%', backgroundColor: getStatusColor(f.status), border: '2px solid var(--bg-card)' }} />
                     </div>
                     <div>
@@ -168,7 +177,13 @@ export default function FriendsView() {
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{f.statusText}</div>
                     </div>
                   </div>
-                  <button onClick={() => handleRemoveFriend(f.id)} className="btn-icon" style={{ color: 'var(--accent-danger)' }} title="Remove Friend">
+                  <button 
+                    onClick={() => handleRemoveFriend(f.id)} 
+                    className="btn-icon" 
+                    style={{ color: 'var(--accent-danger)' }} 
+                    aria-label={`Remove friend ${f.username}`}
+                    title="Remove Friend"
+                  >
                     <RiUserUnfollowLine size={20} />
                   </button>
                 </div>
@@ -187,14 +202,32 @@ export default function FriendsView() {
                 {requests.incoming.map(r => (
                   <div key={r.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: 'var(--bg-card)', borderRadius: '12px', marginBottom: '8px', border: '1px solid var(--border-color)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <img src={r.user.avatar} alt={r.user.username} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img 
+                        src={getOptimizedImageUrl(r.user.avatar || `https://ui-avatars.com/api/?name=${r.user.username}`, { width: 80, height: 80 })} 
+                        alt={r.user.username} 
+                        width="40" 
+                        height="40" 
+                        loading="lazy" 
+                        decoding="async"
+                        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
+                      />
                       <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '1.05rem' }}>{r.user.username}</div>
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <button onClick={() => handleAcceptRequest(r.id)} className="btn-icon" style={{ backgroundColor: 'var(--accent-success)', color: 'var(--bg-darkest)', padding: '8px', borderRadius: '50%' }}>
+                      <button 
+                        onClick={() => handleAcceptRequest(r.id)} 
+                        className="btn-icon" 
+                        aria-label={`Accept friend request from ${r.user.username}`}
+                        style={{ backgroundColor: 'var(--accent-success)', color: 'var(--bg-darkest)', padding: '8px', borderRadius: '50%' }}
+                      >
                         <RiCheckLine size={20} />
                       </button>
-                      <button onClick={() => handleDeclineRequest(r.id)} className="btn-icon" style={{ backgroundColor: 'var(--bg-darker)', color: 'var(--accent-danger)', padding: '8px', borderRadius: '50%' }}>
+                      <button 
+                        onClick={() => handleDeclineRequest(r.id)} 
+                        className="btn-icon" 
+                        aria-label={`Decline friend request from ${r.user.username}`}
+                        style={{ backgroundColor: 'var(--bg-darker)', color: 'var(--accent-danger)', padding: '8px', borderRadius: '50%' }}
+                      >
                         <RiCloseLine size={20} />
                       </button>
                     </div>
@@ -211,10 +244,24 @@ export default function FriendsView() {
                 {requests.outgoing.map(r => (
                   <div key={r.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: 'var(--bg-card)', borderRadius: '12px', marginBottom: '8px', border: '1px solid var(--border-color)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <img src={r.user.avatar} alt={r.user.username} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img 
+                        src={getOptimizedImageUrl(r.user.avatar || `https://ui-avatars.com/api/?name=${r.user.username}`, { width: 80, height: 80 })} 
+                        alt={r.user.username} 
+                        width="40" 
+                        height="40" 
+                        loading="lazy" 
+                        decoding="async"
+                        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
+                      />
                       <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '1.05rem' }}>{r.user.username}</div>
                     </div>
-                    <button onClick={() => handleDeclineRequest(r.id)} className="btn-icon" style={{ color: 'var(--accent-danger)' }} title="Cancel Request">
+                    <button 
+                      onClick={() => handleDeclineRequest(r.id)} 
+                      className="btn-icon" 
+                      style={{ color: 'var(--accent-danger)' }} 
+                      aria-label={`Cancel friend request to ${r.user.username}`}
+                      title="Cancel Request"
+                    >
                       <RiCloseLine size={20} />
                     </button>
                   </div>
@@ -247,6 +294,7 @@ export default function FriendsView() {
               <input
                 type="text"
                 placeholder="Search by username..."
+                aria-label="Search by username"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 style={{ width: '100%', padding: '16px 16px 16px 48px', borderRadius: '12px', border: '1px solid var(--accent-success)', backgroundColor: 'var(--bg-card)', color: 'var(--text-main)', fontSize: '1rem', outline: 'none', boxShadow: '0 0 0 2px rgba(39, 174, 96, 0.1)' }}
@@ -261,7 +309,15 @@ export default function FriendsView() {
                 {searchResults.map(u => (
                   <div key={u.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: 'var(--bg-card)', borderRadius: '12px', marginBottom: '8px', border: '1px solid var(--border-color)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <img src={u.avatar} alt={u.username} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img 
+                        src={getOptimizedImageUrl(u.avatar || `https://ui-avatars.com/api/?name=${u.username}`, { width: 80, height: 80 })} 
+                        alt={u.username} 
+                        width="40" 
+                        height="40" 
+                        loading="lazy" 
+                        decoding="async"
+                        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
+                      />
                       <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '1.05rem' }}>{u.username}</div>
                     </div>
                     <button onClick={() => handleSendRequest(u.id)} className="btn" style={{ backgroundColor: 'var(--accent-success)', color: 'var(--bg-darkest)', padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 700 }}>

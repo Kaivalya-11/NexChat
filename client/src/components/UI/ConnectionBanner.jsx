@@ -21,7 +21,20 @@ export default function ConnectionBanner() {
   }
 
   return (
-    <div className={`connection-banner ${connectionState}`}>
+    <div
+      className={`connection-banner ${connectionState}`}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        minHeight: '28px',
+        height: '28px',
+        zIndex: 100
+      }}
+      role="status"
+      aria-live="polite"
+    >
       {icon}
       <span>{text}</span>
       <style>{`

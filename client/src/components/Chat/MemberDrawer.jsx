@@ -4,6 +4,7 @@ import { useChat } from '../../context/ChatContext';
 import { useSocket } from '../../context/SocketContext';
 import { useAuth } from '../../context/AuthContext';
 import * as api from '../../services/api';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { RiCloseLine, RiUserAddFill, RiUserMinusFill, RiVipCrownFill, RiShieldUserFill, RiGroupFill } from 'react-icons/ri';
 
 export default function MemberDrawer({ onClose }) {
@@ -97,6 +98,7 @@ export default function MemberDrawer({ onClose }) {
         <button 
           className="btn-icon" 
           onClick={onClose}
+          aria-label="Close members drawer"
           style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px', borderRadius: '8px' }}
         >
           <RiCloseLine size={22} />
@@ -206,8 +208,12 @@ export default function MemberDrawer({ onClose }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ position: 'relative' }}>
                     <img 
-                      src={member.avatar || `https://ui-avatars.com/api/?name=${member.username}`} 
+                      src={getOptimizedImageUrl(member.avatar || `https://ui-avatars.com/api/?name=${member.username}`, { width: 72, height: 72 })} 
                       alt={member.username} 
+                      width="36"
+                      height="36"
+                      loading="lazy"
+                      decoding="async"
                       style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} 
                     />
                     <div style={{ 
@@ -236,13 +242,14 @@ export default function MemberDrawer({ onClose }) {
                 {isAdmin && member.id !== currentUser?.id && member.id !== channel.owner && (
                   <button 
                     onClick={() => handleRemoveMember(member.id)}
+                    aria-label={`Remove member ${member.username}`}
                     style={{ 
                       background: 'rgba(239, 68, 68, 0.1)', 
                       border: 'none', 
                       color: '#ef4444', 
                       padding: '6px', 
                       borderRadius: '8px', 
-                      cursor: 'pointer',
+                      cursor: 'pointer', 
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'

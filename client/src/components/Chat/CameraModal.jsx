@@ -79,11 +79,16 @@ export default function CameraModal({ onClose, onAttach }) {
           </h3>
           <div style={{ display: 'flex', gap: '8px' }}>
             {!capturedImage && (
-              <button className="btn-icon" onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')} title="Switch Camera">
+              <button 
+                className="btn-icon" 
+                onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')} 
+                aria-label="Switch Camera"
+                title="Switch Camera"
+              >
                 <RiCameraSwitchLine size={22} />
               </button>
             )}
-            <button className="btn-icon" onClick={onClose}>
+            <button className="btn-icon" onClick={onClose} aria-label="Close camera modal">
               <RiCloseLine size={22} />
             </button>
           </div>
@@ -92,9 +97,23 @@ export default function CameraModal({ onClose, onAttach }) {
         {cameraErr ? (
           <div style={{ color: '#ff4d4f', padding: '20px', textAlign: 'center' }}>{cameraErr}</div>
         ) : capturedImage ? (
-          <img src={capturedImage} alt="Captured" style={{ width: '100%', height: '320px', objectFit: 'cover', borderRadius: '12px', marginBottom: '16px' }} />
+          <img 
+            src={capturedImage} 
+            alt="Captured photo preview" 
+            width="400" 
+            height="320" 
+            style={{ width: '100%', height: '320px', objectFit: 'cover', borderRadius: '12px', marginBottom: '16px' }} 
+          />
         ) : (
-          <video ref={videoRef} autoPlay playsInline style={{ width: '100%', height: '320px', objectFit: 'cover', borderRadius: '12px', backgroundColor: '#000', marginBottom: '16px' }} />
+          <video 
+            ref={videoRef} 
+            autoPlay 
+            playsInline 
+            aria-label="Camera preview"
+            style={{ width: '100%', height: '320px', objectFit: 'cover', borderRadius: '12px', backgroundColor: '#000', marginBottom: '16px' }} 
+          >
+            <track kind="captions" />
+          </video>
         )}
 
         <div style={{ display: 'flex', gap: '12px', width: '100%', justifyContent: 'center' }}>

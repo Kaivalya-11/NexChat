@@ -19,6 +19,7 @@ import {
   RiShieldCheckLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
+import { getOptimizedAttachmentUrl } from '../../../utils/imageOptimizer';
 import { AdminLoadingState, AdminErrorState, AdminEmptyState } from '../AdminStates';
 
 function formatBytes(bytes) {
@@ -468,10 +469,13 @@ export default function StorageView({ token }) {
                 }}>
                   {isImage && file.url ? (
                     <img
-                      src={file.url}
+                      src={getOptimizedAttachmentUrl(file.url, { width: 400 })}
                       alt={file.fileName}
+                      width="280"
+                      height="140"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', color: 'var(--text-dim)' }}>

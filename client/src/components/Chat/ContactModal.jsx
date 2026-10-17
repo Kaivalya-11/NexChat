@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RiUser3Fill, RiCloseLine, RiSearch2Line } from 'react-icons/ri';
 import * as api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
 export default function ContactModal({ onClose, onSendContact }) {
   const { token, user } = useAuth();
@@ -31,7 +32,7 @@ export default function ContactModal({ onClose, onSendContact }) {
           <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <RiUser3Fill size={20} style={{ color: '#34c759' }} /> Share Contact
           </h3>
-          <button className="btn-icon" onClick={onClose}>
+          <button className="btn-icon" onClick={onClose} aria-label="Close contact modal">
             <RiCloseLine size={22} />
           </button>
         </div>
@@ -61,7 +62,15 @@ export default function ContactModal({ onClose, onSendContact }) {
                 onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
                 onMouseOut={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'}
               >
-                <img src={u.avatar || `https://ui-avatars.com/api/?name=${u.username}`} alt={u.username} style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                <img
+                  src={getOptimizedImageUrl(u.avatar || `https://ui-avatars.com/api/?name=${u.username}`, { width: 72, height: 72 })}
+                  alt={u.username}
+                  width="36"
+                  height="36"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
+                />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>{u.username}</div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{u.email}</div>

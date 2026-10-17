@@ -68,6 +68,7 @@ export default function SearchModal({ onClose }) {
              value={query}
              onChange={e => setQuery(e.target.value)}
              placeholder="Search all messages..."
+             aria-label="Search all messages"
              style={{
                flex: 1,
                border: 'none',
@@ -77,7 +78,7 @@ export default function SearchModal({ onClose }) {
                outline: 'none'
              }}
            />
-           <button className="btn-icon" onClick={onClose}><RiCloseLine size={22}/></button>
+           <button className="btn-icon" onClick={onClose} aria-label="Close search modal"><RiCloseLine size={22}/></button>
         </div>
 
         <div style={{ maxHeight: '400px', overflowY: 'auto', backgroundColor: 'var(--bg-darkest)' }}>

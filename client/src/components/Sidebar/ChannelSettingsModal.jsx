@@ -19,6 +19,7 @@ import {
   RiUser3Line
 } from 'react-icons/ri';
 import ConfirmModal from '../UI/ConfirmModal';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
 export default function ChannelSettingsModal({ channel, onClose }) {
   const { removeChannel, refreshChannels } = useChat();
@@ -270,6 +271,7 @@ export default function ChannelSettingsModal({ channel, onClose }) {
           <button
             className="btn-icon"
             onClick={onClose}
+            aria-label="Close settings modal"
             style={{
               background: 'transparent',
               border: 'none',
@@ -350,8 +352,12 @@ export default function ChannelSettingsModal({ channel, onClose }) {
                 }}>
                   <div style={{ position: 'relative' }}>
                     <img
-                      src={otherMember.avatar || `https://ui-avatars.com/api/?name=${otherMember.username}`}
+                      src={getOptimizedImageUrl(otherMember.avatar || `https://ui-avatars.com/api/?name=${otherMember.username}`, { width: 112, height: 112 })}
                       alt={otherMember.username}
+                      width="56"
+                      height="56"
+                      loading="lazy"
+                      decoding="async"
                       style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover' }}
                     />
                     <div style={{
@@ -608,8 +614,12 @@ export default function ChannelSettingsModal({ channel, onClose }) {
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                         <img
-                          src={m.avatar || `https://ui-avatars.com/api/?name=${m.username}`}
+                          src={getOptimizedImageUrl(m.avatar || `https://ui-avatars.com/api/?name=${m.username}`, { width: 64, height: 64 })}
                           alt={m.username}
+                          width="32"
+                          height="32"
+                          loading="lazy"
+                          decoding="async"
                           style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                         />
                         <div style={{ minWidth: 0 }}>

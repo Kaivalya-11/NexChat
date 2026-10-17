@@ -13,6 +13,7 @@ import {
   RiAlertFill
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
+import { getOptimizedImageUrl } from '../../../utils/imageOptimizer';
 import AdminConfirmModal from '../modals/AdminConfirmModal';
 import { AdminLoadingState } from '../AdminStates';
 
@@ -304,8 +305,12 @@ export default function ChannelDetailsDrawer({
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <img
-                            src={m.avatar || `https://ui-avatars.com/api/?name=${m.username}`}
+                            src={getOptimizedImageUrl(m.avatar || `https://ui-avatars.com/api/?name=${m.username}`, { width: 48, height: 48 })}
                             alt={m.username}
+                            width="24"
+                            height="24"
+                            loading="lazy"
+                            decoding="async"
                             style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }}
                           />
                           <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>

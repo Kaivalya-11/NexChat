@@ -13,6 +13,7 @@ import {
   RiCloseLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
+import { getOptimizedImageUrl } from '../../../utils/imageOptimizer';
 import { AdminLoadingState, AdminEmptyState, AdminErrorState } from '../AdminStates';
 import UserDetailsDrawer from './UserDetailsDrawer';
 
@@ -310,8 +311,12 @@ export default function UsersView({ token, currentAdminId }) {
                       <td style={{ padding: '14px 20px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <img
-                            src={user.avatar || `https://ui-avatars.com/api/?name=${user.username}`}
+                            src={getOptimizedImageUrl(user.avatar || `https://ui-avatars.com/api/?name=${user.username}`, { width: 72, height: 72 })}
                             alt={user.username}
+                            width="36"
+                            height="36"
+                            loading="lazy"
+                            decoding="async"
                             style={{
                               width: '36px',
                               height: '36px',

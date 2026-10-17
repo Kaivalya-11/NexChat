@@ -221,12 +221,22 @@ export default function MessageInput({ isThread = false, threadParentId = null }
           {media.map((m, i) => (
             <div key={i} style={{ position: 'relative', width: '60px', height: '60px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: 'var(--bg-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {m.fileType === 'image' ? (
-                <img src={m.url} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img
+                  src={m.url}
+                  alt="preview"
+                  width="60"
+                  height="60"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
               ) : (
                 <RiFileTextFill size={24} style={{ color: 'var(--text-muted)' }} />
               )}
               <button 
+                type="button"
                 className="btn-icon" 
+                aria-label="Remove uploaded attachment"
                 style={{ position: 'absolute', top: 2, right: 2, padding: '2px', background: 'rgba(0,0,0,0.5)', color: 'white' }}
                 onClick={() => removeMedia(i)}
               >
@@ -257,21 +267,22 @@ export default function MessageInput({ isThread = false, threadParentId = null }
               {replyingTo.content || 'Attachment'}
             </div>
           </div>
-          <button type="button" className="btn-icon" onClick={() => setReplyingTo(null)}>
+          <button type="button" className="btn-icon" aria-label="Cancel reply" onClick={() => setReplyingTo(null)}>
             <RiCloseLine size={18} />
           </button>
         </div>
       )}
 
       <div style={{ display: 'flex', gap: '8px', marginBottom: '4px', paddingLeft: '4px', overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
-        <button type="button" onMouseDown={(e) => { e.preventDefault(); insertFormat('**', '**'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[bold]</button>
-        <button type="button" onMouseDown={(e) => { e.preventDefault(); insertFormat('*', '*'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[italic]</button>
-        <button type="button" onMouseDown={(e) => { e.preventDefault(); insertFormat('[', '](url)'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[link]</button>
-        <button type="button" onMouseDown={(e) => { e.preventDefault(); insertFormat('`', '`'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[code]</button>
+        <button type="button" aria-label="Format bold" onMouseDown={(e) => { e.preventDefault(); insertFormat('**', '**'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[bold]</button>
+        <button type="button" aria-label="Format italic" onMouseDown={(e) => { e.preventDefault(); insertFormat('*', '*'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[italic]</button>
+        <button type="button" aria-label="Format link" onMouseDown={(e) => { e.preventDefault(); insertFormat('[', '](url)'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[link]</button>
+        <button type="button" aria-label="Format code" onMouseDown={(e) => { e.preventDefault(); insertFormat('`', '`'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[code]</button>
       </div>
 
       <form 
         onSubmit={handleSend}
+        className="message-input-container"
         style={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -289,6 +300,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
             type="button" 
             className="btn-icon" 
             title="Attach file" 
+            aria-label="Attach file"
             onClick={() => setShowAttachMenu(!showAttachMenu)} 
             disabled={isUploading}
             style={{ 
@@ -393,7 +405,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
                 <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <RiStickyNoteFill size={18} style={{ color: '#00c7be' }} /> Send a Sticker
                 </span>
-                <button type="button" className="btn-icon" onClick={() => setShowStickerPicker(false)}>
+                <button type="button" className="btn-icon" aria-label="Close sticker picker" onClick={() => setShowStickerPicker(false)}>
                   <RiCloseLine size={18} />
                 </button>
               </div>
@@ -402,6 +414,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
                   <button
                     key={s.id}
                     type="button"
+                    aria-label={`Send ${s.name} sticker`}
                     onClick={() => handleSendSticker(s.url)}
                     style={{
                       background: 'rgba(255,255,255,0.03)',
@@ -417,7 +430,15 @@ export default function MessageInput({ isThread = false, threadParentId = null }
                     onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
                     onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   >
-                    <img src={s.url} alt={s.name} style={{ width: '52px', height: '52px', objectFit: 'contain' }} />
+                    <img
+                      src={s.url}
+                      alt={s.name}
+                      width="52"
+                      height="52"
+                      loading="lazy"
+                      decoding="async"
+                      style={{ width: '52px', height: '52px', objectFit: 'contain' }}
+                    />
                   </button>
                 ))}
               </div>
@@ -466,7 +487,13 @@ export default function MessageInput({ isThread = false, threadParentId = null }
 
         <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '4px' }}>
           <div style={{ position: 'relative' }}>
-            <button type="button" className="btn-icon" title="Emoji" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+            <button
+              type="button"
+              className="btn-icon"
+              title="Emoji"
+              aria-label="Add emoji"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
               <RiEmotionHappyLine size={22} />
             </button>
             {showEmojiPicker && (
@@ -481,17 +508,32 @@ export default function MessageInput({ isThread = false, threadParentId = null }
           </div>
           
           {isRecording ? (
-            <button type="button" className="btn-icon" title="Stop Recording" onClick={stopRecording} style={{ color: 'var(--accent-danger)' }}>
+            <button
+              type="button"
+              className="btn-icon"
+              title="Stop Recording"
+              aria-label="Stop recording voice message"
+              onClick={stopRecording}
+              style={{ color: 'var(--accent-danger)' }}
+            >
               <RiStopFill size={22} />
             </button>
           ) : (
-            <button type="button" className="btn-icon" title="Voice Message" onClick={startRecording} disabled={isUploading}>
+            <button
+              type="button"
+              className="btn-icon"
+              title="Voice Message"
+              aria-label="Record voice message"
+              onClick={startRecording}
+              disabled={isUploading}
+            >
               <RiMicFill size={22} />
             </button>
           )}
 
           <button 
              type="submit" 
+             aria-label="Send message"
              style={{ 
                padding: '10px 14px', 
                marginLeft: '6px', 

@@ -39,8 +39,8 @@ export default function NotificationDrawer({ onClose }) {
       <div style={{ padding: '16px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.05rem', fontWeight: 600 }}><RiNotification3Fill size={18} style={{ color: 'var(--accent-primary)' }}/> Notifications</h3>
         <div style={{ display: 'flex', gap: '8px' }}>
-          {notifications.length > 0 && <button className="btn-icon" onClick={clearNotifications} style={{ fontSize: '0.8rem', padding: '4px 8px' }}>Clear</button>}
-          <button className="btn-icon" onClick={onClose}><RiCloseLine size={22}/></button>
+          {notifications.length > 0 && <button className="btn-icon" onClick={clearNotifications} aria-label="Clear all notifications" style={{ fontSize: '0.8rem', padding: '4px 8px' }}>Clear</button>}
+          <button className="btn-icon" onClick={onClose} aria-label="Close notifications drawer"><RiCloseLine size={22}/></button>
         </div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>

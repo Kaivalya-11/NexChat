@@ -5,6 +5,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import * as api from '../../services/api';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import {
   RiCloseLine, RiSave3Fill, RiImageLine, RiCameraLine, RiCropLine, RiCheckLine
 } from 'react-icons/ri';
@@ -169,7 +170,7 @@ export default function ProfileModal({ onClose }) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Edit Profile</h2>
-          <button className="btn-icon" onClick={onClose}><RiCloseLine size={22} /></button>
+          <button className="btn-icon" onClick={onClose} aria-label="Close edit profile modal"><RiCloseLine size={22} /></button>
         </div>
 
         <form onSubmit={handleSave}>
@@ -187,8 +188,11 @@ export default function ProfileModal({ onClose }) {
               <motion.img
                 whileHover={{ scale: uploading ? 1 : 1.06 }}
                 whileTap={{ scale: uploading ? 1 : 0.95 }}
-                src={avatar || `https://ui-avatars.com/api/?name=${user.username}`}
+                src={getOptimizedImageUrl(avatar || `https://ui-avatars.com/api/?name=${user.username}`, { width: 160, height: 160 })}
                 alt="Avatar"
+                width="80"
+                height="80"
+                decoding="async"
                 style={{
                   width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover',
                   border: uploading ? '3px solid #22c55e' : '3px solid var(--accent-primary)',
@@ -300,8 +304,16 @@ export default function ProfileModal({ onClose }) {
             onClick={e => e.stopPropagation()}
           >
             <div style={{ position: 'relative' }}>
-              <video ref={videoRef} autoPlay playsInline muted
-                style={{ width: '360px', height: '360px', objectFit: 'cover', borderRadius: '50%', border: '3px solid #22c55e' }} />
+              <video 
+                ref={videoRef} 
+                autoPlay 
+                playsInline 
+                muted
+                aria-label="Live camera preview"
+                style={{ width: '360px', height: '360px', objectFit: 'cover', borderRadius: '50%', border: '3px solid #22c55e' }}
+              >
+                <track kind="captions" />
+              </video>
             </div>
             <div style={{ display: 'flex', gap: '16px' }}>
               <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}

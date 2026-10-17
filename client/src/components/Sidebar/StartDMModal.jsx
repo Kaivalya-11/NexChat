@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
 import * as api from '../../services/api';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { RiCloseLine, RiMessage3Fill } from 'react-icons/ri';
 
 export default function StartDMModal({ onClose }) {
@@ -51,7 +52,7 @@ export default function StartDMModal({ onClose }) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Direct Message</h2>
-           <button className="btn-icon" onClick={onClose}><RiCloseLine size={22}/></button>
+           <button className="btn-icon" onClick={onClose} aria-label="Close direct message modal"><RiCloseLine size={22}/></button>
         </div>
 
         <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -81,7 +82,15 @@ export default function StartDMModal({ onClose }) {
                 borderBottom: '1px solid var(--border-color)'
               }}
             >
-              <img src={u.avatar} alt={u.username} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+              <img 
+                src={getOptimizedImageUrl(u.avatar || `https://ui-avatars.com/api/?name=${u.username}`, { width: 80, height: 80 })} 
+                alt={u.username} 
+                width="40" 
+                height="40" 
+                loading="lazy" 
+                decoding="async" 
+                style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
+              />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{u.username}</span>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{u.statusText}</span>

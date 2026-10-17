@@ -85,7 +85,7 @@ export default function ThreadDrawer() {
            <h2 style={{ fontSize: '1.05rem', margin: 0, fontWeight: 600, color: 'var(--text-main)' }}>Thread</h2>
            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{activeChannelId}</span>
         </div>
-        <button className="btn-icon" onClick={() => setActiveThread(null)}>
+        <button className="btn-icon" onClick={() => setActiveThread(null)} aria-label="Close thread drawer">
           <RiCloseLine size={20} />
         </button>
       </div>

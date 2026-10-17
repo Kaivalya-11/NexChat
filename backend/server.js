@@ -41,6 +41,14 @@ async function startServer() {
 
   expressApp.use(cors(corsOptions));
 
+  // Security Headers hardening (Best Practices)
+  expressApp.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    next();
+  });
+
   expressApp.use(express.json());
 
   // Public deployment health check endpoint (returns minimal safe status, no sensitive details)

@@ -19,6 +19,7 @@ import {
   RiEyeLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
+import { getOptimizedImageUrl } from '../../../utils/imageOptimizer';
 import { AdminLoadingState, AdminErrorState, AdminEmptyState } from '../AdminStates';
 
 const ACTION_GROUPS = [
@@ -433,8 +434,12 @@ export default function AuditLogsView({ token }) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={log.actor?.avatar || `https://ui-avatars.com/api/?name=${log.actor?.username || 'Admin'}`}
+                            src={getOptimizedImageUrl(log.actor?.avatar || `https://ui-avatars.com/api/?name=${log.actor?.username || 'Admin'}`, { width: 52, height: 52 })}
                             alt={log.actor?.username}
+                            width="26"
+                            height="26"
+                            loading="lazy"
+                            decoding="async"
                             style={{
                               width: '26px',
                               height: '26px',

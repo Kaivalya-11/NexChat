@@ -72,7 +72,7 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
         borderBottom: '1px solid var(--border-color)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button className="btn-icon mobile-only" onClick={onToggleSidebar} style={{ padding: '4px', marginRight: '4px' }}>
+          <button className="btn-icon mobile-only" aria-label="Toggle navigation sidebar" onClick={onToggleSidebar} style={{ padding: '4px', marginRight: '4px' }}>
             <RiMenuLine size={20} color="var(--text-main)" />
           </button>
           <div style={{ color: 'var(--accent-primary)' }}>
@@ -92,12 +92,12 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button className="btn-icon" onClick={onOpenSearch} title="Search" style={{ padding: '6px', color: 'var(--text-muted)' }}>
+          <button className="btn-icon" onClick={onOpenSearch} title="Search" aria-label="Search conversation messages" style={{ padding: '6px', color: 'var(--text-muted)' }}>
             <RiSearch2Line size={18} />
           </button>
 
           {channel.isGroup && (
-            <button className="btn-icon" onClick={onToggleMembers} title="Members" style={{ padding: '6px', color: 'var(--text-muted)' }}>
+            <button className="btn-icon" onClick={onToggleMembers} title="Members" aria-label="View channel members" style={{ padding: '6px', color: 'var(--text-muted)' }}>
               <RiGroupFill size={18} />
             </button>
           )}
@@ -106,6 +106,7 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
             className="btn-icon"
             onClick={() => setShowSettingsModal(true)}
             title={channel.isGroup ? "Channel Settings" : "Chat Settings"}
+            aria-label={channel.isGroup ? "Channel Settings" : "Chat Settings"}
             style={{ padding: '6px', color: 'var(--text-muted)' }}
           >
             <RiSettings4Line size={18} />
@@ -122,7 +123,8 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
                 onConfirm: () => removeChannel(channel.id)
               });
             }}
-            title="Remove/Leave"
+            title={channel.isGroup ? "Leave Channel" : "Delete Chat"}
+            aria-label={channel.isGroup ? "Leave channel" : "Delete chat"}
             style={{ padding: '6px', color: 'var(--accent-danger)' }}
           >
             <RiDeleteBin6Line size={18} />

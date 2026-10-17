@@ -107,7 +107,10 @@ export default function MessageList() {
 
   useEffect(() => {
     if (!isFetchingOlder) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      // Batch DOM write in animation frame to prevent forced synchronous reflow
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      });
     }
   }, [messages.length, isFetchingOlder]);
 
@@ -116,20 +119,27 @@ export default function MessageList() {
       (entries) => {
         if (entries[0].isIntersecting && !loadingMessages && hasMore && messages.length > 0) {
           setIsFetchingOlder(true);
-          prevScrollHeightRef.current = containerRef.current.scrollHeight;
+          const currentContainer = containerRef.current;
+          if (!currentContainer) return;
+          const prevScrollHeight = currentContainer.scrollHeight;
+          prevScrollHeightRef.current = prevScrollHeight;
           
           loadMessages(activeChannelId, messages[0].createdAt).then((newMsgsCount) => {
             if (newMsgsCount === 0 || newMsgsCount < 40) {
               setHasMore(false); // 40 is the backend limit per page
             }
             
-            setTimeout(() => {
+            // Batch scroll adjustment in animation frame to eliminate layout thrashing
+            requestAnimationFrame(() => {
               if (containerRef.current) {
                 const newScrollHeight = containerRef.current.scrollHeight;
-                containerRef.current.scrollTop += (newScrollHeight - prevScrollHeightRef.current);
+                const delta = newScrollHeight - prevScrollHeight;
+                if (delta > 0) {
+                  containerRef.current.scrollTop += delta;
+                }
               }
               setIsFetchingOlder(false);
-            }, 0);
+            });
           }).catch(() => {
              setIsFetchingOlder(false);
           });
@@ -185,18 +195,18 @@ export default function MessageList() {
               {selectedMessages.size} selected
             </span>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <button className="btn-icon" onClick={handleCopy} title="Copy" style={{ padding: '6px' }}>
+              <button className="btn-icon" onClick={handleCopy} title="Copy" aria-label="Copy selected messages" style={{ padding: '6px' }}>
                 <RiFileCopyLine size={18} />
               </button>
-              <button className="btn-icon" onClick={handleForward} title="Forward" style={{ padding: '6px' }}>
+              <button className="btn-icon" onClick={handleForward} title="Forward" aria-label="Forward selected messages" style={{ padding: '6px' }}>
                 <RiShareForwardLine size={18} />
               </button>
-              <button className="btn-icon" onClick={handleDelete} title="Delete" style={{ padding: '6px', color: '#ef4444' }}>
+              <button className="btn-icon" onClick={handleDelete} title="Delete" aria-label="Delete selected messages" style={{ padding: '6px', color: '#ef4444' }}>
                 <RiDeleteBin6Line size={18} />
               </button>
             </div>
             <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--border-color)' }} />
-            <button className="btn-icon" onClick={clearSelection} title="Cancel" style={{ padding: '6px' }}>
+            <button className="btn-icon" onClick={clearSelection} title="Cancel" aria-label="Cancel selection" style={{ padding: '6px' }}>
               <RiCloseLine size={18} />
             </button>
           </motion.div>
@@ -235,6 +245,7 @@ export default function MessageList() {
               className="btn-icon" 
               onClick={() => unpinMessage(activeChannelId)} 
               title="Unpin"
+              aria-label="Unpin message"
               style={{ padding: '6px' }}
             >
               <RiCloseLine size={20} />
@@ -248,9 +259,12 @@ export default function MessageList() {
         style={{ 
           flex: 1, 
           overflowY: 'auto', 
-          padding: '16px 8px 0 8px', 
+          padding: '16px', 
           display: 'flex', 
-          flexDirection: 'column',
+          flexDirection: 'column', 
+          gap: '12px',
+          minHeight: '240px',
+          contain: 'layout',
           zIndex: 1
         }}
       >

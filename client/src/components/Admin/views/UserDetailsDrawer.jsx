@@ -14,6 +14,7 @@ import {
   RiInformationLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
+import { getOptimizedImageUrl } from '../../../utils/imageOptimizer';
 import AdminConfirmModal from '../modals/AdminConfirmModal';
 import { AdminLoadingState } from '../AdminStates';
 
@@ -183,8 +184,12 @@ export default function UserDetailsDrawer({
                 gap: '16px'
               }}>
                 <img
-                  src={user.avatar || `https://ui-avatars.com/api/?name=${user.username}`}
+                  src={getOptimizedImageUrl(user.avatar || `https://ui-avatars.com/api/?name=${user.username}`, { width: 128, height: 128 })}
                   alt={user.username}
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '64px',
                     height: '64px',

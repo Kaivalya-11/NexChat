@@ -137,6 +137,7 @@ export default function MediaPreviewModal() {
                 <button
                   className="btn-icon"
                   title="Zoom Out"
+                  aria-label="Zoom out"
                   onClick={() => setZoom(prev => Math.max(0.5, prev - 0.25))}
                   style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '8px', padding: '6px' }}
                 >
@@ -148,6 +149,7 @@ export default function MediaPreviewModal() {
                 <button
                   className="btn-icon"
                   title="Zoom In"
+                  aria-label="Zoom in"
                   onClick={() => setZoom(prev => Math.min(3, prev + 0.25))}
                   style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '8px', padding: '6px' }}
                 >
@@ -156,6 +158,7 @@ export default function MediaPreviewModal() {
                 <button
                   className="btn-icon"
                   title="Reset Zoom"
+                  aria-label="Reset zoom"
                   onClick={() => setZoom(1)}
                   style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '8px', padding: '6px', marginRight: '8px' }}
                 >
@@ -167,6 +170,7 @@ export default function MediaPreviewModal() {
             <button
               className="btn btn-secondary"
               title="Download File"
+              aria-label="Download file"
               onClick={handleDownload}
               disabled={isDownloading}
               style={{ padding: '6px 14px', fontSize: '0.85rem', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '6px', cursor: isDownloading ? 'wait' : 'pointer' }}
@@ -180,6 +184,7 @@ export default function MediaPreviewModal() {
               rel="noreferrer"
               className="btn-icon"
               title="Open in New Tab"
+              aria-label="Open file in new tab"
               onClick={(e) => e.stopPropagation()}
               style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px', padding: '8px' }}
             >
@@ -189,6 +194,7 @@ export default function MediaPreviewModal() {
             <button
               className="btn-icon"
               title="Close (Esc)"
+              aria-label="Close media preview"
               onClick={() => setPreviewMedia(null)}
               style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: '#ff4d4f', borderRadius: '10px', padding: '8px', marginLeft: '4px' }}
             >
@@ -250,6 +256,8 @@ export default function MediaPreviewModal() {
               <video
                 controls
                 autoPlay
+                playsInline
+                aria-label={fileName || 'Video preview'}
                 src={url}
                 style={{
                   width: 'auto',
@@ -261,7 +269,10 @@ export default function MediaPreviewModal() {
                   boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
                   border: '1px solid rgba(255,255,255,0.1)'
                 }}
-              />
+              >
+                <track kind="captions" srcLang="en" label="English captions" />
+                Your browser does not support the video tag.
+              </video>
             </motion.div>
           ) : isAudio ? (
             <motion.div

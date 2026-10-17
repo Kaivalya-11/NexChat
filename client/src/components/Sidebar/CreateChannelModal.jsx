@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
 import * as api from '../../services/api';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { RiCloseLine, RiHashtag, RiCheckLine } from 'react-icons/ri';
 
 export default function CreateChannelModal({ onClose }) {
@@ -71,7 +72,7 @@ export default function CreateChannelModal({ onClose }) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Create Channel</h2>
-           <button className="btn-icon" onClick={onClose}><RiCloseLine size={22}/></button>
+           <button className="btn-icon" onClick={onClose} aria-label="Close create channel modal"><RiCloseLine size={22}/></button>
         </div>
 
         <form onSubmit={handleCreate}>
@@ -122,7 +123,15 @@ export default function CreateChannelModal({ onClose }) {
                   >
                     {selectedUsers.has(u.id) && <RiCheckLine size={14} color="white" />}
                   </motion.div>
-                  <img src={u.avatar} alt={u.username} style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
+                  <img 
+                    src={getOptimizedImageUrl(u.avatar || `https://ui-avatars.com/api/?name=${u.username}`, { width: 56, height: 56 })} 
+                    alt={u.username} 
+                    width="28" 
+                    height="28" 
+                    loading="lazy" 
+                    decoding="async" 
+                    style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} 
+                  />
                   <span style={{ color: 'var(--text-main)', fontSize: '0.9rem' }}>{u.username}</span>
                 </motion.div>
               ))}

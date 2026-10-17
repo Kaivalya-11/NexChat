@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { RiCloseLine, RiHashtag, RiSearch2Line, RiShareForwardLine } from 'react-icons/ri';
 
 export default function ForwardModal({ isOpen, onClose, onForward, channels, user }) {
@@ -61,7 +62,7 @@ export default function ForwardModal({ isOpen, onClose, onForward, channels, use
             <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
               <RiShareForwardLine /> Forward Messages
             </h3>
-            <button className="btn-icon" onClick={onClose}><RiCloseLine size={24}/></button>
+            <button className="btn-icon" onClick={onClose} aria-label="Close forward modal"><RiCloseLine size={24}/></button>
           </div>
 
           <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-darkest)' }}>
@@ -72,6 +73,7 @@ export default function ForwardModal({ isOpen, onClose, onForward, channels, use
                  value={query}
                  onChange={e => setQuery(e.target.value)}
                  placeholder="Search channels or contacts..."
+                 aria-label="Search channels or contacts"
                  style={{
                    width: '100%',
                    padding: '12px 16px 12px 40px',
@@ -128,7 +130,15 @@ export default function ForwardModal({ isOpen, onClose, onForward, channels, use
                         <RiHashtag size={20} />
                       </div>
                     ) : (
-                      <img src={avatar} alt={name} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img 
+                        src={getOptimizedImageUrl(avatar, { width: 80, height: 80 })} 
+                        alt={name} 
+                        width="40" 
+                        height="40" 
+                        loading="lazy" 
+                        decoding="async" 
+                        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
+                      />
                     )}
                     <span style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>
                       {isGroup ? `# ${name}` : name}

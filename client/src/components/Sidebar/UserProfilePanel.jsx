@@ -11,6 +11,7 @@ import {
   RiArrowRightSLine,
   RiShieldCheckFill
 } from 'react-icons/ri';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
 export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSearch, onToggleTheme, logout, getStatusColor }) {
   return (
@@ -36,8 +37,11 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               boxShadow: '0 0 15px rgba(16, 185, 129, 0.2)'
             }}>
               <img
-                src={user.avatar || `https://ui-avatars.com/api/?name=${user.username}`}
+                src={getOptimizedImageUrl(user.avatar || `https://ui-avatars.com/api/?name=${user.username}`, { width: 128, height: 128 })}
                 alt={user.username}
+                width="64"
+                height="64"
+                decoding="async"
                 style={{
                   width: '64px',
                   height: '64px',
@@ -181,6 +185,7 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
           {/* Appearance Control */}
           <button
             onClick={onToggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             style={{
               flex: 1,
               display: 'flex',
@@ -210,6 +215,7 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
           {/* Logout Control */}
           <button
             onClick={logout}
+            aria-label="Log out"
             style={{
               display: 'flex',
               alignItems: 'center',

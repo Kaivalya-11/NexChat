@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCall } from '../../context/CallContext';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { 
   RiMicFill, 
   RiMicOffFill, 
@@ -45,13 +46,20 @@ function VideoStream({ stream, isMuted = false, isLocal = false, username, avata
           autoPlay
           playsInline
           muted={isLocal || isMuted}
+          aria-label={isLocal ? "Your video stream" : `${username}'s video stream`}
           style={{ width: '100%', height: '100%', objectFit: 'cover', transform: isLocal ? 'scaleX(-1)' : 'none' }}
-        />
+        >
+          <track kind="captions" />
+        </video>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <img
-            src={avatar || `https://ui-avatars.com/api/?name=${username || 'User'}`}
+            src={getOptimizedImageUrl(avatar || `https://ui-avatars.com/api/?name=${username || 'User'}`, { width: 160, height: 160 })}
             alt={username}
+            width="80"
+            height="80"
+            loading="lazy"
+            decoding="async"
             style={{ width: '80px', height: '80px', borderRadius: '50%', border: '3px solid var(--accent-primary)', objectFit: 'cover' }}
           />
           <span style={{ fontSize: '1rem', fontWeight: 600, color: '#fff' }}>{username}</span>
@@ -131,8 +139,12 @@ export default function VideoCallModal() {
           }}
         >
           <img
-            src={incomingCall.caller.avatar || `https://ui-avatars.com/api/?name=${incomingCall.caller.username}`}
+            src={getOptimizedImageUrl(incomingCall.caller.avatar || `https://ui-avatars.com/api/?name=${incomingCall.caller.username}`, { width: 96, height: 96 })}
             alt={incomingCall.caller.username}
+            width="48"
+            height="48"
+            loading="lazy"
+            decoding="async"
             style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
           />
           <div>
@@ -147,6 +159,7 @@ export default function VideoCallModal() {
           <div style={{ display: 'flex', gap: '8px', marginLeft: '8px' }}>
             <button
               onClick={declineCall}
+              aria-label="Decline incoming call"
               style={{
                 width: '40px',
                 height: '40px',
@@ -166,6 +179,7 @@ export default function VideoCallModal() {
 
             <button
               onClick={acceptCall}
+              aria-label="Accept incoming call"
               style={{
                 width: '40px',
                 height: '40px',
@@ -209,7 +223,7 @@ export default function VideoCallModal() {
           <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#fff', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34c759' }} /> In Call
           </span>
-          <button className="btn-icon" onClick={() => setIsMinimized(false)} style={{ padding: '2px' }}>
+          <button className="btn-icon" onClick={() => setIsMinimized(false)} aria-label="Expand video call from picture-in-picture" style={{ padding: '2px' }}>
             <RiFullscreenLine size={16} />
           </button>
         </div>
@@ -243,7 +257,7 @@ export default function VideoCallModal() {
           </div>
         </div>
 
-        <button className="btn-icon" onClick={() => setIsMinimized(true)} title="Minimize to PiP">
+        <button className="btn-icon" onClick={() => setIsMinimized(true)} aria-label="Minimize video call to picture-in-picture" title="Minimize to PiP">
           <RiFullscreenExitLine size={22} />
         </button>
       </div>
@@ -299,6 +313,7 @@ export default function VideoCallModal() {
       }}>
         <button
           onClick={toggleMic}
+          aria-label={isMicMuted ? 'Unmute Microphone' : 'Mute Microphone'}
           style={{
             width: '48px',
             height: '48px',
@@ -319,6 +334,7 @@ export default function VideoCallModal() {
 
         <button
           onClick={toggleCamera}
+          aria-label={isCameraOff ? 'Turn Camera On' : 'Turn Camera Off'}
           style={{
             width: '48px',
             height: '48px',
@@ -339,6 +355,7 @@ export default function VideoCallModal() {
 
         <button
           onClick={toggleScreenShare}
+          aria-label={isScreenSharing ? 'Stop Screen Share' : 'Share Screen'}
           style={{
             width: '48px',
             height: '48px',
@@ -359,6 +376,7 @@ export default function VideoCallModal() {
 
         <button
           onClick={endCall}
+          aria-label="End Call"
           style={{
             width: '56px',
             height: '56px',

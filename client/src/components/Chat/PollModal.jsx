@@ -36,7 +36,7 @@ export default function PollModal({ onClose, onCreatePoll }) {
           <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <RiBarChart2Fill size={20} style={{ color: '#ffcc00' }} /> Create Poll
           </h3>
-          <button className="btn-icon" onClick={onClose}>
+          <button className="btn-icon" onClick={onClose} aria-label="Close poll modal">
             <RiCloseLine size={22} />
           </button>
         </div>
@@ -49,6 +49,7 @@ export default function PollModal({ onClose, onCreatePoll }) {
             <input
               type="text"
               placeholder="Ask a question..."
+              aria-label="Poll question"
               value={pollQuestion}
               onChange={e => setPollQuestion(e.target.value)}
               style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-dark)', color: 'var(--text-main)', outline: 'none', fontSize: '0.95rem' }}
@@ -65,6 +66,7 @@ export default function PollModal({ onClose, onCreatePoll }) {
                   <input
                     type="text"
                     placeholder={`Option ${i + 1}`}
+                    aria-label={`Option ${i + 1}`}
                     value={opt}
                     onChange={e => {
                       const next = [...pollOptions];
@@ -74,7 +76,7 @@ export default function PollModal({ onClose, onCreatePoll }) {
                     style={{ flex: 1, padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-dark)', color: 'var(--text-main)', outline: 'none' }}
                   />
                   {pollOptions.length > 2 && (
-                    <button type="button" className="btn-icon" style={{ color: '#ff4d4f' }} onClick={() => setPollOptions(pollOptions.filter((_, idx) => idx !== i))}>
+                    <button type="button" className="btn-icon" style={{ color: '#ff4d4f' }} onClick={() => setPollOptions(pollOptions.filter((_, idx) => idx !== i))} aria-label={`Remove option ${i + 1}`}>
                       <RiDeleteBin6Line size={18} />
                     </button>
                   )}

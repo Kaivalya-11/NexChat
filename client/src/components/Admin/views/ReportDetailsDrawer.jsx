@@ -15,6 +15,7 @@ import {
   RiErrorWarningLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
+import { getOptimizedImageUrl } from '../../../utils/imageOptimizer';
 import AdminConfirmModal from '../modals/AdminConfirmModal';
 
 export default function ReportDetailsDrawer({
@@ -422,8 +423,12 @@ export default function ReportDetailsDrawer({
                 {report.targetType === 'user' && report.reportedUser && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                     <img
-                      src={report.reportedUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
-                      alt=""
+                      src={getOptimizedImageUrl(report.reportedUser.avatar || `https://ui-avatars.com/api/?name=${report.reportedUser.username}`, { width: 96, height: 96 })}
+                      alt={report.reportedUser.username || ''}
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                      decoding="async"
                       style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
                     />
                     <div style={{ flex: 1 }}>

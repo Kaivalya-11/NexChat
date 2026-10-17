@@ -51,7 +51,6 @@ function ChatLayout() {
   return (
     <div className="app-container">
       <ConnectionBanner />
-      <AnnouncementBanner />
       
       <div className={`sidebar-container ${isSidebarOpen ? 'open' : ''}`}>
         <Sidebar 
@@ -78,6 +77,7 @@ function ChatLayout() {
       </AnimatePresence>
 
       <main className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+        <AnnouncementBanner />
         {activeChannelId === 'friends' ? (
           <FriendsView />
         ) : activeChannelId ? (
@@ -105,7 +105,7 @@ function ChatLayout() {
           </>
         ) : (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', backgroundColor: 'var(--bg-darkest)' }}>
-             <button className="btn-icon mobile-only" onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ position: 'absolute', top: '16px', left: '16px', padding: '8px', backgroundColor: 'var(--bg-card)' }}>
+             <button className="btn-icon mobile-only" onClick={() => setIsSidebarOpen(!isSidebarOpen)} aria-label="Toggle navigation menu" style={{ position: 'absolute', top: '16px', left: '16px', padding: '8px', backgroundColor: 'var(--bg-card)' }}>
                <RiMenuLine size={24} color="var(--text-main)" />
              </button>
              <div style={{ width: '100%', maxWidth: '400px', textAlign: 'center', padding: '32px', backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>

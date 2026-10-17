@@ -23,6 +23,7 @@ import {
 import PollMessage from './PollMessage';
 import { RiPhoneFill, RiMessage3Fill } from 'react-icons/ri';
 import ConfirmModal from '../UI/ConfirmModal';
+import { getOptimizedImageUrl, getOptimizedAttachmentUrl } from '../../utils/imageOptimizer';
 
 const formatMessageText = (text) => {
   if (typeof text !== 'string') return text;
@@ -98,7 +99,15 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
           onClick={() => setPreviewMedia({ url: mediaItem.url, fileName: mediaItem.fileName || 'Photo', fileType: 'image', fileSize: mediaItem.fileSize })}
           style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', backgroundColor: '#000', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '4px' }}
         >
-          <img src={mediaItem.url} alt={mediaItem.fileName} style={{ maxWidth: '100%', maxHeight: '400px', width: 'auto', height: 'auto', borderRadius: '2px', display: 'block', objectFit: 'contain' }} />
+          <img
+            src={getOptimizedAttachmentUrl(mediaItem.url, { maxWidth: 800 })}
+            alt={mediaItem.fileName || 'Image attachment'}
+            width="400"
+            height="300"
+            loading="lazy"
+            decoding="async"
+            style={{ maxWidth: '100%', maxHeight: '400px', width: 'auto', height: 'auto', borderRadius: '2px', display: 'block', objectFit: 'contain' }}
+          />
         </motion.div>
       );
     } else if (mediaItem.fileType === 'audio') {
@@ -110,7 +119,17 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
     } else if (isVideo) {
       return (
         <motion.div key={mediaItem.url} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} style={{ marginTop: isMediaOnly ? '2px' : '8px', cursor: 'pointer', backgroundColor: '#000', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '4px' }} onClick={() => setPreviewMedia({ url: mediaItem.url, fileName: mediaItem.fileName || 'Video', fileType: 'video', fileSize: mediaItem.fileSize })}>
-          <video src={mediaItem.url} style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '2px', backgroundColor: '#000', display: 'block' }} />
+          <video
+            src={mediaItem.url}
+            playsInline
+            controls
+            preload="metadata"
+            aria-label={mediaItem.fileName || 'Chat video attachment'}
+            style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '2px', backgroundColor: '#000', display: 'block' }}
+          >
+            <track kind="captions" srcLang="en" label="English captions" />
+            Your browser does not support the video tag.
+          </video>
         </motion.div>
       );
     } else {
@@ -143,7 +162,15 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
           onClick={() => setPreviewMedia({ url: message.content, fileName: 'Sticker / GIF', fileType: 'image', contentType: 'sticker' })}
           style={{ marginTop: '4px', display: 'inline-block', cursor: 'pointer' }}
         >
-          <img src={message.content} alt="Sticker" style={{ width: '130px', height: '130px', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }} />
+          <img
+            src={message.content}
+            alt="Sticker"
+            width="130"
+            height="130"
+            loading="lazy"
+            decoding="async"
+            style={{ width: '130px', height: '130px', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
+          />
         </motion.div>
       );
     }
@@ -156,7 +183,15 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
       return (
         <div style={{ marginTop: '6px', maxWidth: '280px', width: '100%', backgroundColor: 'var(--bg-darker)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
           <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid var(--border-color)' }}>
-            <img src={contactData.avatar || `https://ui-avatars.com/api/?name=${contactData.name || 'Contact'}`} alt={contactData.name} style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }} />
+            <img
+              src={getOptimizedImageUrl(contactData.avatar || `https://ui-avatars.com/api/?name=${contactData.name || 'Contact'}`, { width: 88, height: 88 })}
+              alt={contactData.name || 'Contact avatar'}
+              width="44"
+              height="44"
+              loading="lazy"
+              decoding="async"
+              style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }}
+            />
             <div style={{ flex: 1, overflow: 'hidden' }}>
               <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{contactData.name || 'Shared Contact'}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}><RiPhoneFill size={14} /> {contactData.phone || contactData.email || 'Contact Info'}</div>
@@ -258,7 +293,15 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         className="message-avatar"
         style={{ width: '32px', height: '32px', flexShrink: 0, position: 'relative' }}
       >
-        <img src={message.sender.avatar || `https://ui-avatars.com/api/?name=${message.sender.username}`} alt="avatar" style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '50%', backgroundColor: 'var(--bg-card)' }} />
+        <img
+          src={getOptimizedImageUrl(message.sender.avatar || `https://ui-avatars.com/api/?name=${message.sender.username}`, { width: 64, height: 64 })}
+          alt={`${message.sender.username}'s avatar`}
+          width="32"
+          height="32"
+          loading="lazy"
+          decoding="async"
+          style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '50%', backgroundColor: 'var(--bg-card)' }}
+        />
       </motion.div>
 
       <div className="message-bubble" style={{ 
@@ -270,7 +313,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         border: isMediaOnly ? 'none' : '1px solid var(--border-color)',
         borderRadius: isOwn ? '12px 4px 12px 12px' : '4px 12px 12px 12px',
         boxShadow: 'var(--shadow-sm)',
-        transition: 'all 0.15s ease'
+        transition: 'transform 0.15s ease, opacity 0.15s ease'
       }}>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: isOwn ? 'flex-end' : 'flex-start', marginBottom: isMediaOnly ? '0' : '4px', padding: isMediaOnly ? '4px 4px 0 4px' : '0' }}>
@@ -338,15 +381,17 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         )}
 
         {message.reactions && Object.keys(message.reactions).length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px' }}>
+          <div className="message-reactions-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px', minHeight: '26px' }}>
             {Object.entries(message.reactions).map(([emoji, users]) => {
               const hasReacted = users.includes(user.id);
               return (
-                <motion.div
+                <motion.button
+                  type="button"
                   key={emoji}
                   whileHover={{ scale: 1.12 }}
                   whileTap={{ scale: 0.88 }}
                   onClick={() => handleReaction(emoji)}
+                  aria-label={`${hasReacted ? 'Remove' : 'Add'} ${emoji} reaction (${users.length})`}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -357,12 +402,13 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
                     borderRadius: 'var(--radius-full)',
                     fontSize: '0.85rem',
                     cursor: 'pointer',
-                    userSelect: 'none'
+                    userSelect: 'none',
+                    color: 'inherit'
                   }}
                 >
                   <span>{emoji}</span>
                   <span style={{ color: hasReacted ? 'var(--accent-primary)' : 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem' }}>{users.length}</span>
-                </motion.div>
+                </motion.button>
               );
             })}
           </div>
@@ -414,15 +460,15 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
           zIndex: 50
         }}
       >
-        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('👍'); setShowActions(false); }}>
+        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('👍'); setShowActions(false); }} aria-label="React with thumbs up">
           <span>👍</span>
         </motion.button>
-        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('❤️'); setShowActions(false); }}>
+        <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('❤️'); setShowActions(false); }} aria-label="React with heart">
           <span>❤️</span>
         </motion.button>
         
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowEmojiPicker(true); }} title="Add Reaction">
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowEmojiPicker(true); }} title="Add Reaction" aria-label="Add reaction">
             <RiAddLine size={18} />
           </motion.button>
           {showEmojiPicker && (
@@ -448,7 +494,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
           )}
         </div>
 
-        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); setReplyingTo(message); setShowActions(false); }} title="Reply">
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); setReplyingTo(message); setShowActions(false); }} title="Reply" aria-label="Reply to message">
           <RiReplyFill size={18} />
         </motion.button>
         {!isOwn && currentChannel?.isGroup && (
@@ -462,18 +508,18 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
             } catch (err) {
               alert('Failed to start DM');
             }
-          }} title="Reply Privately">
+          }} title="Reply Privately" aria-label="Reply privately">
             <RiChatQuoteFill size={18} />
           </motion.button>
         )}
-        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); setActiveThread(message); setShowActions(false); }} title="Reply in Thread">
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); setActiveThread(message); setShowActions(false); }} title="Reply in Thread" aria-label="Reply in thread">
           <RiChat1Fill size={18} />
         </motion.button>
         
-        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); onToggleSelect && onToggleSelect(message.id); setShowActions(false); }} title="Select Message">
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); onToggleSelect && onToggleSelect(message.id); setShowActions(false); }} title="Select Message" aria-label="Select message">
           <RiCheckboxCircleLine size={18} />
         </motion.button>
-        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); pinMessage(activeChannelId, message); setShowActions(false); }} title="Pin Message">
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); pinMessage(activeChannelId, message); setShowActions(false); }} title="Pin Message" aria-label="Pin message">
           <RiPushpinLine size={18} />
         </motion.button>
 
@@ -495,8 +541,9 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
               });
             }}
             title="Delete Message"
+            aria-label="Delete message"
           >
-            <RiDeleteBin6Line size={18} />
+            <RiDeleteBin6Line size={16} />
           </motion.button>
         )}
       </motion.div>
