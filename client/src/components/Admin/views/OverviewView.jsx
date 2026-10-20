@@ -4,6 +4,7 @@ import {
   RiGroupLine,
   RiHashtag,
   RiMessage3Line,
+  RiMessage2Line,
   RiServerLine,
   RiRefreshLine,
   RiShieldCheckLine,
@@ -14,7 +15,16 @@ import {
   RiUserAddLine,
   RiFolderAddLine,
   RiAlertLine,
-  RiCheckboxCircleLine
+  RiCheckboxCircleLine,
+  RiArrowUpLine,
+  RiScales3Line,
+  RiShieldUserLine,
+  RiShieldLine,
+  RiUserLine,
+  RiLockLine,
+  RiFlashlightLine,
+  RiCheckLine,
+  RiShieldFlashLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
 import { AdminLoadingState, AdminErrorState } from '../AdminStates';
@@ -138,32 +148,84 @@ export default function OverviewView({ token, onNavigate }) {
 
   return (
     <div className="overview-container">
-      {/* Top Banner & Refresh */}
+      {/* Executive Command Header */}
       <div className="overview-header-banner">
-        <div>
+        <div style={{ flex: '1 1 360px', minWidth: 0 }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '6px',
-            fontSize: '0.75rem',
+            gap: '8px',
+            fontSize: '0.72rem',
             fontFamily: 'var(--font-mono)',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
             color: 'var(--accent-primary)',
             backgroundColor: 'rgba(211, 255, 234, 0.08)',
-            padding: '3px 8px',
-            borderRadius: '4px',
-            marginBottom: '6px'
+            border: '1px solid rgba(211, 255, 234, 0.2)',
+            padding: '3px 10px',
+            borderRadius: '999px',
+            marginBottom: '10px'
           }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-success)' }} />
-            LIVE TELEMETRY
+            <span style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              backgroundColor: 'var(--accent-success)',
+              boxShadow: '0 0 8px var(--accent-success)'
+            }} />
+            Live Platform Telemetry
           </div>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-heading)' }}>
+
+          <h1 style={{
+            fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
+            fontWeight: 800,
+            color: 'var(--text-main)',
+            margin: '0 0 6px 0',
+            fontFamily: 'var(--font-heading)',
+            letterSpacing: '-0.02em'
+          }}>
             System Platform Overview
-          </h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
-            Real-time aggregate database metrics, weekly platform velocity, and active queues.
+          </h1>
+          <p style={{
+            fontSize: '0.85rem',
+            color: 'var(--text-muted)',
+            margin: 0,
+            maxWidth: '600px',
+            lineHeight: 1.45
+          }}>
+            Real-time aggregate database metrics, rolling 7-day velocity curves, and platform security events.
           </p>
+
+          {/* Subsystem Health Ribbons */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            marginTop: '14px',
+            flexWrap: 'wrap',
+            fontSize: '0.75rem',
+            color: 'var(--text-dim)',
+            fontFamily: 'var(--font-mono)'
+          }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <RiTimeLine size={13} style={{ color: 'var(--accent-primary)' }} />
+              Uptime: <strong style={{ color: 'var(--text-main)' }}>{formatUptime(server?.uptime)}</strong>
+            </span>
+            <span style={{ color: 'var(--border-color)' }}>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <RiServerLine size={13} style={{ color: 'var(--accent-secondary)' }} />
+              Node: <strong style={{ color: 'var(--text-main)' }}>{server?.nodeVersion || 'v20.x'}</strong>
+            </span>
+            <span style={{ color: 'var(--border-color)' }}>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-success)' }} />
+              Database: <strong style={{ color: 'var(--accent-success)' }}>Connected</strong>
+            </span>
+          </div>
         </div>
 
+        {/* Action Controls */}
         <div className="overview-header-actions">
           <button
             onClick={() => onNavigate && onNavigate('analytics')}
@@ -172,7 +234,7 @@ export default function OverviewView({ token, onNavigate }) {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              padding: '8px 14px',
+              padding: '9px 16px',
               backgroundColor: 'rgba(59, 130, 246, 0.1)',
               color: '#60a5fa',
               border: '1px solid rgba(59, 130, 246, 0.3)',
@@ -180,11 +242,20 @@ export default function OverviewView({ token, onNavigate }) {
               cursor: 'pointer',
               fontSize: '0.85rem',
               fontWeight: 600,
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              transition: 'all 0.15s ease'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.18)';
+              e.currentTarget.style.borderColor = '#60a5fa';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
             }}
           >
             <RiBarChartLine size={16} />
-            View Analytics
+            Platform Analytics
           </button>
 
           <button
@@ -195,7 +266,7 @@ export default function OverviewView({ token, onNavigate }) {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              padding: '8px 16px',
+              padding: '9px 16px',
               backgroundColor: 'var(--bg-darkest)',
               color: 'var(--text-main)',
               border: '1px solid var(--border-color)',
@@ -205,6 +276,18 @@ export default function OverviewView({ token, onNavigate }) {
               fontWeight: 600,
               transition: 'all 0.15s ease',
               whiteSpace: 'nowrap'
+            }}
+            onMouseOver={(e) => {
+              if (!refreshing) {
+                e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
+                e.currentTarget.style.borderColor = 'var(--border-highlight)';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!refreshing) {
+                e.currentTarget.style.backgroundColor = 'var(--bg-darkest)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+              }
             }}
           >
             <RiRefreshLine size={16} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
@@ -218,8 +301,8 @@ export default function OverviewView({ token, onNavigate }) {
         {/* Total Users Card */}
         <div className="overview-kpi-card">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Total Accounts
               </span>
               <div style={{
@@ -227,28 +310,42 @@ export default function OverviewView({ token, onNavigate }) {
                 height: '36px',
                 borderRadius: '8px',
                 backgroundColor: 'rgba(211, 255, 234, 0.08)',
+                border: '1px solid rgba(211, 255, 234, 0.2)',
                 color: 'var(--accent-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
-                <RiGroupLine size={20} />
+                <RiGroupLine size={18} />
               </div>
             </div>
+
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
-              <div style={{ fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
-                {users.total}
+              <div style={{
+                fontSize: 'clamp(1.9rem, 2.5vw, 2.35rem)',
+                fontWeight: 800,
+                color: 'var(--text-main)',
+                fontFamily: 'var(--font-heading)',
+                lineHeight: 1,
+                fontVariantNumeric: 'tabular-nums'
+              }}>
+                {users.total.toLocaleString()}
               </div>
               <span style={{
-                fontSize: '0.75rem',
+                fontSize: '0.72rem',
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--accent-success)',
                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                padding: '2px 6px',
+                border: '1px solid rgba(16, 185, 129, 0.2)',
+                padding: '2px 7px',
                 borderRadius: '4px',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px'
               }}>
+                <RiArrowUpLine size={11} />
                 +{velocity.newUsers} 7d
               </span>
             </div>
@@ -260,20 +357,51 @@ export default function OverviewView({ token, onNavigate }) {
             borderTop: '1px solid var(--border-color)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '6px',
+            gap: '8px',
             fontSize: '0.75rem'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px 8px', color: 'var(--text-dim)' }}>
-              <span style={{ color: 'var(--accent-success)', whiteSpace: 'nowrap' }}>● {users.active} Active</span>
-              <span style={{ color: users.suspended > 0 ? '#ef4444' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
-                {users.suspended > 0 ? `⚠️ ${users.suspended} Suspended` : '0 Suspended'}
+            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px 8px' }}>
+              <span style={{ color: 'var(--accent-success)', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-success)' }} />
+                {users.active} Active
               </span>
-              {users.deactivated > 0 && <span style={{ whiteSpace: 'nowrap' }}>⚪ {users.deactivated} Deact</span>}
+
+              <span style={{
+                color: users.suspended > 0 ? '#ef4444' : 'var(--text-dim)',
+                whiteSpace: 'nowrap',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                {users.suspended > 0 ? (
+                  <>
+                    <RiAlertLine size={12} />
+                    <span>{users.suspended} Suspended</span>
+                  </>
+                ) : (
+                  <span>0 Suspended</span>
+                )}
+              </span>
+
+              {users.deactivated > 0 && (
+                <span style={{ whiteSpace: 'nowrap', color: 'var(--text-dim)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'var(--text-dim)' }} />
+                  {users.deactivated} Deact
+                </span>
+              )}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px 8px', color: 'var(--text-muted)', fontSize: '0.7rem' }}>
-              <span style={{ whiteSpace: 'nowrap' }}>👑 {users.admins} Admins</span>
-              <span style={{ whiteSpace: 'nowrap' }}>🛡️ {users.moderators} Mods</span>
-              <span style={{ whiteSpace: 'nowrap' }}>👤 {users.regular} Users</span>
+
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '4px 8px',
+              color: 'var(--text-muted)',
+              fontSize: '0.7rem'
+            }}>
+              <span style={{ whiteSpace: 'nowrap' }}>{users.admins} Admins</span>
+              <span style={{ whiteSpace: 'nowrap' }}>{users.moderators} Mods</span>
+              <span style={{ whiteSpace: 'nowrap' }}>{users.regular} Users</span>
             </div>
           </div>
         </div>
@@ -281,8 +409,8 @@ export default function OverviewView({ token, onNavigate }) {
         {/* Total Channels Card */}
         <div className="overview-kpi-card">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Total Channels
               </span>
               <div style={{
@@ -290,28 +418,42 @@ export default function OverviewView({ token, onNavigate }) {
                 height: '36px',
                 borderRadius: '8px',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                border: '1px solid rgba(59, 130, 246, 0.25)',
                 color: '#60a5fa',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
-                <RiHashtag size={20} />
+                <RiHashtag size={18} />
               </div>
             </div>
+
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
-              <div style={{ fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
-                {channels.total}
+              <div style={{
+                fontSize: 'clamp(1.9rem, 2.5vw, 2.35rem)',
+                fontWeight: 800,
+                color: 'var(--text-main)',
+                fontFamily: 'var(--font-heading)',
+                lineHeight: 1,
+                fontVariantNumeric: 'tabular-nums'
+              }}>
+                {channels.total.toLocaleString()}
               </div>
               <span style={{
-                fontSize: '0.75rem',
+                fontSize: '0.72rem',
                 fontFamily: 'var(--font-mono)',
                 color: '#60a5fa',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                padding: '2px 6px',
+                border: '1px solid rgba(59, 130, 246, 0.25)',
+                padding: '2px 7px',
                 borderRadius: '4px',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px'
               }}>
+                <RiArrowUpLine size={11} />
                 +{velocity.newChannels} 7d
               </span>
             </div>
@@ -328,16 +470,22 @@ export default function OverviewView({ token, onNavigate }) {
             fontSize: '0.75rem',
             color: 'var(--text-dim)'
           }}>
-            <span style={{ whiteSpace: 'nowrap' }}>📢 {channels.groups} Public Groups</span>
-            <span style={{ whiteSpace: 'nowrap' }}>💬 {channels.dms} Direct Chats</span>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <RiHashtag size={12} style={{ color: 'var(--accent-secondary)' }} />
+              {channels.groups} Public Groups
+            </span>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <RiMessage2Line size={12} style={{ color: 'var(--accent-primary)' }} />
+              {channels.dms} Direct Chats
+            </span>
           </div>
         </div>
 
         {/* Total Messages Card */}
         <div className="overview-kpi-card">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Total Messages
               </span>
               <div style={{
@@ -345,28 +493,42 @@ export default function OverviewView({ token, onNavigate }) {
                 height: '36px',
                 borderRadius: '8px',
                 backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                border: '1px solid rgba(245, 158, 11, 0.25)',
                 color: '#fbbf24',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
-                <RiMessage3Line size={20} />
+                <RiMessage3Line size={18} />
               </div>
             </div>
+
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
-              <div style={{ fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
-                {messages.total}
+              <div style={{
+                fontSize: 'clamp(1.9rem, 2.5vw, 2.35rem)',
+                fontWeight: 800,
+                color: 'var(--text-main)',
+                fontFamily: 'var(--font-heading)',
+                lineHeight: 1,
+                fontVariantNumeric: 'tabular-nums'
+              }}>
+                {messages.total.toLocaleString()}
               </div>
               <span style={{
-                fontSize: '0.75rem',
+                fontSize: '0.72rem',
                 fontFamily: 'var(--font-mono)',
                 color: '#fbbf24',
                 backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                padding: '2px 6px',
+                border: '1px solid rgba(245, 158, 11, 0.25)',
+                padding: '2px 7px',
                 borderRadius: '4px',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px'
               }}>
+                <RiArrowUpLine size={11} />
                 +{velocity.newMessages} 7d
               </span>
             </div>
@@ -380,21 +542,28 @@ export default function OverviewView({ token, onNavigate }) {
             color: 'var(--text-dim)',
             display: 'flex',
             justifyContent: 'space-between',
+            alignItems: 'center',
             flexWrap: 'wrap',
             gap: '4px 8px'
           }}>
-            <span style={{ whiteSpace: 'nowrap' }}>🔒 Contents strictly private</span>
-            <span style={{ cursor: 'pointer', color: 'var(--accent-primary)', whiteSpace: 'nowrap' }} onClick={() => onNavigate && onNavigate('analytics')}>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <RiLockLine size={12} style={{ color: 'var(--accent-primary)' }} />
+              Encrypted in-transit
+            </span>
+            <span
+              style={{ cursor: 'pointer', color: 'var(--accent-primary)', fontWeight: 600, whiteSpace: 'nowrap' }}
+              onClick={() => onNavigate && onNavigate('analytics')}
+            >
               Trends →
             </span>
           </div>
         </div>
 
-        {/* Moderation & Compliance Card */}
+        {/* Moderation Queue Card */}
         <div className="overview-kpi-card">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Moderation Queue
               </span>
               <div style={{
@@ -402,26 +571,29 @@ export default function OverviewView({ token, onNavigate }) {
                 height: '36px',
                 borderRadius: '8px',
                 backgroundColor: moderation.pendingReports > 0 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+                border: moderation.pendingReports > 0 ? '1px solid rgba(239, 68, 68, 0.25)' : '1px solid rgba(16, 185, 129, 0.25)',
                 color: moderation.pendingReports > 0 ? '#ef4444' : 'var(--accent-success)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
-                <RiShieldCheckLine size={20} />
+                <RiShieldCheckLine size={18} />
               </div>
             </div>
+
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
               <div style={{
-                fontSize: 'clamp(1.85rem, 2.5vw, 2.25rem)',
-                fontWeight: 700,
+                fontSize: 'clamp(1.9rem, 2.5vw, 2.35rem)',
+                fontWeight: 800,
                 color: moderation.pendingReports > 0 ? '#ef4444' : 'var(--text-main)',
                 fontFamily: 'var(--font-heading)',
-                lineHeight: 1
+                lineHeight: 1,
+                fontVariantNumeric: 'tabular-nums'
               }}>
                 {moderation.pendingReports}
               </div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                 pending {moderation.pendingReports === 1 ? 'report' : 'reports'}
               </span>
             </div>
@@ -439,7 +611,10 @@ export default function OverviewView({ token, onNavigate }) {
             flexWrap: 'wrap',
             gap: '4px 8px'
           }}>
-            <span style={{ whiteSpace: 'nowrap' }}>⚖️ {moderation.pendingAppeals} Appeals</span>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <RiScales3Line size={13} style={{ color: '#c084fc' }} />
+              {moderation.pendingAppeals} Appeals
+            </span>
             <button
               onClick={() => onNavigate && onNavigate('moderation')}
               style={{
@@ -465,11 +640,11 @@ export default function OverviewView({ token, onNavigate }) {
       <div className="overview-panel">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
           <div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-heading)' }}>
+            <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-heading)' }}>
               Recent Platform Activity
-            </h3>
+            </h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
-              Real-time audit events, newly registered users, and channel creations.
+              Real-time administrative audit trail, newly registered users, and channel creations.
             </p>
           </div>
         </div>
@@ -477,24 +652,48 @@ export default function OverviewView({ token, onNavigate }) {
         <div className="overview-activity-grid">
           {/* Recent Accounts */}
           <div className="activity-subcard">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <RiUserAddLine color="var(--accent-primary)" /> New Accounts
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <RiUserAddLine color="var(--accent-primary)" size={16} />
+                <span>New Accounts</span>
+                <span style={{
+                  fontSize: '0.68rem',
+                  fontFamily: 'var(--font-mono)',
+                  backgroundColor: 'rgba(211, 255, 234, 0.08)',
+                  color: 'var(--accent-primary)',
+                  padding: '1px 6px',
+                  borderRadius: '4px'
+                }}>
+                  {recent.users?.length || 0}
+                </span>
               </span>
               <button
                 onClick={() => onNavigate && onNavigate('users')}
-                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
               >
                 All Users →
               </button>
             </div>
 
             {(!recent.users || recent.users.length === 0) ? (
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>No recent user registrations</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>No recent user registrations</p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {recent.users.map(u => (
-                  <div key={u.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', gap: '8px' }}>
+                  <div
+                    key={u.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.8rem',
+                      gap: '8px',
+                      padding: '6px 8px',
+                      borderRadius: 'var(--radius-sm)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                      transition: 'background-color 0.15s'
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
                       <span style={{ fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
                         @{u.username}
@@ -502,10 +701,13 @@ export default function OverviewView({ token, onNavigate }) {
                       <span style={{
                         fontSize: '0.65rem',
                         fontFamily: 'var(--font-mono)',
-                        padding: '1px 5px',
+                        fontWeight: 600,
+                        padding: '1px 6px',
                         borderRadius: '3px',
-                        backgroundColor: u.role === 'admin' ? 'rgba(239, 68, 68, 0.15)' : (u.role === 'moderator' ? 'rgba(59, 130, 246, 0.15)' : 'rgba(255, 255, 255, 0.05)'),
+                        textTransform: 'uppercase',
+                        backgroundColor: u.role === 'admin' ? 'rgba(239, 68, 68, 0.12)' : (u.role === 'moderator' ? 'rgba(59, 130, 246, 0.12)' : 'rgba(255, 255, 255, 0.05)'),
                         color: u.role === 'admin' ? '#ef4444' : (u.role === 'moderator' ? '#60a5fa' : 'var(--text-dim)'),
+                        border: u.role === 'admin' ? '1px solid rgba(239, 68, 68, 0.25)' : (u.role === 'moderator' ? '1px solid rgba(59, 130, 246, 0.25)' : '1px solid var(--border-color)'),
                         flexShrink: 0,
                         whiteSpace: 'nowrap'
                       }}>
@@ -523,34 +725,61 @@ export default function OverviewView({ token, onNavigate }) {
 
           {/* Recent Channels */}
           <div className="activity-subcard">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <RiFolderAddLine color="#60a5fa" /> New Channels
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <RiFolderAddLine color="#60a5fa" size={16} />
+                <span>New Channels</span>
+                <span style={{
+                  fontSize: '0.68rem',
+                  fontFamily: 'var(--font-mono)',
+                  backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                  color: '#60a5fa',
+                  padding: '1px 6px',
+                  borderRadius: '4px'
+                }}>
+                  {recent.channels?.length || 0}
+                </span>
               </span>
               <button
                 onClick={() => onNavigate && onNavigate('channels')}
-                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
               >
                 All Channels →
               </button>
             </div>
 
             {(!recent.channels || recent.channels.length === 0) ? (
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>No recent channels</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>No recent channels</p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {recent.channels.map(c => (
-                  <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', gap: '8px' }}>
+                  <div
+                    key={c.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.8rem',
+                      gap: '8px',
+                      padding: '6px 8px',
+                      borderRadius: 'var(--radius-sm)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', color: c.isGroup ? 'var(--accent-primary)' : '#60a5fa', flexShrink: 0 }}>
+                        {c.isGroup ? <RiHashtag size={13} /> : <RiMessage2Line size={13} />}
+                      </span>
                       <span style={{ fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
-                        {c.isGroup ? `#${c.name}` : c.name}
+                        {c.name}
                       </span>
                       <span style={{
                         fontSize: '0.65rem',
                         fontFamily: 'var(--font-mono)',
-                        padding: '1px 5px',
+                        padding: '1px 6px',
                         borderRadius: '3px',
                         backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid var(--border-color)',
                         color: 'var(--text-dim)',
                         flexShrink: 0,
                         whiteSpace: 'nowrap'
@@ -569,26 +798,46 @@ export default function OverviewView({ token, onNavigate }) {
 
           {/* Recent Audit / Security Events */}
           <div className="activity-subcard">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <RiShieldCheckLine color="var(--accent-success)" /> Security & Actions
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <RiShieldCheckLine color="var(--accent-success)" size={16} />
+                <span>Security & Actions</span>
               </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>Audit trail</span>
+              <button
+                onClick={() => onNavigate && onNavigate('audit_logs')}
+                style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                Audit Trail →
+              </button>
             </div>
 
             {(!recent.auditLogs || recent.auditLogs.length === 0) ? (
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>No administrative events recorded</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>No administrative events recorded</p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {recent.auditLogs.map(a => (
-                  <div key={a.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', gap: '8px' }}>
+                  <div
+                    key={a.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.8rem',
+                      gap: '8px',
+                      padding: '6px 8px',
+                      borderRadius: 'var(--radius-sm)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
                       <span style={{
                         fontSize: '0.65rem',
                         fontFamily: 'var(--font-mono)',
-                        padding: '1px 5px',
+                        fontWeight: 700,
+                        padding: '1px 6px',
                         borderRadius: '3px',
                         backgroundColor: a.result === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                        border: a.result === 'success' ? '1px solid rgba(16, 185, 129, 0.25)' : '1px solid rgba(239, 68, 68, 0.25)',
                         color: a.result === 'success' ? 'var(--accent-success)' : '#ef4444',
                         maxWidth: '135px',
                         overflow: 'hidden',
@@ -613,17 +862,22 @@ export default function OverviewView({ token, onNavigate }) {
         </div>
       </div>
 
-      {/* Quick Navigation Hub */}
+      {/* Administrative Modules Hub */}
       <div className="overview-panel">
-        <h3 style={{
-          fontSize: '1.1rem',
-          fontWeight: 700,
-          color: 'var(--text-main)',
-          marginBottom: '16px',
-          fontFamily: 'var(--font-heading)'
-        }}>
-          Administrative Control Center
-        </h3>
+        <div style={{ marginBottom: '18px' }}>
+          <h2 style={{
+            fontSize: '1.15rem',
+            fontWeight: 800,
+            color: 'var(--text-main)',
+            margin: '0 0 4px 0',
+            fontFamily: 'var(--font-heading)'
+          }}>
+            Administrative Control Center
+          </h2>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+            Direct access to dedicated configuration, moderation workflows, and platform telemetry.
+          </p>
+        </div>
 
         <div className="overview-control-grid">
           {QUICK_NAV_ITEMS.map(item => {
@@ -632,8 +886,9 @@ export default function OverviewView({ token, onNavigate }) {
               <div
                 key={item.id}
                 onClick={() => onNavigate && onNavigate(item.id)}
+                className="control-card"
                 style={{
-                  padding: '16px',
+                  padding: '16px 18px',
                   backgroundColor: 'var(--bg-darkest)',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-md)',
@@ -641,21 +896,23 @@ export default function OverviewView({ token, onNavigate }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '14px',
-                  transition: 'all 0.15s ease',
+                  transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
                   minWidth: 0
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.borderColor = 'var(--border-highlight)';
                   e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.borderColor = 'var(--border-color)';
                   e.currentTarget.style.backgroundColor = 'var(--bg-darkest)';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
                 <div style={{
-                  width: '40px',
-                  height: '40px',
+                  width: '42px',
+                  height: '42px',
                   borderRadius: '10px',
                   backgroundColor: 'rgba(211, 255, 234, 0.05)',
                   border: '1px solid var(--border-color)',
@@ -669,8 +926,8 @@ export default function OverviewView({ token, onNavigate }) {
                 </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-main)' }}>
                       {item.label}
                     </span>
                     {item.badge && item.badge !== 'Live' && (
@@ -678,7 +935,7 @@ export default function OverviewView({ token, onNavigate }) {
                         fontSize: '0.65rem',
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 700,
-                        padding: '2px 6px',
+                        padding: '1px 6px',
                         borderRadius: '4px',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         color: 'var(--accent-success)'
@@ -703,7 +960,7 @@ export default function OverviewView({ token, onNavigate }) {
         .overview-container {
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          gap: 22px;
           width: 100%;
           box-sizing: border-box;
         }
@@ -711,10 +968,10 @@ export default function OverviewView({ token, onNavigate }) {
         .overview-header-banner {
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justifyContent: space-between;
           flex-wrap: wrap;
-          gap: 16px;
-          padding: 20px 24px;
+          gap: 20px;
+          padding: 22px 26px;
           background-color: var(--bg-card);
           border-radius: var(--radius-lg);
           border: 1px solid var(--border-color);
@@ -739,26 +996,31 @@ export default function OverviewView({ token, onNavigate }) {
           background-color: var(--bg-card);
           border: 1px solid var(--border-color);
           border-radius: var(--radius-lg);
-          padding: 20px;
+          padding: 22px;
           box-shadow: var(--shadow-sm);
           display: flex;
           flex-direction: column;
           justifyContent: space-between;
           min-width: 0;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .overview-kpi-card:hover {
+          border-color: var(--border-highlight);
         }
 
         /* Recent Activity: 3 columns on desktop, responsive wrap below */
         .overview-activity-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 20px;
+          gap: 18px;
         }
 
         .activity-subcard {
           background-color: var(--bg-darkest);
           border-radius: var(--radius-md);
           border: 1px solid var(--border-color);
-          padding: 16px;
+          padding: 18px;
           min-width: 0;
         }
 
@@ -774,6 +1036,7 @@ export default function OverviewView({ token, onNavigate }) {
           border-radius: var(--radius-lg);
           border: 1px solid var(--border-color);
           padding: 24px;
+          box-shadow: var(--shadow-sm);
         }
 
         @media (max-width: 1200px) {
@@ -790,7 +1053,7 @@ export default function OverviewView({ token, onNavigate }) {
             gap: 16px;
           }
           .overview-header-banner {
-            padding: 16px 14px;
+            padding: 18px 16px;
           }
           .overview-header-actions {
             width: 100%;
@@ -804,7 +1067,7 @@ export default function OverviewView({ token, onNavigate }) {
             gap: 12px;
           }
           .overview-panel {
-            padding: 16px 14px;
+            padding: 18px 16px;
           }
         }
 

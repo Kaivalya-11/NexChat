@@ -5,6 +5,9 @@ import {
   RiFilter3Line,
   RiRefreshLine,
   RiShieldUserFill,
+  RiShieldCheckLine,
+  RiShieldLine,
+  RiUserLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
   RiForbidLine,
@@ -362,7 +365,22 @@ export default function UsersView({ token, currentAdminId }) {
                           backgroundColor: user.role === 'admin' ? 'rgba(245, 158, 11, 0.12)' : user.role === 'moderator' ? 'rgba(59, 130, 246, 0.12)' : 'rgba(255, 255, 255, 0.05)',
                           color: user.role === 'admin' ? 'var(--accent-warning)' : user.role === 'moderator' ? '#60a5fa' : 'var(--text-dim)'
                         }}>
-                          {user.role === 'admin' ? '👑 Admin' : user.role === 'moderator' ? '🛡️ Mod' : '👤 User'}
+                          {user.role === 'admin' ? (
+                            <>
+                              <RiShieldCheckLine size={13} />
+                              <span>Admin</span>
+                            </>
+                          ) : user.role === 'moderator' ? (
+                            <>
+                              <RiShieldLine size={13} />
+                              <span>Moderator</span>
+                            </>
+                          ) : (
+                            <>
+                              <RiUserLine size={13} />
+                              <span>User</span>
+                            </>
+                          )}
                         </span>
                       </td>
 

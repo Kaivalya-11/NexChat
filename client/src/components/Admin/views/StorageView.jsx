@@ -304,8 +304,9 @@ export default function StorageView({ token }) {
           </div>
           <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-color)', fontSize: '0.75rem', color: 'var(--text-dim)', display: 'flex', justifyContent: 'space-between' }}>
             <span>Bucket: {provider.cloudNameMasked || 'Active'}</span>
-            <span style={{ color: provider.configured ? 'var(--accent-success)' : '#fbbf24' }}>
-              ● {provider.configured ? 'Operational' : 'Fallback'}
+            <span style={{ color: provider.configured ? 'var(--accent-success)' : '#fbbf24', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: provider.configured ? 'var(--accent-success)' : '#fbbf24' }} />
+              <span>{provider.configured ? 'Operational' : 'Fallback'}</span>
             </span>
           </div>
         </div>
@@ -575,7 +576,10 @@ export default function StorageView({ token }) {
                         <RiDeleteBinLine size={13} /> Clean up
                       </button>
                     ) : (
-                      <span style={{ color: 'var(--accent-success)' }}>● In use</span>
+                      <span style={{ color: 'var(--accent-success)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-success)' }} />
+                        <span>In use</span>
+                      </span>
                     )}
                   </div>
                 </div>

@@ -349,11 +349,15 @@ export default function AdminSidebar({
                   {adminUser.username}
                 </div>
                 <div style={{
-                  fontSize: '0.7rem',
+                  fontSize: '0.72rem',
                   color: 'var(--accent-success)',
-                  fontWeight: 600
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
                 }}>
-                  👑 Administrator
+                  <RiShieldCheckLine size={13} style={{ flexShrink: 0 }} />
+                  <span>Administrator</span>
                 </div>
               </div>
             </div>

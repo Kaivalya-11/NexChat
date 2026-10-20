@@ -11,7 +11,9 @@ import {
   RiCloudLine,
   RiRadio2Line,
   RiServerLine,
-  RiAlertLine
+  RiAlertLine,
+  RiFlashlightLine,
+  RiLock2Line
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
 import { AdminLoadingState, AdminErrorState } from '../AdminStates';
@@ -177,9 +179,13 @@ export default function SystemHealthView({ token }) {
                 padding: '2px 8px',
                 borderRadius: '4px',
                 backgroundColor: pingMs < 100 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-                color: pingMs < 100 ? 'var(--accent-success)' : '#fbbf24'
+                color: pingMs < 100 ? 'var(--accent-success)' : '#fbbf24',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
               }}>
-                ⚡ {pingMs}ms ping
+                <RiFlashlightLine size={12} />
+                <span>{pingMs}ms ping</span>
               </span>
             )}
           </div>
@@ -187,8 +193,9 @@ export default function SystemHealthView({ token }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--text-muted)' }}>Connection State:</span>
-              <span style={{ color: 'var(--accent-success)', fontWeight: 600, textTransform: 'capitalize' }}>
-                ● {health?.database?.status || 'Unknown'}
+              <span style={{ color: 'var(--accent-success)', fontWeight: 600, textTransform: 'capitalize', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-success)' }} />
+                <span>{health?.database?.status || 'Unknown'}</span>
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -235,8 +242,9 @@ export default function SystemHealthView({ token }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--text-muted)' }}>Gateway Status:</span>
-              <span style={{ color: 'var(--accent-success)', fontWeight: 600 }}>
-                ● {socket.status || 'Active'}
+              <span style={{ color: 'var(--accent-success)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-success)' }} />
+                <span>{socket.status || 'Active'}</span>
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -309,8 +317,9 @@ export default function SystemHealthView({ token }) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--text-muted)' }}>Credentials Privacy:</span>
-              <span style={{ color: 'var(--accent-success)', fontSize: '0.75rem' }}>
-                🔒 Secrets securely masked
+              <span style={{ color: 'var(--accent-success)', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <RiLock2Line size={12} />
+                <span>Environment variables masked</span>
               </span>
             </div>
           </div>

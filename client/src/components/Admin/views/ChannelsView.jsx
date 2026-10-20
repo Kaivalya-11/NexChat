@@ -4,6 +4,7 @@ import {
   RiSearch2Line,
   RiRefreshLine,
   RiHashtag,
+  RiMessage2Line,
   RiArrowLeftSLine,
   RiArrowRightSLine,
   RiArchiveLine,
@@ -309,8 +310,8 @@ export default function ChannelsView({ token }) {
                     {/* Name & description */}
                     <td style={{ padding: '14px 20px' }}>
                       <div style={{ fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ color: chan.isGroup ? 'var(--accent-primary)' : '#60a5fa' }}>
-                          {chan.isGroup ? '#' : '💬'}
+                        <span style={{ color: chan.isGroup ? 'var(--accent-primary)' : '#60a5fa', display: 'inline-flex', alignItems: 'center' }}>
+                          {chan.isGroup ? <RiHashtag size={15} /> : <RiMessage2Line size={15} />}
                         </span>
                         {chan.name}
                       </div>

@@ -10,7 +10,10 @@ import {
   RiShieldCheckLine,
   RiLockLine,
   RiArrowRightUpLine,
-  RiAttachmentLine
+  RiAttachmentLine,
+  RiTeamLine,
+  RiChatPrivateLine,
+  RiFireLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
 import { AdminLoadingState, AdminErrorState, AdminEmptyState } from '../AdminStates';
@@ -226,8 +229,9 @@ export default function AnalyticsView({ token, onNavigate }) {
 
           <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             {data?.startDate && data?.endDate ? (
-              <span>
-                📅 {new Date(data.startDate).toLocaleDateString()} — {new Date(data.endDate).toLocaleDateString()} ({data.daysCount} {data.daysCount === 1 ? 'day' : 'days'})
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <RiCalendarLine size={13} style={{ flexShrink: 0 }} />
+                <span>{new Date(data.startDate).toLocaleDateString()} — {new Date(data.endDate).toLocaleDateString()} ({data.daysCount} {data.daysCount === 1 ? 'day' : 'days'})</span>
               </span>
             ) : null}
           </div>
@@ -332,7 +336,10 @@ export default function AnalyticsView({ token, onNavigate }) {
           </div>
           <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-color)', fontSize: '0.75rem', color: 'var(--text-dim)', display: 'flex', justifyContent: 'space-between' }}>
             <span>~{summary.avgMessagesPerDay}/day avg</span>
-            <span>📎 {summary.totalMessagesWithAttachments} attachments</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <RiAttachmentLine size={13} />
+              <span>{summary.totalMessagesWithAttachments} attachments</span>
+            </span>
           </div>
         </div>
 
@@ -385,8 +392,14 @@ export default function AnalyticsView({ token, onNavigate }) {
             </div>
           </div>
           <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-color)', fontSize: '0.75rem', color: 'var(--text-dim)', display: 'flex', justifyContent: 'space-between' }}>
-            <span>📢 {summary.totalGroupChannelsCreated} Groups</span>
-            <span>💬 {summary.totalDmChannelsCreated} DMs</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <RiTeamLine size={13} />
+              <span>{summary.totalGroupChannelsCreated} Groups</span>
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <RiChatPrivateLine size={13} />
+              <span>{summary.totalDmChannelsCreated} DMs</span>
+            </span>
           </div>
         </div>
 
@@ -464,9 +477,13 @@ export default function AnalyticsView({ token, onNavigate }) {
               borderRadius: '6px',
               backgroundColor: 'rgba(245, 158, 11, 0.1)',
               color: '#fbbf24',
-              border: '1px solid rgba(245, 158, 11, 0.2)'
+              border: '1px solid rgba(245, 158, 11, 0.2)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              ⭐ Peak Day: {summary.peakMessageDay.date} ({summary.peakMessageDay.count} msgs)
+              <RiFireLine size={13} />
+              <span>Peak Day: {summary.peakMessageDay.date} ({summary.peakMessageDay.count} msgs)</span>
             </div>
           )}
         </div>
