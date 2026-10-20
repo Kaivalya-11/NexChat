@@ -356,14 +356,16 @@ export default function UsersView({ token, currentAdminId }) {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '4px',
-                          fontSize: '0.75rem',
+                          fontSize: '11px',
                           fontFamily: 'var(--font-mono)',
                           fontWeight: 700,
-                          padding: '3px 8px',
-                          borderRadius: '6px',
+                          padding: '2px 8px',
+                          borderRadius: '9999px',
                           textTransform: 'uppercase',
-                          backgroundColor: user.role === 'admin' ? 'rgba(245, 158, 11, 0.12)' : user.role === 'moderator' ? 'rgba(59, 130, 246, 0.12)' : 'rgba(255, 255, 255, 0.05)',
-                          color: user.role === 'admin' ? 'var(--accent-warning)' : user.role === 'moderator' ? '#60a5fa' : 'var(--text-dim)'
+                          letterSpacing: '0.04em',
+                          backgroundColor: user.role === 'admin' ? 'rgba(244, 63, 94, 0.12)' : user.role === 'moderator' ? 'rgba(6, 182, 212, 0.12)' : 'rgba(255, 255, 255, 0.05)',
+                          border: user.role === 'admin' ? '1px solid rgba(244, 63, 94, 0.25)' : user.role === 'moderator' ? '1px solid rgba(6, 182, 212, 0.25)' : '1px solid #1F2E35',
+                          color: user.role === 'admin' ? '#F43F5E' : user.role === 'moderator' ? '#06B6D4' : '#94A3B8'
                         }}>
                           {user.role === 'admin' ? (
                             <>
@@ -390,18 +392,20 @@ export default function UsersView({ token, currentAdminId }) {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '5px',
-                          fontSize: '0.75rem',
+                          fontSize: '11px',
+                          fontFamily: 'var(--font-mono)',
                           fontWeight: 600,
-                          padding: '3px 8px',
-                          borderRadius: '6px',
-                          backgroundColor: user.isSuspended ? 'rgba(239, 68, 68, 0.1)' : user.isDeactivated ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)',
-                          color: user.isSuspended ? '#ef4444' : user.isDeactivated ? 'var(--accent-warning)' : 'var(--accent-success)'
+                          padding: '2px 8px',
+                          borderRadius: '9999px',
+                          backgroundColor: user.isSuspended ? 'rgba(244, 63, 94, 0.1)' : user.isDeactivated ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+                          border: user.isSuspended ? '1px solid rgba(244, 63, 94, 0.25)' : user.isDeactivated ? '1px solid rgba(245, 158, 11, 0.25)' : '1px solid rgba(16, 185, 129, 0.25)',
+                          color: user.isSuspended ? '#F43F5E' : user.isDeactivated ? '#F59E0B' : '#10B981'
                         }}>
                           <span style={{
                             width: '6px',
                             height: '6px',
                             borderRadius: '50%',
-                            backgroundColor: user.isSuspended ? '#ef4444' : user.isDeactivated ? 'var(--accent-warning)' : 'var(--accent-success)'
+                            backgroundColor: user.isSuspended ? '#F43F5E' : user.isDeactivated ? '#F59E0B' : '#10B981'
                           }} />
                           {user.isSuspended ? 'Suspended' : user.isDeactivated ? 'Deactivated' : 'Active'}
                         </span>

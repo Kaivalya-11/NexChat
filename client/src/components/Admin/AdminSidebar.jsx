@@ -129,10 +129,10 @@ export default function AdminSidebar({
       {/* Sidebar Aside */}
       <aside
         style={{
-          width: 'min(280px, 85vw)',
+          width: '260px',
           height: '100vh',
-          backgroundColor: 'var(--bg-sidebar)',
-          borderRight: '1px solid var(--border-color)',
+          backgroundColor: '#11181C',
+          borderRight: '1px solid #1F2E35',
           display: 'flex',
           flexDirection: 'column',
           flexShrink: 0,
@@ -149,32 +149,33 @@ export default function AdminSidebar({
       >
         {/* Header / Brand */}
         <div style={{
-          padding: '20px 16px',
-          borderBottom: '1px solid var(--border-color)',
+          padding: '18px 16px',
+          borderBottom: '1px solid #1F2E35',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          backgroundColor: '#11181C'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
               width: '36px',
               height: '36px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0.05) 100%)',
-              border: '1px solid var(--accent-success)',
+              borderRadius: '8px',
+              backgroundColor: '#162026',
+              border: '1px solid #1F2E35',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--accent-success)',
-              boxShadow: '0 0 12px rgba(16, 185, 129, 0.2)'
+              color: '#10B981',
+              boxShadow: '0 0 12px rgba(16, 185, 129, 0.15)'
             }}>
               <RiShieldFlashFill size={20} />
             </div>
             <div>
               <div style={{
-                fontSize: '1.05rem',
+                fontSize: '1rem',
                 fontWeight: 700,
-                color: 'var(--text-main)',
+                color: '#F1F5F9',
                 fontFamily: 'var(--font-heading)',
                 lineHeight: 1.1,
                 display: 'flex',
@@ -183,18 +184,28 @@ export default function AdminSidebar({
               }}>
                 NexChat
                 <span style={{
-                  fontSize: '0.65rem',
+                  fontSize: '10px',
                   fontFamily: 'var(--font-mono)',
-                  color: 'var(--accent-primary)',
-                  backgroundColor: 'rgba(211, 255, 234, 0.1)',
-                  padding: '2px 5px',
-                  borderRadius: '4px'
+                  fontWeight: 700,
+                  color: '#10B981',
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  padding: '1px 5px',
+                  borderRadius: '9999px',
+                  letterSpacing: '0.04em'
                 }}>
                   ADMIN
                 </span>
               </div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                Management Console
+              <span style={{
+                fontSize: '11px',
+                color: '#94A3B8',
+                fontFamily: 'var(--font-heading)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                fontWeight: 600
+              }}>
+                Telemetry Console
               </span>
             </div>
           </div>
@@ -208,12 +219,12 @@ export default function AdminSidebar({
               padding: '6px',
               backgroundColor: 'transparent',
               border: 'none',
-              color: 'var(--text-muted)',
+              color: '#94A3B8',
               cursor: 'pointer',
               borderRadius: '6px'
             }}
           >
-            <RiCloseLine size={22} />
+            <RiCloseLine size={20} />
           </button>
         </div>
 
@@ -221,18 +232,19 @@ export default function AdminSidebar({
         <div style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '16px 12px',
+          padding: '14px 10px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '4px'
+          gap: '3px'
         }}>
           <div style={{
-            fontSize: '0.7rem',
+            fontSize: '10px',
             fontFamily: 'var(--font-mono)',
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
-            color: 'var(--text-muted)',
-            padding: '4px 10px 8px'
+            color: '#64748B',
+            padding: '4px 10px 8px',
+            fontWeight: 700
           }}>
             CONSOLE MODULES
           </div>
@@ -251,47 +263,48 @@ export default function AdminSidebar({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px',
-                  padding: '10px 14px',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: isActive ? 'var(--bg-card)' : 'transparent',
-                  border: isActive ? '1px solid var(--border-highlight)' : '1px solid transparent',
-                  borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
-                  color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)',
+                  gap: '10px',
+                  padding: '9px 12px',
+                  borderRadius: '8px',
+                  backgroundColor: isActive ? '#162026' : 'transparent',
+                  border: isActive ? '1px solid #1F2E35' : '1px solid transparent',
+                  borderLeft: isActive ? '3px solid #10B981' : '3px solid transparent',
+                  color: isActive ? '#F1F5F9' : '#94A3B8',
                   cursor: 'pointer',
                   textAlign: 'left',
                   width: '100%',
-                  fontSize: '0.9rem',
+                  fontSize: '0.85rem',
                   fontWeight: isActive ? 600 : 500,
                   transition: 'all 0.15s ease'
                 }}
                 onMouseOver={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
-                    e.currentTarget.style.color = 'var(--text-main)';
+                    e.currentTarget.style.backgroundColor = '#162026';
+                    e.currentTarget.style.color = '#F1F5F9';
                   }
                 }}
                 onMouseOut={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--text-muted)';
+                    e.currentTarget.style.color = '#94A3B8';
                   }
                 }}
               >
-                <Icon size={18} style={{ color: isActive ? 'var(--accent-primary)' : 'inherit', flexShrink: 0 }} />
+                <Icon size={17} style={{ color: isActive ? '#10B981' : '#64748B', flexShrink: 0 }} />
                 <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {item.label}
                 </span>
 
                 {item.badge && item.badge !== 'Live' && (
                   <span style={{
-                    fontSize: '0.65rem',
+                    fontSize: '10px',
                     fontFamily: 'var(--font-mono)',
                     fontWeight: 700,
                     padding: '2px 6px',
-                    borderRadius: '4px',
+                    borderRadius: '9999px',
                     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    color: 'var(--text-dim)'
+                    color: '#94A3B8',
+                    border: '1px solid #1F2E35'
                   }}>
                     {item.badge}
                   </span>
@@ -303,12 +316,12 @@ export default function AdminSidebar({
 
         {/* Sidebar Footer */}
         <div style={{
-          padding: '16px 12px',
-          borderTop: '1px solid var(--border-color)',
+          padding: '14px 10px',
+          borderTop: '1px solid #1F2E35',
           display: 'flex',
           flexDirection: 'column',
-          gap: '12px',
-          backgroundColor: 'var(--bg-darkest)'
+          gap: '10px',
+          backgroundColor: '#0B1013'
         }}>
           {/* Admin Identity Card */}
           {adminUser && (
@@ -317,31 +330,31 @@ export default function AdminSidebar({
               alignItems: 'center',
               gap: '10px',
               padding: '8px 10px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border-color)'
+              borderRadius: '8px',
+              backgroundColor: '#162026',
+              border: '1px solid #1F2E35'
             }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={getOptimizedImageUrl(adminUser.avatar || `https://ui-avatars.com/api/?name=${adminUser.username}`, { width: 68, height: 68 })}
                 alt={adminUser.username}
-                width="34"
-                height="34"
+                width="32"
+                height="32"
                 loading="lazy"
                 decoding="async"
                 style={{
-                  width: '34px',
-                  height: '34px',
+                  width: '32px',
+                  height: '32px',
                   borderRadius: '50%',
                   objectFit: 'cover',
-                  border: '1.5px solid var(--accent-success)'
+                  border: '1.5px solid #10B981'
                 }}
               />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   fontWeight: 600,
-                  color: 'var(--text-main)',
+                  color: '#F1F5F9',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap'
@@ -349,21 +362,22 @@ export default function AdminSidebar({
                   {adminUser.username}
                 </div>
                 <div style={{
-                  fontSize: '0.72rem',
-                  color: 'var(--accent-success)',
+                  fontSize: '11px',
+                  fontFamily: 'var(--font-mono)',
+                  color: '#10B981',
                   fontWeight: 600,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px'
                 }}>
-                  <RiShieldCheckLine size={13} style={{ flexShrink: 0 }} />
-                  <span>Administrator</span>
+                  <RiShieldCheckLine size={12} style={{ flexShrink: 0 }} />
+                  <span>ADMINISTRATOR</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Clear Return to Chat Button */}
+          {/* Return to Chat Button (Ghost per DESIGN.md) */}
           <Link
             href="/"
             style={{
@@ -371,24 +385,26 @@ export default function AdminSidebar({
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              padding: '10px 14px',
-              backgroundColor: 'rgba(211, 255, 234, 0.08)',
-              border: '1px solid var(--border-highlight)',
-              borderRadius: 'var(--radius-md)',
-              color: 'var(--accent-primary)',
+              padding: '8px 12px',
+              backgroundColor: '#162026',
+              border: '1px solid #1F2E35',
+              borderRadius: '8px',
+              color: '#F1F5F9',
               textDecoration: 'none',
-              fontSize: '0.875rem',
+              fontSize: '0.82rem',
               fontWeight: 600,
               transition: 'all 0.15s ease'
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(211, 255, 234, 0.15)';
+              e.currentTarget.style.backgroundColor = '#1E2B33';
+              e.currentTarget.style.borderColor = '#2C3F49';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(211, 255, 234, 0.08)';
+              e.currentTarget.style.backgroundColor = '#162026';
+              e.currentTarget.style.borderColor = '#1F2E35';
             }}
           >
-            <RiArrowLeftLine size={18} />
+            <RiArrowLeftLine size={16} />
             Return to NexChat
           </Link>
         </div>
@@ -397,6 +413,7 @@ export default function AdminSidebar({
       <style jsx global>{`
         @media (min-width: 1024px) {
           .admin-sidebar {
+            width: 260px !important;
             position: fixed !important;
             transform: translateX(0) !important;
           }
@@ -409,9 +426,9 @@ export default function AdminSidebar({
         }
         @media (max-width: 1023px) {
           .admin-sidebar {
-            width: min(280px, 85vw) !important;
+            width: min(260px, 85vw) !important;
             transform: translateX(-100%);
-            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
           }
           .admin-sidebar.open {
             transform: translateX(0);

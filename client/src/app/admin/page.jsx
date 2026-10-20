@@ -144,16 +144,19 @@ export default function AdminPage() {
   const adminUser = verifiedAdminUser || user;
 
   return (
-    <div style={{
-      height: '100vh',
-      maxHeight: '100vh',
-      backgroundColor: 'var(--bg-darkest)',
-      color: 'var(--text-main)',
-      display: 'flex',
-      overflow: 'hidden',
-      width: '100vw',
-      maxWidth: '100%'
-    }}>
+    <div
+      className="admin-layout-root"
+      style={{
+        height: '100vh',
+        maxHeight: '100vh',
+        backgroundColor: '#0B1013',
+        color: '#F1F5F9',
+        display: 'flex',
+        overflow: 'hidden',
+        width: '100vw',
+        maxWidth: '100%'
+      }}
+    >
       {/* Admin Sidebar */}
       <AdminSidebar
         activeNav={activeNav}
@@ -170,12 +173,13 @@ export default function AdminPage() {
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
-          marginLeft: '280px',
+          marginLeft: '260px',
           height: '100vh',
           maxHeight: '100vh',
           overflowY: 'auto',
           overflowX: 'hidden',
-          scrollBehavior: 'smooth'
+          scrollBehavior: 'smooth',
+          backgroundColor: '#0B1013'
         }}
         className="admin-main-wrapper"
       >
@@ -190,8 +194,8 @@ export default function AdminPage() {
         {/* Content Area */}
         <main style={{
           flex: 1,
-          padding: '28px',
-          maxWidth: '1280px',
+          padding: '24px',
+          maxWidth: '1360px',
           width: '100%',
           margin: '0 auto',
           boxSizing: 'border-box'
@@ -233,32 +237,80 @@ export default function AdminPage() {
       </div>
 
       <style jsx global>{`
+        /* Obsidian Telemetry Design System Scope */
+        .admin-layout-root {
+          --bg-darkest: #0B1013;
+          --bg-sidebar: #11181C;
+          --bg-card: #11181C;
+          --bg-card-secondary: #162026;
+          --bg-hover: #1E2B33;
+          --bg-active: #162026;
+
+          --border-color: #1F2E35;
+          --border-highlight: #2C3F49;
+          --border-active: #10B981;
+
+          --accent-primary: #10B981;
+          --accent-primary-hover: #34D399;
+          --accent-secondary: #06B6D4;
+          --accent-success: #10B981;
+          --accent-warning: #F59E0B;
+          --accent-danger: #F43F5E;
+
+          --text-main: #F1F5F9;
+          --text-muted: #94A3B8;
+          --text-dim: #475569;
+
+          --font-family: 'Geist', var(--font-family, system-ui, -apple-system, sans-serif);
+          --font-heading: 'Geist', var(--font-heading, sans-serif);
+          --font-mono: 'JetBrains Mono', monospace;
+
+          --radius-sm: 4px;
+          --radius-md: 8px;
+          --radius-lg: 12px;
+          --radius-full: 9999px;
+        }
+
+        /* Continuous Telemetry Pulse */
+        @keyframes telemetry-pulse {
+          0% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+          }
+          70% {
+            box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+          }
+        }
+
         /* Smooth vertical scrolling in Admin console */
         html:has(.admin-main-wrapper),
         body:has(.admin-main-wrapper) {
           overflow-y: auto !important;
+          background-color: #0B1013 !important;
         }
 
         .admin-main-wrapper {
           scrollbar-width: thin;
-          scrollbar-color: var(--border-highlight, rgba(16, 185, 129, 0.3)) transparent;
+          scrollbar-color: #1F2E35 #0B1013;
         }
 
         .admin-main-wrapper::-webkit-scrollbar {
-          width: 8px;
+          width: 6px;
         }
 
         .admin-main-wrapper::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.15);
+          background: #0B1013;
         }
 
         .admin-main-wrapper::-webkit-scrollbar-thumb {
-          background: var(--border-highlight, rgba(16, 185, 129, 0.25));
+          background: #1F2E35;
           border-radius: 4px;
         }
 
         .admin-main-wrapper::-webkit-scrollbar-thumb:hover {
-          background: var(--accent-success, #10b981);
+          background: #10B981;
         }
 
         @media (max-width: 1023px) {
@@ -268,7 +320,7 @@ export default function AdminPage() {
             max-width: 100vw !important;
           }
           .admin-content-area {
-            padding: 18px 16px !important;
+            padding: 16px 14px !important;
           }
         }
 

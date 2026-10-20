@@ -325,15 +325,16 @@ export default function ChannelsView({ token }) {
                     {/* Type */}
                     <td style={{ padding: '14px 16px' }}>
                       <span style={{
-                        fontSize: '0.75rem',
+                        fontSize: '11px',
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 600,
                         padding: '2px 8px',
-                        borderRadius: '4px',
-                        backgroundColor: chan.isGroup ? 'rgba(16, 185, 129, 0.12)' : 'rgba(59, 130, 246, 0.12)',
-                        color: chan.isGroup ? 'var(--accent-success)' : '#60a5fa'
+                        borderRadius: '9999px',
+                        backgroundColor: chan.isGroup ? 'rgba(16, 185, 129, 0.1)' : 'rgba(6, 182, 212, 0.1)',
+                        border: chan.isGroup ? '1px solid rgba(16, 185, 129, 0.25)' : '1px solid rgba(6, 182, 212, 0.25)',
+                        color: chan.isGroup ? '#10B981' : '#06B6D4'
                       }}>
-                        {chan.isGroup ? 'Group' : 'DM'}
+                        {chan.isGroup ? 'GROUP' : 'DIRECT'}
                       </span>
                     </td>
 
@@ -343,12 +344,12 @@ export default function ChannelsView({ token }) {
                     </td>
 
                     {/* Members */}
-                    <td style={{ padding: '14px 16px', color: 'var(--text-main)', fontWeight: 600 }}>
+                    <td style={{ padding: '14px 16px', color: 'var(--text-main)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
                       {chan.memberCount}
                     </td>
 
                     {/* Messages */}
-                    <td style={{ padding: '14px 16px', color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>
+                    <td style={{ padding: '14px 16px', color: 'var(--text-main)', fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
                       {chan.messageCount}
                     </td>
 
@@ -358,18 +359,20 @@ export default function ChannelsView({ token }) {
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '5px',
-                        fontSize: '0.75rem',
+                        fontSize: '11px',
+                        fontFamily: 'var(--font-mono)',
                         fontWeight: 600,
-                        padding: '3px 8px',
-                        borderRadius: '6px',
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
                         backgroundColor: chan.isArchived ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)',
-                        color: chan.isArchived ? 'var(--accent-warning)' : 'var(--accent-success)'
+                        border: chan.isArchived ? '1px solid rgba(245, 158, 11, 0.25)' : '1px solid rgba(16, 185, 129, 0.25)',
+                        color: chan.isArchived ? '#F59E0B' : '#10B981'
                       }}>
                         <span style={{
                           width: '6px',
                           height: '6px',
                           borderRadius: '50%',
-                          backgroundColor: chan.isArchived ? 'var(--accent-warning)' : 'var(--accent-success)'
+                          backgroundColor: chan.isArchived ? '#F59E0B' : '#10B981'
                         }} />
                         {chan.isArchived ? 'Archived' : 'Active'}
                       </span>
