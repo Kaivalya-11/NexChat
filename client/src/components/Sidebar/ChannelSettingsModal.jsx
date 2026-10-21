@@ -251,7 +251,7 @@ export default function ChannelSettingsModal({ channel, onClose }) {
               width: '32px',
               height: '32px',
               borderRadius: '8px',
-              backgroundColor: 'rgba(211, 255, 234, 0.1)',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

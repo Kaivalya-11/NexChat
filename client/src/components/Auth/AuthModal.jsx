@@ -53,10 +53,10 @@ export default function AuthModal() {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: '#0B0F10',
+        backgroundColor: '#0B1013',
         background: `
-          radial-gradient(circle at 50% 30%, rgba(56,239,125,0.07), transparent 40%),
-          #0B0F10
+          radial-gradient(circle at 50% 30%, rgba(16, 185, 129, 0.08), transparent 45%),
+          #0B1013
         `,
         display: 'flex',
         flexDirection: 'column',
@@ -76,10 +76,10 @@ export default function AuthModal() {
         position: 'absolute',
         inset: 0,
         backgroundImage: `
-          linear-gradient(rgba(56,239,125,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(56,239,125,0.03) 1px, transparent 1px)
+          linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px)
         `,
-        backgroundSize: '20px 20px',
+        backgroundSize: '24px 24px',
         pointerEvents: 'none',
         zIndex: 0
       }} />
@@ -105,23 +105,23 @@ export default function AuthModal() {
         <div style={{
           width: '64px',
           height: '64px',
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
+          backgroundColor: '#11181C',
+          border: '1px solid #1F2E35',
           borderRadius: '16px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           marginBottom: '24px',
-          boxShadow: '0 8px 16px rgba(0,0,0,0.4)'
+          boxShadow: '0 8px 24px rgba(0,0,0,0.5), 0 0 16px -2px rgba(16, 185, 129, 0.2)'
         }}>
-          <RiMessage3Fill size={32} color="var(--accent-primary)" />
+          <RiMessage3Fill size={32} color="#10B981" />
         </div>
 
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '32px',
           fontWeight: 700,
-          color: 'var(--text-main)',
+          color: '#F1F5F9',
           margin: '0 0 12px 0',
           letterSpacing: '-0.02em'
         }}>
@@ -131,7 +131,7 @@ export default function AuthModal() {
         <p style={{
           fontFamily: 'var(--font-family)',
           fontSize: '14px',
-          color: 'var(--text-muted)',
+          color: '#94A3B8',
           textAlign: 'center',
           lineHeight: '1.5',
           margin: '0 0 32px 0',
@@ -150,9 +150,10 @@ export default function AuthModal() {
               exit={{ opacity: 0, scale: 0.96 }}
               style={{
                 width: '100%',
-                backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                border: '1px solid var(--accent-danger)',
-                color: 'var(--accent-danger)',
+                backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                border: '1px solid #F43F5E',
+                color: '#F43F5E',
+                borderRadius: '8px',
                 padding: '12px 16px',
                 marginBottom: '20px',
                 fontSize: '0.88rem',
@@ -169,16 +170,17 @@ export default function AuthModal() {
         {/* Credential Console */}
         <div style={{
           width: '100%',
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
+          backgroundColor: '#11181C',
+          border: '1px solid #1F2E35',
           borderRadius: '12px',
           padding: '24px',
-          marginBottom: '24px'
+          marginBottom: '24px',
+          boxShadow: '0 12px 32px rgba(0, 0, 0, 0.5)'
         }}>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <label style={{ color: 'var(--text-muted)', fontSize: '13px', fontWeight: 500 }}>
+                <label style={{ color: '#94A3B8', fontSize: '13px', fontWeight: 500 }}>
                   Username
                 </label>
               </div>
@@ -186,13 +188,13 @@ export default function AuthModal() {
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: 'var(--input-pill-bg)',
-                border: focusedInput === 'username' ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                boxShadow: focusedInput === 'username' ? '0 0 0 2px rgba(64, 138, 113, 0.2)' : 'none',
+                backgroundColor: '#162026',
+                border: focusedInput === 'username' ? '1px solid #10B981' : '1px solid #1F2E35',
+                boxShadow: focusedInput === 'username' ? '0 0 0 2px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(52, 211, 153, 0.15)' : 'none',
                 borderRadius: '8px',
                 transition: 'all 0.2s ease'
               }}>
-                <RiUser3Line size={18} style={{ position: 'absolute', left: '16px', color: focusedInput === 'username' ? 'var(--accent-primary)' : 'var(--text-muted)' }} />
+                <RiUser3Line size={18} style={{ position: 'absolute', left: '16px', color: focusedInput === 'username' ? '#10B981' : '#64748B' }} />
                 <input
                   type="text"
                   placeholder="Username"
@@ -201,27 +203,27 @@ export default function AuthModal() {
                   onFocus={() => setFocusedInput('username')}
                   onBlur={() => setFocusedInput(null)}
                   required
-                  style={{ width: '100%', padding: '12px 16px 12px 42px', backgroundColor: 'transparent', border: 'none', outline: 'none', color: 'var(--text-main)', fontSize: '14px', fontFamily: 'var(--font-family)' }}
+                  style={{ width: '100%', padding: '12px 16px 12px 42px', backgroundColor: 'transparent', border: 'none', outline: 'none', color: '#F1F5F9', fontSize: '14px', fontFamily: 'var(--font-family)' }}
                 />
               </div>
             </div>
 
             {!isLogin && (
               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
-                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
+                <label style={{ display: 'block', color: '#94A3B8', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
                   Email address
                 </label>
                 <div style={{
                   position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: 'var(--input-pill-bg)',
-                  border: focusedInput === 'email' ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                  boxShadow: focusedInput === 'email' ? '0 0 0 2px rgba(64, 138, 113, 0.2)' : 'none',
+                  backgroundColor: '#162026',
+                  border: focusedInput === 'email' ? '1px solid #10B981' : '1px solid #1F2E35',
+                  boxShadow: focusedInput === 'email' ? '0 0 0 2px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(52, 211, 153, 0.15)' : 'none',
                   borderRadius: '8px',
                   transition: 'all 0.2s ease'
                 }}>
-                  <RiMailLine size={18} style={{ position: 'absolute', left: '16px', color: focusedInput === 'email' ? 'var(--accent-primary)' : 'var(--text-muted)' }} />
+                  <RiMailLine size={18} style={{ position: 'absolute', left: '16px', color: focusedInput === 'email' ? '#10B981' : '#64748B' }} />
                   <input
                     type="email"
                     placeholder="user@example.com"
@@ -230,27 +232,27 @@ export default function AuthModal() {
                     onFocus={() => setFocusedInput('email')}
                     onBlur={() => setFocusedInput(null)}
                     required={!isLogin}
-                    style={{ width: '100%', padding: '12px 16px 12px 42px', backgroundColor: 'transparent', border: 'none', outline: 'none', color: 'var(--text-main)', fontSize: '14px', fontFamily: 'var(--font-family)' }}
+                    style={{ width: '100%', padding: '12px 16px 12px 42px', backgroundColor: 'transparent', border: 'none', outline: 'none', color: '#F1F5F9', fontSize: '14px', fontFamily: 'var(--font-family)' }}
                   />
                 </div>
               </motion.div>
             )}
 
             <div>
-              <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
+              <label style={{ display: 'block', color: '#94A3B8', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
                 Password
               </label>
               <div style={{
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: 'var(--input-pill-bg)',
-                border: focusedInput === 'password' ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                boxShadow: focusedInput === 'password' ? '0 0 0 2px rgba(64, 138, 113, 0.2)' : 'none',
+                backgroundColor: '#162026',
+                border: focusedInput === 'password' ? '1px solid #10B981' : '1px solid #1F2E35',
+                boxShadow: focusedInput === 'password' ? '0 0 0 2px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(52, 211, 153, 0.15)' : 'none',
                 borderRadius: '8px',
                 transition: 'all 0.2s ease'
               }}>
-                <RiTerminalBoxLine size={18} style={{ position: 'absolute', left: '16px', color: focusedInput === 'password' ? 'var(--accent-primary)' : 'var(--text-muted)' }} />
+                <RiTerminalBoxLine size={18} style={{ position: 'absolute', left: '16px', color: focusedInput === 'password' ? '#10B981' : '#64748B' }} />
                 <input
                   type="password"
                   placeholder="••••••••••••"
@@ -259,7 +261,7 @@ export default function AuthModal() {
                   onFocus={() => setFocusedInput('password')}
                   onBlur={() => setFocusedInput(null)}
                   required
-                  style={{ width: '100%', padding: '12px 16px 12px 42px', backgroundColor: 'transparent', border: 'none', outline: 'none', color: 'var(--text-primary)', fontSize: '14px', fontFamily: 'var(--font-mono)' }}
+                  style={{ width: '100%', padding: '12px 16px 12px 42px', backgroundColor: 'transparent', border: 'none', outline: 'none', color: '#F1F5F9', fontSize: '14px', fontFamily: 'var(--font-mono)' }}
                 />
               </div>
             </div>
@@ -269,10 +271,10 @@ export default function AuthModal() {
               <div
                 onClick={() => setBindTerminal(!bindTerminal)}
                 style={{
-                  width: '32px',
-                  height: '16px',
-                  backgroundColor: bindTerminal ? 'var(--accent-primary)' : 'var(--border-color)',
-                  borderRadius: '8px',
+                  width: '34px',
+                  height: '18px',
+                  backgroundColor: bindTerminal ? '#10B981' : '#1F2E35',
+                  borderRadius: '9999px',
                   position: 'relative',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s'
@@ -282,16 +284,16 @@ export default function AuthModal() {
                   position: 'absolute',
                   top: '2px',
                   left: bindTerminal ? '18px' : '2px',
-                  width: '12px',
-                  height: '12px',
-                  backgroundColor: '#FFFFFF',
+                  width: '14px',
+                  height: '14px',
+                  backgroundColor: bindTerminal ? '#0B1013' : '#94A3B8',
                   borderRadius: '50%',
-                  transition: 'left 0.2s'
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                 }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '13px', color: 'var(--text-main)', fontWeight: 500 }}>Remember me</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Keep me logged in for 30 days</span>
+                <span style={{ fontSize: '13px', color: '#F1F5F9', fontWeight: 500 }}>Remember me</span>
+                <span style={{ fontSize: '11px', color: '#94A3B8' }}>Keep me logged in for 30 days</span>
               </div>
             </div>
 
@@ -301,12 +303,12 @@ export default function AuthModal() {
               disabled={loading}
               style={{
                 width: '100%',
-                padding: '16px',
+                padding: '14px 16px',
                 marginTop: '8px',
-                backgroundColor: 'var(--accent-primary)',
+                backgroundColor: '#10B981',
                 border: 'none',
                 borderRadius: '8px',
-                color: 'var(--bg-darkest)',
+                color: '#0B1013',
                 fontSize: '14px',
                 fontWeight: 600,
                 fontFamily: 'var(--font-heading)',
@@ -316,6 +318,13 @@ export default function AuthModal() {
                 justifyContent: 'center',
                 gap: '8px',
                 transition: 'all 0.2s ease',
+                boxShadow: '0 0 14px rgba(16, 185, 129, 0.35)'
+              }}
+              onMouseOver={(e) => {
+                if (!loading) e.currentTarget.style.backgroundColor = '#34D399';
+              }}
+              onMouseOut={(e) => {
+                if (!loading) e.currentTarget.style.backgroundColor = '#10B981';
               }}
             >
               <RiLockLine size={18} />
@@ -325,26 +334,29 @@ export default function AuthModal() {
         </div>
 
         {/* Registration CTA */}
-        {/* Registration CTA */}
         <button
           type="button"
           onClick={() => setIsLogin(!isLogin)}
           style={{
             background: 'none',
             border: 'none',
-            color: 'var(--text-main)',
+            color: '#10B981',
             fontSize: '14px',
+            fontWeight: 500,
             cursor: 'pointer',
             padding: '8px',
-            textDecoration: 'underline'
+            textDecoration: 'none',
+            transition: 'color 0.15s ease'
           }}
+          onMouseOver={(e) => e.currentTarget.style.color = '#34D399'}
+          onMouseOut={(e) => e.currentTarget.style.color = '#10B981'}
         >
           {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
         </button>
 
         {/* Security Footer */}
         <div style={{ marginTop: '48px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', color: 'var(--accent-secondary)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', color: '#10B981' }}>
             <RiShieldStarLine size={16} />
             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '12px', fontWeight: 600, letterSpacing: '0.05em' }}>END-TO-END SECURE</span>
           </div>

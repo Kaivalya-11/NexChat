@@ -17,11 +17,11 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
   return (
     <div style={{ padding: '12px', flexShrink: 0 }}>
       <div style={{
-        backgroundColor: 'var(--bg-darkest, #0a0a0a)',
+        backgroundColor: '#11181C',
         borderRadius: '16px',
-        border: '1px solid rgba(16, 185, 129, 0.2)',
+        border: '1px solid #1F2E35',
         padding: '16px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.3), inset 0 0 12px rgba(16, 185, 129, 0.05)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
@@ -33,8 +33,8 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
             <div style={{
               padding: '3px',
               borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(16, 185, 129, 0.1) 100%)',
-              boxShadow: '0 0 15px rgba(16, 185, 129, 0.2)'
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(16, 185, 129, 0.05) 100%)',
+              boxShadow: '0 0 14px rgba(16, 185, 129, 0.2)'
             }}>
               <img
                 src={getOptimizedImageUrl(user.avatar || `https://ui-avatars.com/api/?name=${user.username}`, { width: 128, height: 128 })}
@@ -47,7 +47,7 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
                   height: '64px',
                   borderRadius: '50%',
                   objectFit: 'cover',
-                  border: '2px solid var(--bg-darkest, #0a0a0a)',
+                  border: '2px solid #0B1013',
                   display: 'block'
                 }}
               />
@@ -60,7 +60,7 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               height: '14px',
               borderRadius: '50%',
               backgroundColor: getStatusColor(user.status || 'online'),
-              border: '2.5px solid var(--bg-darkest, #0a0a0a)',
+              border: '2.5px solid #11181C',
               boxShadow: `0 0 8px ${getStatusColor(user.status || 'online')}`
             }} />
           </div>
@@ -70,29 +70,23 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               {user.username}
               {user.isAdmin && (
                 <span style={{
-                  fontSize: '0.6rem',
+                  fontSize: '0.65rem',
+                  fontFamily: 'var(--font-mono)',
                   fontWeight: 700,
-                  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-                  color: '#000',
+                  background: 'rgba(245, 158, 11, 0.15)',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                  color: '#F59E0B',
                   padding: '2px 6px',
-                  borderRadius: '6px',
+                  borderRadius: '9999px',
                   letterSpacing: '0.05em',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px'
                 }}>
-                  👑 Admin
+                  <RiShieldCheckFill size={10} /> ADMIN
                 </span>
               )}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '4px' }}>
-              <div style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                backgroundColor: getStatusColor(user.status || 'online')
-              }} />
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-                {user.statusText || (user.status === 'online' ? 'Active now' : user.status === 'away' ? 'Away' : user.status === 'dnd' ? 'Do not disturb' : 'Offline')}
-              </span>
             </div>
           </div>
         </div>
@@ -107,21 +101,21 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               alignItems: 'center',
               gap: '12px',
               padding: '10px 12px',
-              backgroundColor: 'rgba(16, 185, 129, 0.04)',
-              border: '1px solid rgba(16, 185, 129, 0.1)',
-              borderRadius: '12px',
+              backgroundColor: '#162026',
+              border: '1px solid #1F2E35',
+              borderRadius: '10px',
               color: 'var(--text-main)',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
               textAlign: 'left'
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.08)';
-              e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+              e.currentTarget.style.backgroundColor = '#1E2B33';
+              e.currentTarget.style.borderColor = '#2C3F49';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.04)';
-              e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.1)';
+              e.currentTarget.style.backgroundColor = '#162026';
+              e.currentTarget.style.borderColor = '#1F2E35';
             }}
           >
             <div style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center' }}>
@@ -142,9 +136,9 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
                 alignItems: 'center',
                 gap: '12px',
                 padding: '10px 12px',
-                backgroundColor: 'rgba(211, 255, 234, 0.08)',
-                border: '1px solid var(--border-highlight)',
-                borderRadius: '12px',
+                backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                border: '1px solid rgba(16, 185, 129, 0.25)',
+                borderRadius: '10px',
                 color: 'var(--text-main)',
                 textDecoration: 'none',
                 cursor: 'pointer',
@@ -152,12 +146,12 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
                 textAlign: 'left'
               }}
               onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(211, 255, 234, 0.15)';
-                e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.16)';
+                e.currentTarget.style.borderColor = '#10B981';
               }}
               onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(211, 255, 234, 0.08)';
-                e.currentTarget.style.borderColor = 'var(--border-highlight)';
+                e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.25)';
               }}
             >
               <div style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center' }}>
@@ -167,7 +161,6 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
                 <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-primary)' }}>
                   Admin Dashboard
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Console & Telemetry</div>
               </div>
             </Link>
           )}
@@ -180,7 +173,7 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
           justifyContent: 'space-between',
           gap: '8px',
           paddingTop: '16px',
-          borderTop: '1px solid rgba(255,255,255,0.05)'
+          borderTop: '1px solid #1F2E35'
         }}>
           {/* Appearance Control */}
           <button
@@ -199,7 +192,7 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               transition: 'background-color 0.2s ease',
               borderRadius: '8px',
             }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#162026'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
@@ -221,20 +214,20 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               alignItems: 'center',
               justifyContent: 'center',
               padding: '8px',
-              backgroundColor: 'rgba(239, 68, 68, 0.05)',
-              border: '1px solid rgba(239, 68, 68, 0.1)',
+              backgroundColor: 'rgba(244, 63, 94, 0.08)',
+              border: '1px solid rgba(244, 63, 94, 0.2)',
               borderRadius: '8px',
-              color: '#ef4444',
+              color: '#F43F5E',
               cursor: 'pointer',
               transition: 'all 0.2s ease'
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
-              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+              e.currentTarget.style.backgroundColor = 'rgba(244, 63, 94, 0.16)';
+              e.currentTarget.style.borderColor = '#F43F5E';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.05)';
-              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.1)';
+              e.currentTarget.style.backgroundColor = 'rgba(244, 63, 94, 0.08)';
+              e.currentTarget.style.borderColor = 'rgba(244, 63, 94, 0.2)';
             }}
             title="Logout"
           >

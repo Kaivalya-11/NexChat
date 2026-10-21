@@ -87,14 +87,14 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '14px 16px',
+            padding: '12px 16px',
             background: 'var(--bg-card)',
             borderRadius: 'var(--radius-md)',
             cursor: 'pointer',
-            border: '1px solid var(--accent-success)',
-            boxShadow: '0 4px 12px -2px rgba(40, 90, 72, 0.4), 0 0 8px rgba(176, 228, 204, 0.15)'
+            border: '1px solid var(--border-color)',
+            boxShadow: 'inset 0 1px 0 rgba(52, 211, 153, 0.15)'
           }}>
-          <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 700, color: 'var(--accent-success)', letterSpacing: '-0.02em', lineHeight: 1, textShadow: '0 0 4px rgba(176, 228, 204, 0.2)' }}>
+          <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 700, color: 'var(--accent-primary)', letterSpacing: '-0.02em', lineHeight: 1 }}>
             NexChat
           </h2>
         </motion.div>
@@ -171,7 +171,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                     cursor: 'pointer',
                     position: 'relative',
                     background: isActive ? 'var(--bg-card)' : 'transparent',
-                    border: isActive ? '1px solid var(--border-color)' : '1px solid transparent',
+                    border: isActive ? '1px solid var(--border-highlight)' : '1px solid transparent',
                     color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)',
                     borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
                     marginBottom: '2px',
@@ -191,7 +191,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       className="unread-badge"
-                      style={{ backgroundColor: 'var(--accent-primary)', color: 'var(--bg-darkest)', fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 6px', borderRadius: 'var(--radius-sm)' }}
+                      style={{ backgroundColor: 'var(--accent-primary)', color: 'var(--btn-primary-text)', fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 6px', borderRadius: 'var(--radius-sm)' }}
                     >
                       {unreadCounts[c.id]}
                     </motion.div>
@@ -265,7 +265,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                     cursor: 'pointer',
                     position: 'relative',
                     background: isActive ? 'var(--bg-card)' : 'transparent',
-                    border: isActive ? '1px solid var(--border-color)' : '1px solid transparent',
+                    border: isActive ? '1px solid var(--border-highlight)' : '1px solid transparent',
                     borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
                     color: isActive ? 'var(--text-main)' : 'var(--text-muted)',
                     marginBottom: '2px',
@@ -274,7 +274,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                   }}
                 >
                   <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                    <div style={{ width: '26px', height: '26px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-darker)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)', border: '1px solid var(--border-color)' }}>
+                    <div style={{ width: '26px', height: '26px', borderRadius: 'var(--radius-md)', backgroundColor: isActive ? 'var(--bg-hover)' : 'var(--bg-card)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)', border: '1px solid var(--border-color)' }}>
                       <RiMessage3Fill size={14} />
                     </div>
                     <div style={{
@@ -296,7 +296,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       className="unread-badge"
-                      style={{ backgroundColor: 'var(--accent-primary)', color: 'white', fontSize: '0.7rem', fontWeight: 700, padding: '2px 6px', borderRadius: '10px' }}
+                      style={{ backgroundColor: 'var(--accent-primary)', color: 'var(--btn-primary-text)', fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 6px', borderRadius: 'var(--radius-sm)' }}
                     >
                       {unreadCounts[c.id]}
                     </motion.div>

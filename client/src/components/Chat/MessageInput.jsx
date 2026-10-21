@@ -142,24 +142,6 @@ export default function MessageInput({ isThread = false, threadParentId = null }
     setMedia(prev => prev.filter((_, i) => i !== index));
   };
 
-  const insertFormat = (prefix, suffix) => {
-    if (!inputRef.current) return;
-    
-    const textarea = inputRef.current;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    
-    const selectedText = content.substring(start, end);
-    const newContent = content.substring(0, start) + prefix + selectedText + suffix + content.substring(end);
-    
-    setContent(newContent);
-    
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + prefix.length, end + prefix.length);
-    }, 0);
-  };
-
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -272,13 +254,6 @@ export default function MessageInput({ isThread = false, threadParentId = null }
           </button>
         </div>
       )}
-
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '4px', paddingLeft: '4px', overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
-        <button type="button" aria-label="Format bold" onMouseDown={(e) => { e.preventDefault(); insertFormat('**', '**'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[bold]</button>
-        <button type="button" aria-label="Format italic" onMouseDown={(e) => { e.preventDefault(); insertFormat('*', '*'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[italic]</button>
-        <button type="button" aria-label="Format link" onMouseDown={(e) => { e.preventDefault(); insertFormat('[', '](url)'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[link]</button>
-        <button type="button" aria-label="Format code" onMouseDown={(e) => { e.preventDefault(); insertFormat('`', '`'); }} style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '4px 8px', fontSize: '10px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>[code]</button>
-      </div>
 
       <form 
         onSubmit={handleSend}
@@ -537,17 +512,17 @@ export default function MessageInput({ isThread = false, threadParentId = null }
              style={{ 
                padding: '10px 14px', 
                marginLeft: '6px', 
-               backgroundColor: '#9BB7AE', 
-               color: '#1A2F26', 
+               backgroundColor: 'var(--accent-primary)', 
+               color: 'var(--btn-primary-text)', 
                border: 'none', 
                cursor: (!content.trim() && media.length === 0) || isUploading ? 'not-allowed' : 'pointer',
                display: 'flex', 
                alignItems: 'center', 
                justifyContent: 'center',
                borderRadius: 'var(--radius-md)',
-               opacity: (!content.trim() && media.length === 0) || isUploading ? 0.75 : 1,
+               opacity: (!content.trim() && media.length === 0) || isUploading ? 0.6 : 1,
                transition: 'all 0.2s ease',
-               boxShadow: '0 2px 8px rgba(155, 183, 174, 0.4)'
+               boxShadow: '0 2px 10px rgba(16, 185, 129, 0.35)'
              }}
              disabled={(!content.trim() && media.length === 0) || isUploading}
           >

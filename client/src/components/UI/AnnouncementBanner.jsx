@@ -15,37 +15,37 @@ import { useSocket } from '../../context/SocketContext';
 
 const CATEGORY_STYLES = {
   maintenance: {
-    bg: 'rgba(245, 158, 11, 0.15)',
-    border: 'rgba(245, 158, 11, 0.4)',
-    color: '#fbbf24',
+    bg: 'rgba(245, 158, 11, 0.12)',
+    border: 'rgba(245, 158, 11, 0.35)',
+    color: '#F59E0B',
     icon: RiAlertLine,
     label: 'MAINTENANCE'
   },
   security: {
-    bg: 'rgba(239, 68, 68, 0.15)',
-    border: 'rgba(239, 68, 68, 0.4)',
-    color: '#ef4444',
+    bg: 'rgba(244, 63, 94, 0.12)',
+    border: 'rgba(244, 63, 94, 0.35)',
+    color: '#F43F5E',
     icon: RiShieldCheckLine,
     label: 'SECURITY'
   },
   feature: {
-    bg: 'rgba(59, 130, 246, 0.15)',
-    border: 'rgba(59, 130, 246, 0.4)',
-    color: '#60a5fa',
+    bg: 'rgba(6, 182, 212, 0.12)',
+    border: 'rgba(6, 182, 212, 0.35)',
+    color: '#06B6D4',
     icon: RiSparklingLine,
     label: 'NEW FEATURE'
   },
   incident: {
-    bg: 'rgba(239, 68, 68, 0.15)',
-    border: 'rgba(239, 68, 68, 0.4)',
-    color: '#ef4444',
+    bg: 'rgba(244, 63, 94, 0.12)',
+    border: 'rgba(244, 63, 94, 0.35)',
+    color: '#F43F5E',
     icon: RiAlertLine,
     label: 'INCIDENT'
   },
   general: {
-    bg: 'rgba(211, 255, 234, 0.1)',
-    border: 'rgba(211, 255, 234, 0.3)',
-    color: 'var(--accent-primary)',
+    bg: 'rgba(16, 185, 129, 0.12)',
+    border: 'rgba(16, 185, 129, 0.35)',
+    color: '#10B981',
     icon: RiMegaphoneLine,
     label: 'ANNOUNCEMENT'
   }

@@ -85,8 +85,8 @@ export default function ChatHeader({ onToggleMembers, onOpenSearch, onToggleSide
                 <span className={`status-dot ${getDMOtherUserStatus(channel)}`} style={{ borderRadius: '2px', width: '6px', height: '6px' }} />
               )}
             </h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
-              <span style={{ color: 'var(--accent-warning)', fontWeight: 600 }}>ONLINE USERS: {channel.members.filter(id => onlineUsers.has(id)).length}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--accent-secondary)', fontWeight: 600 }}>ONLINE: {channel.members.filter(id => onlineUsers.has(id)).length}</span>
             </div>
           </div>
         </div>

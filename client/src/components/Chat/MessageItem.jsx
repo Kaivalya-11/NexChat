@@ -69,7 +69,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
     const isDeliveredBySome = message.deliveredTo?.length > 1;
 
     if (isReadByAll || isReadBySome) {
-      receiptIcon = <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}><RiCheckDoubleLine size={16} style={{ color: '#53bdeb' }} /></motion.span>;
+      receiptIcon = <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}><RiCheckDoubleLine size={16} style={{ color: '#06B6D4' }} /></motion.span>;
     } else if (isDeliveredBySome) {
       receiptIcon = <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}><RiCheckDoubleLine size={16} style={{ color: 'var(--text-muted)' }} /></motion.span>;
     } else {
@@ -309,10 +309,11 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         minWidth: 0, 
         position: 'relative',
         padding: isMediaOnly ? '4px' : '8px 12px',
-        backgroundColor: isMediaOnly ? 'transparent' : (isOwn ? 'var(--msg-card-bg)' : 'var(--bg-card)'),
-        border: isMediaOnly ? 'none' : '1px solid var(--border-color)',
+        backgroundColor: isMediaOnly ? 'transparent' : (isOwn ? '#162026' : '#11181C'),
+        border: isMediaOnly ? 'none' : (isOwn ? '1px solid #2C3F49' : '1px solid #1F2E35'),
+        borderRight: isOwn && !isMediaOnly ? '2px solid #10B981' : undefined,
         borderRadius: isOwn ? '12px 4px 12px 12px' : '4px 12px 12px 12px',
-        boxShadow: 'var(--shadow-sm)',
+        boxShadow: isOwn ? '0 2px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(52, 211, 153, 0.1)' : 'var(--shadow-sm)',
         transition: 'transform 0.15s ease, opacity 0.15s ease'
       }}>
 
@@ -324,7 +325,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
                   {message.sender.username}
                 </span>
                 {message.sender.role === 'admin' && (
-                  <span style={{ backgroundColor: 'rgba(56, 189, 248, 0.1)', color: 'var(--accent-primary)', border: '1px solid var(--accent-primary)', borderRadius: '4px', padding: '2px 6px', fontSize: '10px', fontWeight: 600 }}>ADMIN</span>
+                  <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '4px', padding: '2px 6px', fontSize: '10px', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>ADMIN</span>
                 )}
               </>
             )}
@@ -342,12 +343,12 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
             initial={{ opacity: 0, x: -6 }}
             animate={{ opacity: 1, x: 0 }}
             style={{
-              backgroundColor: 'var(--bg-darkest)',
-              borderLeft: '4px solid var(--accent-primary)',
+              backgroundColor: '#0B1013',
+              borderLeft: '3px solid #10B981',
               padding: '6px 12px',
               marginBottom: '8px',
               borderRadius: 'var(--radius-sm)',
-              opacity: 0.85,
+              opacity: 0.9,
               cursor: 'pointer'
             }}
           >
