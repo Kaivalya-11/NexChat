@@ -17,7 +17,8 @@ import {
   RiAlertLine,
   RiArrowUpLine,
   RiScales3Line,
-  RiLockLine
+  RiLockLine,
+  RiSettings4Line
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
 import { AdminLoadingState, AdminErrorState } from '../AdminStates';
@@ -78,6 +79,12 @@ const QUICK_NAV_ITEMS = [
     label: 'Moderation Queue',
     desc: 'Handle user reports, policy violations, and account suspensions.',
     icon: RiShieldCheckLine
+  },
+  {
+    id: 'settings',
+    label: 'Platform Settings',
+    desc: 'Configure maintenance mode, registration rules, and upload limits.',
+    icon: RiSettings4Line
   }
 ];
 

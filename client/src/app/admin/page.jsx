@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import * as api from '../../services/api';
+import { RiMenuLine } from 'react-icons/ri';
 import AdminSidebar, { ADMIN_NAV_ITEMS } from '../../components/Admin/AdminSidebar';
-import AdminHeader from '../../components/Admin/AdminHeader';
 import {
   AdminLoadingState,
   AdminAccessDeniedState,
@@ -183,13 +183,15 @@ export default function AdminPage() {
         }}
         className="admin-main-wrapper"
       >
-        {/* Header */}
-        <AdminHeader
-          activeNav={activeNav}
-          navItem={currentNavItem}
-          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          adminUser={adminUser}
-        />
+        {/* Mobile Navigation Trigger (only visible on screens < 1024px) */}
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="admin-mobile-fab"
+          aria-label="Open admin navigation menu"
+          title="Open admin navigation"
+        >
+          <RiMenuLine size={20} />
+        </button>
 
         {/* Content Area */}
         <main style={{
@@ -313,7 +315,34 @@ export default function AdminPage() {
           background: #10B981;
         }
 
+        .admin-mobile-fab {
+          display: none;
+        }
+
         @media (max-width: 1023px) {
+          .admin-mobile-fab {
+            display: flex !important;
+            position: fixed;
+            bottom: 22px;
+            right: 22px;
+            z-index: 80;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background-color: #162026;
+            border: 1px solid #1F2E35;
+            color: #10B981;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s ease;
+          }
+          .admin-mobile-fab:hover {
+            background-color: #1E2B33;
+            border-color: #10B981;
+            transform: scale(1.05);
+          }
           .admin-main-wrapper {
             margin-left: 0 !important;
             width: 100% !important;
