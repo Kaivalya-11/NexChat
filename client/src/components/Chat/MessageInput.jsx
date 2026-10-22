@@ -19,12 +19,14 @@ import {
   RiStickyNoteFill, 
   RiAddLine, 
   RiDeleteBin6Line, 
-  RiSearch2Line 
+  RiSearch2Line,
+  RiReplyFill
 } from 'react-icons/ri';
 import EmojiPicker from 'emoji-picker-react';
 import CameraModal from './CameraModal';
 import ContactModal from './ContactModal';
 import PollModal from './PollModal';
+import { formatQuotePreview, parseQuotedContent } from '../../utils/quoteHelper';
 const STICKERS = [
   { id: 'cat-love', name: 'Cat Love', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y2Z285eWhmZjJmbmtraXR1ZWlhaHVwNzcxOHUzZ3N2bzI3dXk5NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MDJ9IbxxvDUQM/giphy.gif' },
   { id: 'pepe-hype', name: 'Pepe Hype', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmhjbnZndDliYXdwZjVlM3hsbXZ4bmtic3MxeDZwZnFtcWNvMnJveiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/blSTtZehjAZ8I/giphy.gif' },
@@ -62,8 +64,23 @@ export default function MessageInput({ isThread = false, threadParentId = null }
   const channelId = activeChannelId;
   const currentChannel = channels?.find(c => c.id === channelId);
   
+  const [showTypingSetting, setShowTypingSetting] = useState(() => {
+    return typeof window !== 'undefined' ? localStorage.getItem('nexchat_show_typing') !== 'false' : true;
+  });
+
+  useEffect(() => {
+    const handleSettingsChanged = (e) => {
+      const { key } = e.detail || {};
+      if (!key || key === 'nexchat_show_typing') {
+        setShowTypingSetting(typeof window !== 'undefined' ? localStorage.getItem('nexchat_show_typing') !== 'false' : true);
+      }
+    };
+    window.addEventListener('nexchat_settings_changed', handleSettingsChanged);
+    return () => window.removeEventListener('nexchat_settings_changed', handleSettingsChanged);
+  }, []);
+
   const channelTypers = typingUsers[channelId] ? Object.values(typingUsers[channelId]) : [];
-  const showTyping = !isThread && channelTypers.length > 0;
+  const showTyping = !isThread && channelTypers.length > 0 && showTypingSetting;
 
   const handleTyping = (e) => {
     setContent(e.target.value);
@@ -91,7 +108,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
       quote: (!isThread && replyingTo) ? {
         messageId: replyingTo.id,
         senderName: replyingTo.sender.username,
-        content: replyingTo.content || 'Attachment'
+        content: formatQuotePreview(replyingTo)
       } : null
     };
 
@@ -103,6 +120,28 @@ export default function MessageInput({ isThread = false, threadParentId = null }
       socket.emit('typing-stop', { channelId });
     }
     sendMessage(messageData);
+    
+    // Play message sent audio tick if enabled
+    const sendSound = typeof window !== 'undefined' ? localStorage.getItem('nexchat_send_sound') === 'true' : false;
+    if (sendSound) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          const ctx = new AudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(650, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1050, ctx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.06, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.05);
+        }
+      } catch (e) {}
+    }
     
     setTimeout(() => {
        inputRef.current?.focus();
@@ -229,31 +268,38 @@ export default function MessageInput({ isThread = false, threadParentId = null }
         </div>
       )}
 
-      {replyingTo && !isThread && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: 'var(--bg-hover)',
-          padding: '10px 14px',
-          borderLeft: '4px solid var(--accent-primary)',
-          borderTop: '1px solid var(--border-color)',
-          borderRight: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0'
-        }}>
-          <div style={{ flex: 1, overflow: 'hidden' }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--accent-primary)', marginBottom: '2px' }}>
-              Replying to {replyingTo.sender.username}
+      {replyingTo && !isThread && (() => {
+        const previewText = formatQuotePreview(replyingTo);
+        return (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: 'var(--bg-hover)',
+            padding: '8px 14px',
+            borderLeft: '4px solid var(--accent-primary)',
+            borderTop: '1px solid var(--border-color)',
+            borderRight: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0'
+          }}>
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent-primary)', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <RiReplyFill size={12} />
+                <span>Replying to {replyingTo.sender.username}</span>
+              </div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {replyingTo.type === 'poll' && <RiBarChart2Fill size={14} style={{ color: 'var(--accent-warning)', flexShrink: 0 }} />}
+                {replyingTo.type === 'contact' && <RiUser3Fill size={14} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />}
+                {replyingTo.type === 'sticker' && <RiStickyNoteFill size={14} style={{ color: 'var(--accent-secondary)', flexShrink: 0 }} />}
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{previewText}</span>
+              </div>
             </div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {replyingTo.content || 'Attachment'}
-            </div>
+            <button type="button" className="btn-icon" aria-label="Cancel reply" onClick={() => setReplyingTo(null)}>
+              <RiCloseLine size={18} />
+            </button>
           </div>
-          <button type="button" className="btn-icon" aria-label="Cancel reply" onClick={() => setReplyingTo(null)}>
-            <RiCloseLine size={18} />
-          </button>
-        </div>
-      )}
+        );
+      })()}
 
       <form 
         onSubmit={handleSend}
@@ -309,13 +355,13 @@ export default function MessageInput({ isThread = false, threadParentId = null }
               }}
             >
               {[
-                { icon: RiFileTextFill, label: 'Document', color: '#7f66ff', accept: '.pdf,.doc,.docx,.txt,.csv,.zip,.rar,.xls,.xlsx,.ppt,.pptx' },
-                { icon: RiImage2Fill, label: 'Photos & videos', color: '#007aff', accept: 'image/*,video/*' },
-                { icon: RiCamera3Fill, label: 'Camera', color: '#ff2d55', action: 'camera' },
-                { icon: RiHeadphoneFill, label: 'Audio', color: '#ff9500', accept: 'audio/*' },
-                { icon: RiUser3Fill, label: 'Contact', color: '#34c759', action: 'contact' },
-                { icon: RiBarChart2Fill, label: 'Poll', color: '#ffcc00', action: 'poll' },
-                { icon: RiStickyNoteFill, label: 'New sticker', color: '#00c7be', action: 'sticker' }
+                { icon: RiFileTextFill, label: 'Document', color: 'var(--accent-secondary)', accept: '.pdf,.doc,.docx,.txt,.csv,.zip,.rar,.xls,.xlsx,.ppt,.pptx' },
+                { icon: RiImage2Fill, label: 'Photos & videos', color: 'var(--accent-primary)', accept: 'image/*,video/*' },
+                { icon: RiCamera3Fill, label: 'Camera', color: 'var(--accent-danger)', action: 'camera' },
+                { icon: RiHeadphoneFill, label: 'Audio', color: 'var(--accent-warning)', accept: 'audio/*' },
+                { icon: RiUser3Fill, label: 'Contact', color: 'var(--accent-primary)', action: 'contact' },
+                { icon: RiBarChart2Fill, label: 'Poll', color: 'var(--accent-warning)', action: 'poll' },
+                { icon: RiStickyNoteFill, label: 'New sticker', color: 'var(--accent-secondary)', action: 'sticker' }
               ].map((item, idx) => (
                 <button
                   key={idx}
@@ -350,7 +396,7 @@ export default function MessageInput({ isThread = false, threadParentId = null }
                     textAlign: 'left',
                     transition: 'background-color 0.15s ease'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-hover)'}
                   onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   <div style={{ color: item.color, display: 'flex', alignItems: 'center' }}>
@@ -372,13 +418,13 @@ export default function MessageInput({ isThread = false, threadParentId = null }
               borderRadius: 'var(--radius-md)',
               padding: '12px',
               width: '300px',
-              boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
+              boxShadow: 'var(--shadow-lg)',
               zIndex: 110,
-              border: '1px solid rgba(255,255,255,0.1)'
+              border: '1px solid var(--border-color)'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', paddingBottom: '8px', borderBottom: '1px solid var(--border-color)' }}>
                 <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <RiStickyNoteFill size={18} style={{ color: '#00c7be' }} /> Send a Sticker
+                  <RiStickyNoteFill size={18} style={{ color: 'var(--accent-secondary)' }} /> Send a Sticker
                 </span>
                 <button type="button" className="btn-icon" aria-label="Close sticker picker" onClick={() => setShowStickerPicker(false)}>
                   <RiCloseLine size={18} />
@@ -392,8 +438,8 @@ export default function MessageInput({ isThread = false, threadParentId = null }
                     aria-label={`Send ${s.name} sticker`}
                     onClick={() => handleSendSticker(s.url)}
                     style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.05)',
+                      background: 'var(--bg-hover)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '8px',
                       padding: '6px',
                       cursor: 'pointer',
@@ -434,9 +480,17 @@ export default function MessageInput({ isThread = false, threadParentId = null }
           value={content}
           onChange={handleTyping}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSend(e);
+            const enterToSend = typeof window !== 'undefined' ? localStorage.getItem('nexchat_enter_to_send') !== 'false' : true;
+            if (enterToSend) {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend(e);
+              }
+            } else {
+              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                handleSend(e);
+              }
             }
           }}
           placeholder={isUploading ? "Uploading..." : isRecording ? "Recording voice note..." : "Type a message..."}
@@ -472,13 +526,29 @@ export default function MessageInput({ isThread = false, threadParentId = null }
               <RiEmotionHappyLine size={22} />
             </button>
             {showEmojiPicker && (
-              <div className="emoji-picker-wrapper" style={{ position: 'absolute', bottom: '100%', left: '0', zIndex: 50, marginBottom: '8px' }}>
-                <EmojiPicker onEmojiClick={(emojiObj) => {
-                  setContent(prev => prev + emojiObj.emoji);
-                  setShowEmojiPicker(false);
-                  inputRef.current?.focus();
-                }} theme="dark" />
-              </div>
+              <>
+                <div 
+                  style={{ position: 'fixed', inset: 0, zIndex: 45 }} 
+                  onClick={() => setShowEmojiPicker(false)} 
+                />
+                <div className="emoji-picker-wrapper" style={{ position: 'absolute', bottom: '100%', left: '0', zIndex: 50, marginBottom: '8px' }}>
+                  <EmojiPicker 
+                    onEmojiClick={(emojiObj) => {
+                      const emojiChar = emojiObj?.emoji || emojiObj;
+                      if (emojiChar) {
+                        setContent(prev => prev + emojiChar);
+                      }
+                      setShowEmojiPicker(false);
+                      inputRef.current?.focus();
+                    }} 
+                    theme={typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'}
+                    lazyLoadEmojis={false}
+                    previewConfig={{ showPreview: false }}
+                    width={320}
+                    height={400}
+                  />
+                </div>
+              </>
             )}
           </div>
           

@@ -102,9 +102,27 @@ export function ChatProvider({ children }) {
 
       if (msg.channelId === activeChannelId) {
         setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg]);
-        if (msg.sender.id !== user.id) socket.emit('mark-read', { channelId: activeChannelId });
+        if (msg.sender.id !== user.id) {
+          const sendReceipts = typeof window !== 'undefined' ? localStorage.getItem('nexchat_read_receipts') !== 'false' : true;
+          if (sendReceipts) {
+            socket.emit('mark-read', { channelId: activeChannelId });
+          }
+        }
       } else {
-        soundManager.playNotificationSound();
+        const soundEnabled = typeof window !== 'undefined' ? localStorage.getItem('nexchat_sound_enabled') !== 'false' : true;
+        const channel = channels.find(c => c.id === msg.channelId);
+        const isDm = channel && !channel.isGroup;
+        const dmAlerts = typeof window !== 'undefined' ? localStorage.getItem('nexchat_dm_alerts') !== 'false' : true;
+        const isMention = msg.content && typeof msg.content === 'string' && (msg.content.includes(`@${user.username}`) || msg.content.includes('@all') || msg.content.includes('@everyone'));
+        const mentionAlerts = typeof window !== 'undefined' ? localStorage.getItem('nexchat_mention_alerts') !== 'false' : true;
+
+        if (soundEnabled) {
+          if ((isDm && !dmAlerts) || (isMention && !mentionAlerts)) {
+            // alert sound suppressed by preference
+          } else {
+            soundManager.playNotificationSound();
+          }
+        }
         setUnreadCounts(prev => ({ ...prev, [msg.channelId]: (prev[msg.channelId] || 0) + 1 }));
       }
       

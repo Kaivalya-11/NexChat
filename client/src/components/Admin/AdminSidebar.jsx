@@ -205,7 +205,7 @@ export default function AdminSidebar({
                 letterSpacing: '0.06em',
                 fontWeight: 600
               }}>
-                Telemetry Console
+                Admin Console
               </span>
             </div>
           </div>

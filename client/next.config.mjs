@@ -30,7 +30,7 @@ const nextConfig = {
               "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
-              "img-src 'self' data: blob: https://res.cloudinary.com https://ui-avatars.com",
+              "img-src 'self' data: blob: https://res.cloudinary.com https://ui-avatars.com https://cdn.jsdelivr.net https://media.giphy.com https://*.giphy.com",
               "media-src 'self' data: blob: https://res.cloudinary.com",
               "connect-src 'self' ws: wss: http: https:",
               "frame-ancestors 'self'",

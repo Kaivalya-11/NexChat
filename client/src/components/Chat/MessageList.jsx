@@ -107,10 +107,13 @@ export default function MessageList() {
 
   useEffect(() => {
     if (!isFetchingOlder) {
-      // Batch DOM write in animation frame to prevent forced synchronous reflow
-      requestAnimationFrame(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-      });
+      const autoScroll = typeof window !== 'undefined' ? localStorage.getItem('nexchat_auto_scroll') !== 'false' : true;
+      if (autoScroll) {
+        // Batch DOM write in animation frame to prevent forced synchronous reflow
+        requestAnimationFrame(() => {
+          bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
     }
   }, [messages.length, isFetchingOlder]);
 

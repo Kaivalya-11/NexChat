@@ -518,10 +518,10 @@ export default function OverviewView({ token, onNavigate }) {
               Encrypted In-Transit
             </span>
             <span
-              style={{ cursor: 'pointer', color: '#10B981', fontWeight: 600, whiteSpace: 'nowrap' }}
+              style={{ cursor: 'pointer', color: '#10B981', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
               onClick={() => onNavigate && onNavigate('analytics')}
             >
-              Trends →
+              Trends <RiArrowRightLine size={13} />
             </span>
           </div>
         </div>
@@ -585,12 +585,12 @@ export default function OverviewView({ token, onNavigate }) {
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '3px',
                 padding: 0,
                 whiteSpace: 'nowrap'
               }}
             >
-              Review Queue →
+              Review Queue <RiArrowRightLine size={13} />
             </button>
           </div>
         </div>
@@ -644,9 +644,9 @@ export default function OverviewView({ token, onNavigate }) {
               </span>
               <button
                 onClick={() => onNavigate && onNavigate('users')}
-                style={{ background: 'none', border: 'none', color: '#10B981', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                style={{ background: 'none', border: 'none', color: '#10B981', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
               >
-                All Users →
+                All Users <RiArrowRightLine size={13} />
               </button>
             </div>
 
@@ -726,9 +726,9 @@ export default function OverviewView({ token, onNavigate }) {
               </span>
               <button
                 onClick={() => onNavigate && onNavigate('channels')}
-                style={{ background: 'none', border: 'none', color: '#10B981', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                style={{ background: 'none', border: 'none', color: '#10B981', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
               >
-                All Channels →
+                All Channels <RiArrowRightLine size={13} />
               </button>
             </div>
 
@@ -797,9 +797,9 @@ export default function OverviewView({ token, onNavigate }) {
               </span>
               <button
                 onClick={() => onNavigate && onNavigate('audit_logs')}
-                style={{ background: 'none', border: 'none', color: '#10B981', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                style={{ background: 'none', border: 'none', color: '#10B981', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
               >
-                Audit Trail →
+                Audit Trail <RiArrowRightLine size={13} />
               </button>
             </div>
 

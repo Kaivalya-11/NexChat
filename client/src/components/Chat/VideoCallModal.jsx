@@ -184,7 +184,7 @@ export default function VideoCallModal() {
                 width: '40px',
                 height: '40px',
                 borderRadius: '50%',
-                backgroundColor: '#34c759',
+                backgroundColor: 'var(--accent-primary)',
                 border: 'none',
                 color: '#fff',
                 cursor: 'pointer',
@@ -221,7 +221,7 @@ export default function VideoCallModal() {
       }}>
         <div style={{ padding: '8px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.4)' }}>
           <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#fff', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34c759' }} /> In Call
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--accent-primary)' }} /> In Call
           </span>
           <button className="btn-icon" onClick={() => setIsMinimized(false)} aria-label="Expand video call from picture-in-picture" style={{ padding: '2px' }}>
             <RiFullscreenLine size={16} />

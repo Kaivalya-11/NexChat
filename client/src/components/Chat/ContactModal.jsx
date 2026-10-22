@@ -26,11 +26,11 @@ export default function ContactModal({ onClose, onSendContact }) {
     }}>
       <div style={{
         backgroundColor: 'var(--bg-card)', borderRadius: '16px', width: '90%', maxWidth: '440px',
-        padding: '20px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 50px rgba(0,0,0,0.7)'
+        padding: '20px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <RiUser3Fill size={20} style={{ color: '#34c759' }} /> Share Contact
+            <RiUser3Fill size={20} style={{ color: 'var(--accent-primary)' }} /> Share Contact
           </h3>
           <button className="btn-icon" onClick={onClose} aria-label="Close contact modal">
             <RiCloseLine size={22} />
@@ -57,10 +57,10 @@ export default function ContactModal({ onClose, onSendContact }) {
                 onClick={() => onSendContact({ name: u.username, email: u.email, avatar: u.avatar, userId: u.id, phone: u.phone || '+1 (555) 019-2834' })}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '12px', padding: '10px', borderRadius: '8px',
-                  backgroundColor: 'rgba(255,255,255,0.03)', cursor: 'pointer', transition: 'background 0.15s'
+                  backgroundColor: 'var(--bg-hover)', cursor: 'pointer', transition: 'background 0.15s'
                 }}
-                onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
-                onMouseOut={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'}
+                onMouseOver={e => e.currentTarget.style.backgroundColor = 'var(--bg-active)'}
+                onMouseOut={e => e.currentTarget.style.backgroundColor = 'var(--bg-hover)'}
               >
                 <img
                   src={getOptimizedImageUrl(u.avatar || `https://ui-avatars.com/api/?name=${u.username}`, { width: 72, height: 72 })}
@@ -79,7 +79,7 @@ export default function ContactModal({ onClose, onSendContact }) {
             ))}
         </div>
 
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '12px' }}>
+        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '12px' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '8px' }}>OR CUSTOM CONTACT:</div>
           <input
             type="text"

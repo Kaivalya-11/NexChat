@@ -1,27 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { createPortal } from 'react-dom';
+import { AnimatePresence } from 'framer-motion';
 import {
   RiSettings4Fill,
   RiSunFill,
   RiMoonClearFill,
   RiLogoutBoxRFill,
   RiUser3Fill,
-  RiBookmarkFill,
-  RiSearch2Line,
-  RiArrowRightSLine,
   RiShieldCheckFill
 } from 'react-icons/ri';
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
+import AppSettingsModal from '../UI/AppSettingsModal';
 
-export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSearch, onToggleTheme, logout, getStatusColor }) {
+export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSearch, onToggleTheme, logout, getStatusColor, onOpenSettings }) {
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showStatus, setShowStatus] = useState(() => {
+    return typeof window !== 'undefined' ? localStorage.getItem('nexchat_show_status') !== 'false' : true;
+  });
+
+  useEffect(() => {
+    const handleSettingsChanged = (e) => {
+      if (!e.detail || e.detail.key === 'nexchat_show_status') {
+        setShowStatus(typeof window !== 'undefined' ? localStorage.getItem('nexchat_show_status') !== 'false' : true);
+      }
+    };
+    window.addEventListener('nexchat_settings_changed', handleSettingsChanged);
+    return () => window.removeEventListener('nexchat_settings_changed', handleSettingsChanged);
+  }, []);
   return (
     <div style={{ padding: '12px', flexShrink: 0 }}>
       <div style={{
-        backgroundColor: '#11181C',
+        backgroundColor: 'var(--bg-card)',
         borderRadius: '16px',
-        border: '1px solid #1F2E35',
+        border: '1px solid var(--border-color)',
         padding: '16px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+        boxShadow: 'var(--shadow-sm)',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
@@ -47,22 +61,24 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
                   height: '64px',
                   borderRadius: '50%',
                   objectFit: 'cover',
-                  border: '2px solid #0B1013',
+                  border: '2px solid var(--bg-card)',
                   display: 'block'
                 }}
               />
             </div>
-            <div style={{
-              position: 'absolute',
-              bottom: '2px',
-              right: '2px',
-              width: '14px',
-              height: '14px',
-              borderRadius: '50%',
-              backgroundColor: getStatusColor(user.status || 'online'),
-              border: '2.5px solid #11181C',
-              boxShadow: `0 0 8px ${getStatusColor(user.status || 'online')}`
-            }} />
+            {showStatus && (
+              <div style={{
+                position: 'absolute',
+                bottom: '2px',
+                right: '2px',
+                width: '14px',
+                height: '14px',
+                borderRadius: '50%',
+                backgroundColor: getStatusColor(user.status || 'online'),
+                border: '2.5px solid var(--bg-card)',
+                boxShadow: `0 0 8px ${getStatusColor(user.status || 'online')}`
+              }} />
+            )}
           </div>
 
           <div style={{ textAlign: 'center', width: '100%' }}>
@@ -101,8 +117,8 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               alignItems: 'center',
               gap: '12px',
               padding: '10px 12px',
-              backgroundColor: '#162026',
-              border: '1px solid #1F2E35',
+              backgroundColor: 'var(--bg-hover)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               color: 'var(--text-main)',
               cursor: 'pointer',
@@ -110,12 +126,12 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
               textAlign: 'left'
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#1E2B33';
-              e.currentTarget.style.borderColor = '#2C3F49';
+              e.currentTarget.style.backgroundColor = 'var(--bg-active)';
+              e.currentTarget.style.borderColor = 'var(--border-highlight)';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#162026';
-              e.currentTarget.style.borderColor = '#1F2E35';
+              e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
+              e.currentTarget.style.borderColor = 'var(--border-color)';
             }}
           >
             <div style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center' }}>
@@ -166,60 +182,104 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
           )}
         </div>
 
-        {/* Bottom: Appearance & Logout */}
+        {/* Bottom: Quick Actions (Theme, Settings, Logout) */}
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '8px',
-          paddingTop: '16px',
-          borderTop: '1px solid #1F2E35'
+          paddingTop: '14px',
+          borderTop: '1px solid var(--border-color)'
         }}>
-          {/* Appearance Control */}
+          {/* Dark/Light Mode Icon Button */}
           <button
+            type="button"
             onClick={onToggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             style={{
-              flex: 1,
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              padding: '8px 12px',
-              backgroundColor: 'transparent',
-              border: 'none',
-              color: 'var(--text-main)',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s ease',
+              justifyContent: 'center',
+              height: '38px',
+              backgroundColor: 'var(--bg-hover)',
+              border: '1px solid var(--border-color)',
               borderRadius: '8px',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              width: '100%'
             }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#162026'}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-active)';
+              e.currentTarget.style.borderColor = 'var(--border-highlight)';
+              e.currentTarget.style.color = 'var(--accent-primary)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.color = 'var(--text-muted)';
+            }}
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {theme === 'dark' ? (
-              <RiSunFill size={18} style={{ color: 'var(--text-muted)' }} />
+              <RiSunFill size={19} />
             ) : (
-              <RiMoonClearFill size={18} style={{ color: 'var(--text-muted)' }} />
+              <RiMoonClearFill size={19} />
             )}
-            <span style={{ fontSize: '0.85rem', fontWeight: 500, flex: 1, textAlign: 'left' }}>Appearance</span>
-            <RiArrowRightSLine size={16} style={{ color: 'var(--text-muted)' }} />
           </button>
 
-          {/* Logout Control */}
+          {/* Overall Settings Button */}
           <button
+            type="button"
+            onClick={() => {
+              if (onOpenSettings) onOpenSettings();
+              else setShowSettingsModal(true);
+            }}
+            aria-label="Application Settings"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '38px',
+              backgroundColor: 'var(--bg-hover)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '8px',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              width: '100%'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-active)';
+              e.currentTarget.style.borderColor = 'var(--border-highlight)';
+              e.currentTarget.style.color = 'var(--text-main)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.color = 'var(--text-muted)';
+            }}
+            title="Application Settings"
+          >
+            <RiSettings4Fill size={19} />
+          </button>
+
+          {/* Logout Button */}
+          <button
+            type="button"
             onClick={logout}
             aria-label="Log out"
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '8px',
+              height: '38px',
               backgroundColor: 'rgba(244, 63, 94, 0.08)',
               border: '1px solid rgba(244, 63, 94, 0.2)',
               borderRadius: '8px',
               color: '#F43F5E',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              width: '100%'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = 'rgba(244, 63, 94, 0.16)';
@@ -231,10 +291,25 @@ export default function UserProfilePanel({ user, theme, onOpenProfile, onOpenSea
             }}
             title="Logout"
           >
-            <RiLogoutBoxRFill size={18} />
+            <RiLogoutBoxRFill size={19} />
           </button>
         </div>
       </div>
+
+      {/* Application Overall Settings Modal */}
+      <AnimatePresence>
+        {showSettingsModal && typeof document !== 'undefined' && createPortal(
+          <AppSettingsModal
+            key="app-settings-modal"
+            user={user}
+            theme={theme}
+            onToggleTheme={onToggleTheme}
+            onOpenProfile={onOpenProfile}
+            onClose={() => setShowSettingsModal(false)}
+          />,
+          document.body
+        )}
+      </AnimatePresence>
     </div>
   );
 }

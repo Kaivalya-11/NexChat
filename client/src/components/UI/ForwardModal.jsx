@@ -126,7 +126,7 @@ export default function ForwardModal({ isOpen, onClose, onForward, channels, use
                    }}
                  >
                     {isGroup ? (
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--bg-active)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                         <RiHashtag size={20} />
                       </div>
                     ) : (

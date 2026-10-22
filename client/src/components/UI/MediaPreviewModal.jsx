@@ -116,7 +116,7 @@ export default function MediaPreviewModal() {
         >
           {/* File Info */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1, marginRight: '16px' }}>
-            <div style={{ padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(99, 102, 241, 0.15)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {isImage ? <RiImage2Fill size={20} /> : isVideo ? <RiVideoFill size={20} /> : isAudio ? <RiHeadphoneFill size={20} /> : <RiFileTextFill size={20} />}
             </div>
             <div style={{ minWidth: 0 }}>
@@ -290,7 +290,7 @@ export default function MediaPreviewModal() {
                 boxShadow: '0 20px 50px rgba(0,0,0,0.7)'
               }}
             >
-              <div style={{ width: '70px', height: '70px', borderRadius: '50%', backgroundColor: 'rgba(99, 102, 241, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
+              <div style={{ width: '70px', height: '70px', borderRadius: '50%', backgroundColor: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
                 <RiHeadphoneFill size={36} />
               </div>
               <div style={{ fontWeight: 600, color: '#fff', fontSize: '1.1rem' }}>{fileName}</div>
@@ -322,7 +322,7 @@ export default function MediaPreviewModal() {
                 boxShadow: '0 20px 50px rgba(0,0,0,0.7)'
               }}
             >
-              <div style={{ width: '80px', height: '80px', borderRadius: '20px', backgroundColor: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
+              <div style={{ width: '80px', height: '80px', borderRadius: '20px', backgroundColor: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
                 <RiFileTextFill size={44} />
               </div>
               <div>

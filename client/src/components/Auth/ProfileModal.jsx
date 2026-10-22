@@ -270,14 +270,47 @@ export default function ProfileModal({ onClose }) {
 
           {/* Presence */}
           <div className="form-group">
-            <label className="form-label">Presence</label>
-            <select className="form-input" value={status} onChange={e => setStatus(e.target.value)}
-              style={{ backgroundColor: 'var(--bg-darkest)' }}>
-              <option value="online">🟢 Online</option>
-              <option value="away">🟠 Away</option>
-              <option value="dnd">🔴 Do Not Disturb</option>
-              <option value="offline">⚪ Offline (Invisible)</option>
-            </select>
+            <label className="form-label">Presence Status</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '4px' }}>
+              {[
+                { id: 'online', label: 'Online', color: '#10B981' },
+                { id: 'away', label: 'Away', color: '#F59E0B' },
+                { id: 'dnd', label: 'Do Not Disturb', color: '#F43F5E' },
+                { id: 'offline', label: 'Offline (Invisible)', color: '#64748B' }
+              ].map(p => {
+                const isSelected = status === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setStatus(p.id)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 12px',
+                      backgroundColor: isSelected ? 'var(--bg-card)' : 'transparent',
+                      border: isSelected ? '1px solid #10B981' : '1px solid var(--border-color)',
+                      borderRadius: '8px',
+                      color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                      fontSize: '13px',
+                      fontWeight: isSelected ? 600 : 500
+                    }}
+                  >
+                    <span style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      backgroundColor: p.color,
+                      boxShadow: isSelected ? `0 0 8px ${p.color}` : 'none'
+                    }} />
+                    <span>{p.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div style={{ marginTop: '32px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>

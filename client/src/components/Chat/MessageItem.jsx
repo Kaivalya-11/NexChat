@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import EmojiPicker from 'emoji-picker-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -18,14 +19,21 @@ import {
   RiAddLine,
   RiCheckboxCircleLine,
   RiCheckboxBlankCircleLine,
-  RiPushpinLine
+  RiPushpinLine,
+  RiThumbUpLine,
+  RiHeartLine,
+  RiBarChart2Fill,
+  RiUser3Fill,
+  RiStickyNoteFill,
+  RiImage2Fill
 } from 'react-icons/ri';
 import PollMessage from './PollMessage';
 import { RiPhoneFill, RiMessage3Fill } from 'react-icons/ri';
 import ConfirmModal from '../UI/ConfirmModal';
 import { getOptimizedImageUrl, getOptimizedAttachmentUrl } from '../../utils/imageOptimizer';
+import { parseQuotedContent } from '../../utils/quoteHelper';
 
-const formatMessageText = (text) => {
+const formatMessageText = (text, markdownEnabled = true) => {
   if (typeof text !== 'string') return text;
   
   let html = text
@@ -34,6 +42,8 @@ const formatMessageText = (text) => {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
+  if (!markdownEnabled) return html;
 
   html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
@@ -50,6 +60,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
   const [showActions, setShowActions] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState(null);
+  const [showMediaCollapsed, setShowMediaCollapsed] = useState(false);
   
   const touchTimerRef = useRef(null);
   const touchPosRef = useRef(null);
@@ -57,7 +68,38 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
   const currentChannel = channels.find(c => c.id === activeChannelId);
   const totalChannelMembers = currentChannel?.members?.length || 2;
 
-  const timeString = new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const [clockFormat, setClockFormat] = useState(() => {
+    return typeof window !== 'undefined' ? (localStorage.getItem('nexchat_clock_format') || '12h') : '12h';
+  });
+  const [markdownEnabled, setMarkdownEnabled] = useState(() => {
+    return typeof window !== 'undefined' ? localStorage.getItem('nexchat_markdown_enabled') !== 'false' : true;
+  });
+  const [autoPreview, setAutoPreview] = useState(() => {
+    return typeof window !== 'undefined' ? localStorage.getItem('nexchat_auto_preview') !== 'false' : true;
+  });
+
+  useEffect(() => {
+    const handleSettingsChanged = (e) => {
+      const { key } = e.detail || {};
+      if (!key || key === 'nexchat_clock_format') {
+        setClockFormat(typeof window !== 'undefined' ? (localStorage.getItem('nexchat_clock_format') || '12h') : '12h');
+      }
+      if (!key || key === 'nexchat_markdown_enabled') {
+        setMarkdownEnabled(typeof window !== 'undefined' ? localStorage.getItem('nexchat_markdown_enabled') !== 'false' : true);
+      }
+      if (!key || key === 'nexchat_auto_preview') {
+        setAutoPreview(typeof window !== 'undefined' ? localStorage.getItem('nexchat_auto_preview') !== 'false' : true);
+      }
+    };
+    window.addEventListener('nexchat_settings_changed', handleSettingsChanged);
+    return () => window.removeEventListener('nexchat_settings_changed', handleSettingsChanged);
+  }, []);
+
+  const timeString = new Date(message.createdAt).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: clockFormat === '12h'
+  });
 
   const hasText = !!message.content && !['poll', 'contact', 'sticker'].includes(message.type);
   const isMediaOnly = !hasText && message.media?.length > 0 && !message.quote;
@@ -207,7 +249,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
                 } catch (err) { alert('Failed to start DM with contact'); }
               }}
               style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', border: 'none', color: 'var(--accent-primary)', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s' }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-hover)'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
             >
               <RiMessage3Fill size={16} /> Message Contact
@@ -222,7 +264,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: isOwn ? 'flex-end' : 'flex-start', width: '100%', marginBottom: '8px', padding: isSelected ? '4px 0' : '0', backgroundColor: isSelected ? 'rgba(16, 185, 129, 0.1)' : 'transparent', borderRadius: '8px', transition: 'background-color 0.2s ease' }}>
+    <div id={`message-${message.id}`} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: isOwn ? 'flex-end' : 'flex-start', width: '100%', marginBottom: '8px', padding: isSelected ? '4px 0' : '0', backgroundColor: isSelected ? 'rgba(16, 185, 129, 0.1)' : 'transparent', borderRadius: '8px', transition: 'background-color 0.2s ease' }}>
       {selectionMode && (
         <div 
           onClick={() => onToggleSelect && onToggleSelect(message.id)}
@@ -308,12 +350,12 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         flex: '0 1 auto', 
         minWidth: 0, 
         position: 'relative',
-        padding: isMediaOnly ? '4px' : '8px 12px',
-        backgroundColor: isMediaOnly ? 'transparent' : (isOwn ? '#162026' : '#11181C'),
-        border: isMediaOnly ? 'none' : (isOwn ? '1px solid #2C3F49' : '1px solid #1F2E35'),
-        borderRight: isOwn && !isMediaOnly ? '2px solid #10B981' : undefined,
+        padding: isMediaOnly ? '4px' : 'var(--msg-bubble-padding, 8px 12px)',
+        backgroundColor: isMediaOnly ? 'transparent' : (isOwn ? 'var(--msg-own-bg)' : 'var(--msg-peer-bg)'),
+        border: isMediaOnly ? 'none' : (isOwn ? '1px solid var(--msg-own-border)' : '1px solid var(--msg-peer-border)'),
+        borderRight: isOwn && !isMediaOnly ? '2px solid var(--msg-own-accent)' : undefined,
         borderRadius: isOwn ? '12px 4px 12px 12px' : '4px 12px 12px 12px',
-        boxShadow: isOwn ? '0 2px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(52, 211, 153, 0.1)' : 'var(--shadow-sm)',
+        boxShadow: 'var(--shadow-sm)',
         transition: 'transform 0.15s ease, opacity 0.15s ease'
       }}>
 
@@ -338,24 +380,74 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
           )}
         </div>
 
-        {message.quote && (
-          <motion.div
-            initial={{ opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            style={{
-              backgroundColor: '#0B1013',
-              borderLeft: '3px solid #10B981',
-              padding: '6px 12px',
-              marginBottom: '8px',
-              borderRadius: 'var(--radius-sm)',
-              opacity: 0.9,
-              cursor: 'pointer'
-            }}
-          >
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--accent-primary)', marginBottom: '2px' }}>{message.quote.senderName}</div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontStyle: 'italic', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{message.quote.content}</div>
-          </motion.div>
-        )}
+        {message.quote && (() => {
+          const parsed = parseQuotedContent(message.quote.content);
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => {
+                if (message.quote.messageId) {
+                  const target = document.getElementById(`message-${message.quote.messageId}`);
+                  if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.style.transition = 'background-color 0.3s ease';
+                    target.style.backgroundColor = 'var(--bg-active)';
+                    setTimeout(() => {
+                      target.style.backgroundColor = 'transparent';
+                    }, 1200);
+                  }
+                }
+              }}
+              style={{
+                backgroundColor: 'var(--msg-quote-bg)',
+                borderLeft: '3px solid var(--accent-primary)',
+                padding: '6px 10px',
+                marginBottom: '8px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '2px',
+                maxWidth: '100%',
+                overflow: 'hidden'
+              }}
+              title="Click to jump to quoted message"
+            >
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <RiReplyFill size={12} />
+                <span>{message.quote.senderName}</span>
+              </div>
+              <div style={{ 
+                fontSize: '0.82rem', 
+                color: 'var(--text-secondary, var(--text-main))', 
+                whiteSpace: 'nowrap', 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                {parsed.type === 'poll' && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--accent-warning)', fontWeight: 600 }}>
+                    <RiBarChart2Fill size={14} /> Poll:
+                  </span>
+                )}
+                {parsed.type === 'contact' && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--accent-primary)', fontWeight: 600 }}>
+                    <RiUser3Fill size={14} /> Contact:
+                  </span>
+                )}
+                {parsed.type === 'sticker' && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--accent-secondary)', fontWeight: 600 }}>
+                    <RiStickyNoteFill size={14} /> Sticker
+                  </span>
+                )}
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{parsed.text}</span>
+              </div>
+            </motion.div>
+          );
+        })()}
 
         {renderSpecialMessage()}
 
@@ -364,21 +456,51 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
             style={{
               color: 'var(--text-secondary)',
               fontFamily: 'var(--font-body)',
-              fontSize: '14px',
+              fontSize: 'var(--chat-font-size, 14px)',
               lineHeight: '1.5',
               wordBreak: 'break-word',
               overflowWrap: 'anywhere',
               whiteSpace: 'pre-wrap',
               overflowX: 'auto'
             }}
-            dangerouslySetInnerHTML={{ __html: formatMessageText(message.content) }}
+            dangerouslySetInnerHTML={{ __html: formatMessageText(message.content, markdownEnabled) }}
           />
         )}
 
         {message.media && message.media.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {message.media.map(renderMedia)}
-          </div>
+          autoPreview ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {message.media.map(renderMedia)}
+            </div>
+          ) : (
+            <div>
+              <button
+                type="button"
+                onClick={() => setShowMediaCollapsed(prev => !prev)}
+                style={{
+                  marginTop: '6px',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  backgroundColor: 'var(--bg-darkest)',
+                  border: '1px solid var(--border-color)',
+                  fontSize: '0.78rem',
+                  color: 'var(--accent-primary)',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <RiImage2Fill size={14} />
+                <span>{showMediaCollapsed ? 'Hide Media' : `Show ${message.media.length} Media Attachment(s)`}</span>
+              </button>
+              {showMediaCollapsed && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
+                  {message.media.map(renderMedia)}
+                </div>
+              )}
+            </div>
+          )
         )}
 
         {message.reactions && Object.keys(message.reactions).length > 0 && (
@@ -398,7 +520,7 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
                     alignItems: 'center',
                     gap: '4px',
                     padding: '2px 8px',
-                    backgroundColor: hasReacted ? 'rgba(99, 102, 241, 0.15)' : 'var(--bg-card)',
+                    backgroundColor: hasReacted ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-card)',
                     border: `1px solid ${hasReacted ? 'var(--accent-primary)' : 'var(--border-color)'}`,
                     borderRadius: 'var(--radius-full)',
                     fontSize: '0.85rem',
@@ -462,36 +584,62 @@ export default function MessageItem({ message, isGrouped, isOwn, isSelected, onT
         }}
       >
         <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('👍'); setShowActions(false); }} aria-label="React with thumbs up">
-          <span>👍</span>
+          <RiThumbUpLine size={16} />
         </motion.button>
         <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleReaction('❤️'); setShowActions(false); }} aria-label="React with heart">
-          <span>❤️</span>
+          <RiHeartLine size={16} style={{ color: '#F43F5E' }} />
         </motion.button>
         
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" style={{ padding: '6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowEmojiPicker(true); }} title="Add Reaction" aria-label="Add reaction">
             <RiAddLine size={18} />
           </motion.button>
-          {showEmojiPicker && (
-            <>
+          {showEmojiPicker && typeof document !== 'undefined' && createPortal(
+            <div 
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 99999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                backdropFilter: 'blur(4px)'
+              }}
+              onMouseDown={(e) => {
+                if (e.target === e.currentTarget) {
+                  setShowEmojiPicker(false);
+                  setShowActions(false);
+                }
+              }}
+            >
               <div 
-                style={{ position: 'fixed', inset: 0, zIndex: 90 }} 
-                onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setShowEmojiPicker(false); setShowActions(false); }} 
-              />
-              <div className="emoji-picker-wrapper" style={{ position: 'absolute', bottom: '100%', right: '-50px', zIndex: 100, marginBottom: '8px' }} onMouseDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
+                style={{
+                  boxShadow: 'var(--shadow-lg)',
+                  borderRadius: '12px',
+                  overflow: 'hidden'
+                }}
+                onMouseDown={e => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
+              >
                 <EmojiPicker 
                   onEmojiClick={(emojiObj) => {
-                    handleReaction(emojiObj.emoji);
-                    setTimeout(() => {
-                      setShowEmojiPicker(false);
-                      setShowActions(false);
-                    }, 10);
+                    const emojiChar = emojiObj?.emoji || emojiObj;
+                    if (emojiChar) {
+                      handleReaction(emojiChar);
+                    }
+                    setShowEmojiPicker(false);
+                    setShowActions(false);
                   }} 
-                  theme="dark" 
-                  lazyLoadEmojis={true}
+                  theme={typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'} 
+                  lazyLoadEmojis={false}
+                  previewConfig={{ showPreview: false }}
+                  width={320}
+                  height={400}
                 />
               </div>
-            </>
+            </div>,
+            document.body
           )}
         </div>
 

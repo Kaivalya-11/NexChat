@@ -34,14 +34,14 @@ export default function PollMessage({ message }) {
       marginTop: '6px',
       width: '100%',
       maxWidth: '340px',
-      backgroundColor: 'var(--bg-dark)',
+      backgroundColor: 'var(--bg-card)',
       borderRadius: '14px',
       padding: '14px',
       border: '1px solid var(--border-color)',
       boxShadow: 'var(--shadow-sm)'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        <div style={{ padding: '6px', backgroundColor: 'rgba(255, 204, 0, 0.15)', borderRadius: '8px', color: '#ffcc00' }}>
+        <div style={{ padding: '6px', backgroundColor: 'rgba(245, 158, 11, 0.15)', borderRadius: '8px', color: 'var(--accent-warning)' }}>
           <RiBarChart2Fill size={20} />
         </div>
         <div style={{ flex: 1 }}>
@@ -85,7 +85,7 @@ export default function PollMessage({ message }) {
                   left: 0,
                   bottom: 0,
                   width: `${percentage}%`,
-                  backgroundColor: userVoted ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.06)',
+                  backgroundColor: userVoted ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-active)',
                   transition: 'width 0.3s ease',
                   zIndex: 0
                 }}
@@ -113,7 +113,7 @@ export default function PollMessage({ message }) {
         })}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingTop: '8px', borderTop: '1px solid var(--border-color)', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
         <span>{totalVoters} {totalVoters === 1 ? 'vote' : 'votes'} total</span>
         <span>Click an option to vote</span>
       </div>

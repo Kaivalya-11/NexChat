@@ -70,12 +70,12 @@ export default function CameraModal({ onClose, onAttach }) {
     }}>
       <div style={{
         backgroundColor: 'var(--bg-card)', borderRadius: '16px', width: '90%', maxWidth: '520px',
-        padding: '20px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 50px rgba(0,0,0,0.7)',
+        padding: '20px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)',
         display: 'flex', flexDirection: 'column', alignItems: 'center'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '16px', alignItems: 'center' }}>
           <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <RiCamera3Fill size={20} style={{ color: '#ff2d55' }} /> Take Photo
+            <RiCamera3Fill size={20} style={{ color: 'var(--accent-danger)' }} /> Take Photo
           </h3>
           <div style={{ display: 'flex', gap: '8px' }}>
             {!capturedImage && (

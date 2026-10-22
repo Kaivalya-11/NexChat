@@ -20,22 +20,38 @@ import SearchModal from './components/UI/SearchModal';
 import ProfileModal from './components/Auth/ProfileModal';
 import NotificationDrawer from './components/UI/NotificationDrawer';
 import MediaPreviewModal from './components/UI/MediaPreviewModal';
+import AppSettingsModal from './components/UI/AppSettingsModal';
 import FriendsView from './components/Friends/FriendsView';
+import { applyDocumentSettings } from './utils/appSettings';
 
 function ChatLayout() {
   const { user } = useAuth();
+  const { activeChannelId } = useChat();
   const [isMemberDrawerOpen, setIsMemberDrawerOpen] = React.useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = React.useState(false);
-  const [theme, setTheme] = React.useState(localStorage.getItem('chat_theme') || 'dark');
-  
-  const { activeChannelId } = useChat();
+  const [theme, setTheme] = React.useState('dark');
+
+  React.useEffect(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('chat_theme') : null;
+    if (saved) setTheme(saved);
+    applyDocumentSettings();
+
+    const handleSettingsChanged = () => {
+      applyDocumentSettings();
+    };
+    window.addEventListener('nexchat_settings_changed', handleSettingsChanged);
+    return () => window.removeEventListener('nexchat_settings_changed', handleSettingsChanged);
+  }, []);
 
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('chat_theme', theme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('chat_theme', theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
@@ -56,6 +72,7 @@ function ChatLayout() {
         <Sidebar 
           onOpenProfile={() => setIsProfileModalOpen(true)} 
           onOpenSearch={() => setIsSearchModalOpen(true)}
+          onOpenSettings={() => setIsSettingsModalOpen(true)}
           theme={theme}
           onToggleTheme={toggleTheme}
           onSelectChannel={() => setIsSidebarOpen(false)}
@@ -125,6 +142,22 @@ function ChatLayout() {
       
       <AnimatePresence>
         {isProfileModalOpen && <ProfileModal key="profile-modal" onClose={() => setIsProfileModalOpen(false)} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isSettingsModalOpen && (
+          <AppSettingsModal
+            key="app-settings-modal"
+            user={user}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            onOpenProfile={() => {
+              setIsSettingsModalOpen(false);
+              setIsProfileModalOpen(true);
+            }}
+            onClose={() => setIsSettingsModalOpen(false)}
+          />
+        )}
       </AnimatePresence>
 
       <AnimatePresence>

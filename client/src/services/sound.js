@@ -2,7 +2,12 @@
 class SoundManager {
   constructor() {
     this.audioCtx = null;
-    this.enabled = true;
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('nexchat_sound_enabled');
+      this.enabled = stored !== null ? stored === 'true' : true;
+    } else {
+      this.enabled = true;
+    }
   }
 
   init() {
@@ -56,6 +61,17 @@ class SoundManager {
 
   toggleSound() {
     this.enabled = !this.enabled;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nexchat_sound_enabled', String(this.enabled));
+    }
+    return this.enabled;
+  }
+
+  setSound(val) {
+    this.enabled = Boolean(val);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nexchat_sound_enabled', String(this.enabled));
+    }
     return this.enabled;
   }
 }

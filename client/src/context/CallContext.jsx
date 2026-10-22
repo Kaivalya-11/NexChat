@@ -39,6 +39,8 @@ export function CallProvider({ children }) {
   const audioContextRef = useRef(null);
 
   const playRingtone = () => {
+    const enabled = typeof window !== 'undefined' ? localStorage.getItem('nexchat_call_chime') !== 'false' : true;
+    if (!enabled) return;
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       audioContextRef.current = ctx;
@@ -235,6 +237,18 @@ export function CallProvider({ children }) {
       localStreamRef.current = stream;
       setLocalStream(stream);
 
+      // Apply Call Settings: Auto-mute mic & Auto-disable camera
+      const autoMute = typeof window !== 'undefined' ? localStorage.getItem('nexchat_auto_mute_mic') === 'true' : false;
+      const autoCamOff = typeof window !== 'undefined' ? localStorage.getItem('nexchat_auto_cam_off') === 'true' : false;
+      if (autoMute) {
+        stream.getAudioTracks().forEach(t => { t.enabled = false; });
+        setIsMicMuted(true);
+      }
+      if (autoCamOff) {
+        stream.getVideoTracks().forEach(t => { t.enabled = false; });
+        setIsCameraOff(true);
+      }
+
       if (socket) {
         socket.emit('call-user', { channelId, isVideo: videoMode });
       }
@@ -260,6 +274,18 @@ export function CallProvider({ children }) {
 
       localStreamRef.current = stream;
       setLocalStream(stream);
+
+      // Apply Call Settings: Auto-mute mic & Auto-disable camera
+      const autoMute = typeof window !== 'undefined' ? localStorage.getItem('nexchat_auto_mute_mic') === 'true' : false;
+      const autoCamOff = typeof window !== 'undefined' ? localStorage.getItem('nexchat_auto_cam_off') === 'true' : false;
+      if (autoMute) {
+        stream.getAudioTracks().forEach(t => { t.enabled = false; });
+        setIsMicMuted(true);
+      }
+      if (autoCamOff) {
+        stream.getVideoTracks().forEach(t => { t.enabled = false; });
+        setIsCameraOff(true);
+      }
 
       if (socket) {
         socket.emit('accept-call', { channelId: incomingCall.channelId });

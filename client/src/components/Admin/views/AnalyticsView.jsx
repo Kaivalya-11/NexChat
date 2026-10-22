@@ -13,7 +13,8 @@ import {
   RiAttachmentLine,
   RiTeamLine,
   RiChatPrivateLine,
-  RiFireLine
+  RiFireLine,
+  RiArrowRightLine
 } from 'react-icons/ri';
 import * as api from '../../../services/api';
 import { AdminLoadingState, AdminErrorState, AdminEmptyState } from '../AdminStates';
@@ -427,8 +428,8 @@ export default function AnalyticsView({ token, onNavigate }) {
           <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-color)', fontSize: '0.75rem', color: 'var(--text-dim)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>Compliance queue</span>
             {onNavigate && (
-              <span style={{ cursor: 'pointer', color: 'var(--accent-primary)', fontWeight: 600 }} onClick={() => onNavigate('moderation')}>
-                Moderation →
+              <span style={{ cursor: 'pointer', color: 'var(--accent-primary)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px' }} onClick={() => onNavigate('moderation')}>
+                Moderation <RiArrowRightLine size={13} />
               </span>
             )}
           </div>

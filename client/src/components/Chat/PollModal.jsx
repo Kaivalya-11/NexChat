@@ -30,11 +30,11 @@ export default function PollModal({ onClose, onCreatePoll }) {
     }}>
       <div style={{
         backgroundColor: 'var(--bg-card)', borderRadius: '16px', width: '90%', maxWidth: '460px',
-        padding: '24px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 50px rgba(0,0,0,0.7)'
+        padding: '24px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <RiBarChart2Fill size={20} style={{ color: '#ffcc00' }} /> Create Poll
+            <RiBarChart2Fill size={20} style={{ color: 'var(--accent-warning)' }} /> Create Poll
           </h3>
           <button className="btn-icon" onClick={onClose} aria-label="Close poll modal">
             <RiCloseLine size={22} />

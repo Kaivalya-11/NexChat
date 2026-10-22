@@ -22,7 +22,7 @@ import StartDMModal from './StartDMModal';
 import UserProfilePanel from './UserProfilePanel';
 import ChannelSettingsModal from './ChannelSettingsModal';
 
-export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTheme, onSelectChannel }) {
+export default function Sidebar({ onOpenProfile, onOpenSearch, onOpenSettings, theme, onToggleTheme, onSelectChannel }) {
   const { channels, activeChannelId, setActiveChannelId, unreadCounts, removeChannel } = useChat();
   const { user, logout } = useAuth();
   const { onlineUsers } = useSocket();
@@ -76,28 +76,26 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
       flexShrink: 0
     }}>
       <div style={{
-        padding: '16px',
-        borderBottom: '1px solid var(--border-color)'
+        padding: '0 20px',
+        height: '62px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottom: '1px solid var(--border-color)',
+        boxSizing: 'border-box'
       }}>
-        <motion.div
-          className="hover-item"
-          animate={{ y: [0, -4, 0] }}
-          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '12px 16px',
-            background: 'var(--bg-card)',
-            borderRadius: 'var(--radius-md)',
-            cursor: 'pointer',
-            border: '1px solid var(--border-color)',
-            boxShadow: 'inset 0 1px 0 rgba(52, 211, 153, 0.15)'
-          }}>
-          <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 700, color: 'var(--accent-primary)', letterSpacing: '-0.02em', lineHeight: 1 }}>
-            NexChat
-          </h2>
-        </motion.div>
+        <h2 style={{
+          fontSize: '22px',
+          margin: 0,
+          fontWeight: 700,
+          color: 'var(--accent-primary)',
+          letterSpacing: '-0.02em',
+          lineHeight: 1,
+          fontFamily: 'var(--font-heading)',
+          textAlign: 'center'
+        }}>
+          NexChat
+        </h2>
       </div>
 
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '16px 12px' }}>
@@ -329,6 +327,7 @@ export default function Sidebar({ onOpenProfile, onOpenSearch, theme, onToggleTh
         theme={theme}
         onOpenProfile={onOpenProfile}
         onOpenSearch={onOpenSearch}
+        onOpenSettings={onOpenSettings}
         onToggleTheme={onToggleTheme}
         logout={logout}
         getStatusColor={getStatusColor}
